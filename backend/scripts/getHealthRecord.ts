@@ -1,22 +1,29 @@
+import * as dotenv from "dotenv";
+
 import { ethers } from "hardhat";
 
-async function main() {
-    // Replace with your deployed contract address
-    const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+dotenv.config();
 
-    // Replace with the target address
-    const TARGET_ADDRESS = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+async function main() {
+    // Load the contract address from environment variables
+    const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+    if (!CONTRACT_ADDRESS) {
+        throw new Error("CONTRACT_ADDRESS is not defined in the .env file.");
+    }
+
+    // Replace with the Ethereum address of the owner
+    const OWNER_ADDRESS = process.env.OWNER_ADDRESS; // Replace with valid Ethereum address
 
     // Get the contract instance
     const HealthInfo = await ethers.getContractFactory("HealthInfo");
     const contract = HealthInfo.attach(CONTRACT_ADDRESS);
 
-    // Retrieve the health record IPFS hash
-    const ipfsHash = await contract.getHealthRecord(TARGET_ADDRESS);
-    console.log("Retrieved IPFS hash:", ipfsHash);
+    // Call the getHealthRecord function
+    const ipfsHash = await contract.getHealthRecord(OWNER_ADDRESS);
+    console.log(`IPFS hash for owner ${OWNER_ADDRESS}: ${ipfsHash}`);
 }
 
 main().catch((error) => {
-    console.error(error);
+    console.error("Error:", error);
     process.exitCode = 1;
 });

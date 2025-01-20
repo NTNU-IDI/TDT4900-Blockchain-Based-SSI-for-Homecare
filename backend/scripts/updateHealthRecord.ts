@@ -6,13 +6,14 @@ async function main() {
 
     // Get signer
     const signer = (await ethers.getSigners())[0];
+    console.log("Using account:", await signer.getAddress());
 
     // Attach to deployed contract
     const HealthInfo = await ethers.getContractFactory("HealthInfo");
     const contract = HealthInfo.attach(CONTRACT_ADDRESS);
 
     // Call the updateHealthRecord function
-    const tx = await contract.connect(signer).updateHealthRecord(IPFS_HASH);
+    const tx = await contract.connect(signer).addOrUpdateHealthRecord(IPFS_HASH);
 
     console.log("Waiting for transaction confirmation...");
     await tx.wait();
