@@ -13,7 +13,7 @@ async function main() {
     }
 
     if (!PERMISSIONED_USER_ADDRESS) {
-        throw new Error("GRANTEE_ADDRESS is not defined in the .env file.");
+        throw new Error("PERMISSIONED_USER_ADDRESS is not defined in the .env file.");
     }
 
     // Get signer (the record owner)
