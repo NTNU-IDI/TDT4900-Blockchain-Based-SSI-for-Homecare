@@ -22,7 +22,7 @@ npx hardhat run scripts/getHealthRecordUpdates.ts --network localhost
 ```shell
 npx hardhat run scripts/grantAccess.ts --network localhost
 npx hardhat run scripts/revokeAccess.ts --network localhost
-npx hardhat run scripts/getAccessors.ts --network localhost
+npx hardhat run scripts/getAccessList.ts --network localhost
 ```
 
 ## Obs

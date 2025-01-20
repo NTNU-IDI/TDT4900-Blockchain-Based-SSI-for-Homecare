@@ -20,16 +20,16 @@ async function main() {
     const HealthInfo = await ethers.getContractFactory("HealthInfo");
     const contract = HealthInfo.attach(CONTRACT_ADDRESS);
 
-    console.log(`Fetching grantees for owner: ${OWNER_ADDRESS}`);
+    console.log(`Fetching access list for owner: ${OWNER_ADDRESS}`);
 
     try {
-        const grantees = await contract.getGrantees(OWNER_ADDRESS);
-        console.log(`Grantees for ${OWNER_ADDRESS}:`);
+        const grantees = await contract.getAccessList(OWNER_ADDRESS);
+        console.log(`Access list for ${OWNER_ADDRESS}:`);
         grantees.forEach((grantee: string, index: number) => {
             console.log(`  ${index + 1}. ${grantee}`);
         });
     } catch (error) {
-        console.error("Error fetching grantees:", error);
+        console.error("Error fetching access list:", error);
     }
 }
 

@@ -15,12 +15,12 @@ contract HealthInfo {
 
     mapping(address => HealthRecord) private healthRecords;
     mapping(address => mapping(address => bool)) private accessPermissions;
-    mapping(address => address[]) private grantees;
+    mapping(address => address[]) private accessList;
 
 
     event HealthRecordUpdated(address indexed owner, string ipfsHash);
-    event AccessGranted(address indexed owner, address indexed grantee);
-    event AccessRevoked(address indexed owner, address indexed grantee);
+    event AccessGranted(address indexed owner, address indexed permissionedUser);
+    event AccessRevoked(address indexed owner, address indexed permissionedUser);
 
     /**
      * @dev Updates the health record for the sender with a single IPFS hash.
@@ -40,38 +40,39 @@ contract HealthInfo {
             updater: msg.sender,
             timestamp: block.timestamp
         }));
+        emit HealthRecordUpdated(msg.sender, _ipfsHash);
     }
 
     /**
      * @dev Grants access to the sender's health record to a specified address.
-     * @param grantee The address to grant access to.
+     * @param permissionedUser The address to grant access to.
      */
-    function grantAccess(address grantee) public {
-        require(grantee != address(0), "Invalid grantee address");
-        require(!accessPermissions[msg.sender][grantee], "Access already granted");
+    function grantAccess(address permissionedUser) public {
+        require(permissionedUser != address(0), "Invalid grantee address");
+        require(!accessPermissions[msg.sender][permissionedUser], "Access already granted");
 
-        accessPermissions[msg.sender][grantee] = true;
-        grantees[msg.sender].push(grantee); // Add to grantees list
-        emit AccessGranted(msg.sender, grantee);
+        accessPermissions[msg.sender][permissionedUser] = true;
+        accessList[msg.sender].push(permissionedUser); // Add to grantees list
+        emit AccessGranted(msg.sender, permissionedUser);
     }
 
     /**
      * @dev Revokes access to the sender's health record from a specified address.
-     * @param grantee The address to revoke access from.
+     * @param permissionedUser The address to revoke access from.
      */
-    function revokeAccess(address grantee) public {
-        require(grantee != address(0), "Invalid grantee address");
-        require(accessPermissions[msg.sender][grantee], "Access not granted");
+    function revokeAccess(address permissionedUser) public {
+        require(permissionedUser != address(0), "Invalid grantee address");
+        require(accessPermissions[msg.sender][permissionedUser], "Access not granted");
 
-        accessPermissions[msg.sender][grantee] = false;
-        for (uint256 i = 0; i < grantees[msg.sender].length; i++) {
-            if (grantees[msg.sender][i] == grantee) {
-                grantees[msg.sender][i] = grantees[msg.sender][grantees[msg.sender].length - 1];
-                grantees[msg.sender].pop();
+        accessPermissions[msg.sender][permissionedUser] = false;
+        for (uint256 i = 0; i < accessList[msg.sender].length; i++) {
+            if (accessList[msg.sender][i] == permissionedUser) {
+                accessList[msg.sender][i] = accessList[msg.sender][accessList[msg.sender].length - 1];
+                accessList[msg.sender].pop();
                 break;
             }
         }
-        emit AccessRevoked(msg.sender, grantee);
+        emit AccessRevoked(msg.sender, permissionedUser);
     }
 
     /**
@@ -105,12 +106,12 @@ contract HealthInfo {
 
         return (updaters, timestamps);
 }
-    function getGrantees(address owner) public view returns (address[] memory) {
+    function getAccessList(address owner) public view returns (address[] memory) {
         require(
             owner == msg.sender || accessPermissions[owner][msg.sender],
             "Access denied"
         );
-        return grantees[owner];
+        return accessList[owner];
     }
 
 
