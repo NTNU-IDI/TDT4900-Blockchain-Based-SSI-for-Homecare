@@ -1,36 +1,50 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-const JournalRequestPage: React.FC<{ patient: any; onBack: () => void }> = ({ patient, onBack }) => {
+import { updateAccessRequest } from '../redux/store';
+import { useDispatch } from 'react-redux';
+
+const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({ patient, onBack }) => {
+  const dispatch = useDispatch();
   const [requestSent, setRequestSent] = useState(false);
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState(''); // Input for adding a note to the request
 
   const handleRequestAccess = () => {
-    setRequestSent(true); // Simulate sending request
-    setTimeout(() => onBack(), 2000); // Return to JournalsPage after 2 seconds
+    // Dispatch action to mark access as requested
+    dispatch(updateAccessRequest(patient.id));
+    setRequestSent(true);
+
+    // Simulate a delay and navigate back to the JournalsPage
+    setTimeout(() => onBack(), 2000);
   };
 
   return (
     <View style={styles.container}>
+      {/* Back Button */}
       <TouchableOpacity onPress={onBack} style={styles.backButton}>
         <Text style={styles.backButtonText}>Tilbake</Text>
       </TouchableOpacity>
-      <Text style={styles.title}> Be om tilgang til journal</Text>
+
+      {/* Title */}
+      <Text style={styles.title}>Be om tilgang til journal</Text>
+
+      {/* Patient Info */}
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Navn: </Text>
-          Marte Mortensen {/* TODO: Hardcoded info about the worker */}
+          {patient.name}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Arbeidsplass: </Text>
-          Byåsen hjemmetjeneste {/* TODO: Hardcoded info about the worker */}
+          Byåsen hjemmetjeneste {/* Hardcoded for example */}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Yrke: </Text>
-          Sykepleier {/* TODO: Hardcoded info about the worker */}
+          Sykepleier {/* Hardcoded for example */}
         </Text>
       </View>
 
+      {/* Request Form */}
       {!requestSent ? (
         <>
           <Text style={styles.noteLabel}>Notat:</Text>
@@ -54,7 +68,7 @@ const JournalRequestPage: React.FC<{ patient: any; onBack: () => void }> = ({ pa
   );
 };
 
-export default JournalRequestPage;
+export default JournalRequest;
 
 const styles = StyleSheet.create({
   container: {

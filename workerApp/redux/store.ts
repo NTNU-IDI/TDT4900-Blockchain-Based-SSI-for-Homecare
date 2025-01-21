@@ -17,6 +17,7 @@ type Patient = {
   status: string; // 'Ikke startet', 'Påbegynt', 'Ferdig'
   tasks: Task[];
   access: string; // 'Tilgang' or 'Ikke tilgang'
+  accessRequest: boolean; // Tracks if access has been requested
 };
 
 type PatientState = {
@@ -40,6 +41,7 @@ const initialState: PatientState = {
         { id: 2, name: 'Hjelp med frokost', description: 'Assister pasienten med å lage frokost.', duration: 2, status: 'Ikke startet' },
       ],
       access: 'Tilgang',
+      accessRequest: false,
     },
     {
       id: '2',
@@ -52,6 +54,7 @@ const initialState: PatientState = {
         { id: 1, name: 'Tannpuss', description: 'Hjelp pasienten med tannpuss etter frokost.', duration: 5, status: 'Ikke startet' },
       ],
       access: 'Tilgang',
+      accessRequest: false,
     },
     {
       id: '3',
@@ -66,6 +69,7 @@ const initialState: PatientState = {
         { id: 3, name: 'Administrere medisin', description: 'Gi pasienten medisin som foreskrevet.', duration: 5, status: 'Ikke startet' },
       ],
       access: 'Ikke tilgang',
+      accessRequest: false,
     },
     {
       id: '4',
@@ -79,6 +83,7 @@ const initialState: PatientState = {
         { id: 2, name: 'Medisinering', description: 'Administrer pasientens faste medisiner.', duration: 5, status: 'Ikke startet' },
       ],
       access: 'Tilgang',
+      accessRequest: false,
     },
     {
       id: '5',
@@ -93,6 +98,7 @@ const initialState: PatientState = {
         { id: 3, name: 'Lage middag', description: 'Lag middag sammen med pasienten.', duration: 20, status: 'Ikke startet' },
       ],
       access: 'Tilgang',
+      accessRequest: false,
     },
   ],
 };
@@ -126,12 +132,23 @@ const patientSlice = createSlice({
         patient.access = action.payload.access;
       }
     },
+    updateAccessRequest: (state, action: PayloadAction<string>) => {
+      const patient = state.patients.find((p) => p.id === action.payload);
+      if (patient) {
+        patient.accessRequest = true;
+      }
+    },
   },
 });
 
 // Export Actions
-export const { setCurrentPatient, updatePatientStatus, updateTaskStatus, updatePatientAccess } =
-  patientSlice.actions;
+export const {
+  setCurrentPatient,
+  updatePatientStatus,
+  updateTaskStatus,
+  updatePatientAccess,
+  updateAccessRequest,
+} = patientSlice.actions;
 
 // Create Store
 export const store = configureStore({
@@ -143,4 +160,3 @@ export const store = configureStore({
 // Export Types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-

@@ -1,32 +1,43 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
-import JournalRequestPage from '../components/JournalRequest';
+import JournalRequest from '../components/JournalRequest';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 
 const JournalsPage: React.FC = () => {
   const { patients } = useSelector((state: RootState) => state.patient);
-  const [selectedPatient, setSelectedPatient] = useState(null); // Track selected patient for request
+  const [selectedPatient, setSelectedPatient] = useState(null);
 
   const handlePatientPress = (patient: any) => {
     if (patient.access === 'Tilgang') {
       console.log('Navigate to detailed journal page (not implemented).');
     } else {
-      setSelectedPatient(patient); // Open JournalRequestPage for patients without access
+      setSelectedPatient(patient);
     }
   };
 
   if (selectedPatient) {
-    // Render the JournalRequestPage when a patient without access is selected
-    return <JournalRequestPage patient={selectedPatient} onBack={() => setSelectedPatient(null)} />;
+    return <JournalRequest patient={selectedPatient} onBack={() => setSelectedPatient(null)} />;
   }
 
   const renderPatient = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.patientCard} onPress={() => handlePatientPress(item)}>
+    <TouchableOpacity
+      style={styles.patientCard}
+      onPress={() => handlePatientPress(item)}
+      disabled={item.accessRequest}
+    >
       <Text style={styles.patientName}>{item.name}</Text>
-      <Text style={item.access === 'Tilgang' ? styles.accessGranted : styles.accessDenied}>
-        {item.access}
+      <Text
+        style={
+          item.access === 'Tilgang'
+            ? styles.accessGranted
+            : item.accessRequest
+            ? styles.accessRequested
+            : styles.accessDenied
+        }
+      >
+        {item.accessRequest ? 'Bedt om tilgang' : item.access}
       </Text>
     </TouchableOpacity>
   );
@@ -87,5 +98,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#FF5733',
+  },
+  accessRequested: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FFA500',
   },
 });
