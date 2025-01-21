@@ -117,7 +117,7 @@ let visitTimer: NodeJS.Timeout | null = null;
               onPress={() => openTaskDescription(task.description)}
             >
               <Text style={styles.taskName}>{task.name}</Text>
-              <Text style={styles.taskStatus}>Tid: {task.duration} min</Text>
+              <Text style={styles.taskStatus}>Beregnet tid: {task.duration} min</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[

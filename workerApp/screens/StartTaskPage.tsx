@@ -10,23 +10,37 @@ const StartTaskPage: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   const currentPatient = patients.find((p) => p.id === currentPatientId);
 
-  console.log('Current Patient:', currentPatient); // Debugging
-
-  const handleStart = () => {
-    dispatch(updatePatientStatus({ id: currentPatient!.id, status: 'Påbegynt' }));
-  };
-
   if (!currentPatient) {
     return (
       <View style={styles.container}>
-        <Text style={styles.noPatientText}>Ingen pasient er valgt</Text>
+        <Text style={styles.noPatientText}>Ingen pasient valgt</Text>
       </View>
     );
   }
 
+  // Parse start time and calculate total duration
+  const [startHour, startMinute] = currentPatient.time.split(':').map(Number); // Split "09:00" into [9, 0]
+  const totalDuration = currentPatient.tasks.reduce((sum, task) => sum + task.duration, 0); // Sum up task durations
+
+  // Calculate end time
+  const endTime = new Date();
+  endTime.setHours(startHour, startMinute + totalDuration);
+
+  const formattedEndTime = `${String(endTime.getHours()).padStart(2, '0')}:${String(
+    endTime.getMinutes()
+  ).padStart(2, '0')}`;
+
+  const handleStart = () => {
+    dispatch(updatePatientStatus({ id: currentPatient.id, status: 'Påbegynt' }));
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.patientText}>{currentPatient.name}</Text>
+      {/* Display the time range */}
+      <Text style={styles.patientTime}>
+        {currentPatient.time} - {formattedEndTime}
+      </Text>
       {currentPatient.status === 'Ikke startet' ? (
         <TouchableOpacity style={styles.startButton} onPress={handleStart}>
           <Text style={styles.startButtonText}>Start besøk</Text>
@@ -60,8 +74,13 @@ const styles = StyleSheet.create({
   patientText: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
     color: '#333',
+  },
+  patientTime: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
   },
   startButton: {
     backgroundColor: '#006A70',
