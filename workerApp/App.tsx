@@ -1,8 +1,14 @@
 import Navigation from './components/Navigation';
+import { Provider } from 'react-redux';
 import React from 'react';
+import { store } from './redux/store'; // Adjust the path as needed
 
 const App: React.FC = () => {
-  return <Navigation />;
+  return (
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
+  );
 };
 
 export default App;

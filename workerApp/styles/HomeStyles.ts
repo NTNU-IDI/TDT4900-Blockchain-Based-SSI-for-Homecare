@@ -1,83 +1,46 @@
 import { StyleSheet } from 'react-native';
-
 const HomeStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F4F4F4',
-  },
-  header: {
-    backgroundColor: '#D8EFF4',
+    backgroundColor: '#F9F9F9',
     padding: 20,
-    paddingTop: 50, // Add padding for better spacing on mobile devices
-    alignItems: 'center',
   },
-  headerText: {
-    fontSize: 20,
-    fontWeight: '600',
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
     color: '#333',
   },
-  list: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
-  date: {
-    fontSize: 16,
-    color: '#006A70',
-    fontWeight: '500',
-    marginBottom: 5,
-  },
   patientCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#D8EFF4',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 2, // For Android shadow
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  currentPatient: {
-    borderLeftWidth: 4,
-    borderLeftColor: '#006A70',
-    backgroundColor: '#E9F7F8',
+  currentPatientCard: {
+    backgroundColor: '#006A70',
   },
-  timeContainer: {
-    marginRight: 15,
-  },
-  time: {
+  patientName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#006A70',
-  },
-  details: {
-    flex: 1,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: '500',
     color: '#333',
   },
-  address: {
+  patientInfo: {
     fontSize: 14,
-    color: '#777',
-    marginTop: 2,
+    color: '#666',
   },
-  keyNumber: {
+  patientKey: {
     fontSize: 14,
-    color: '#555',
-    marginTop: 2,
-  },
-  status: {
-    fontSize: 14,
-    fontWeight: '500',
     color: '#999',
   },
-  activeStatus: {
-    color: '#006A70',
+  patientStatus: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
   },
-});
+})
 
 export default HomeStyles;
