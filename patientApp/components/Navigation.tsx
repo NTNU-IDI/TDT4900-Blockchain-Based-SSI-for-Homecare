@@ -1,25 +1,55 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons'; 
+import { useNavigation } from '@react-navigation/native';
 
 const Navigation = () => {
+
+  const navigation = useNavigation();
+  
+  const handlePress = (screen: string) => {
+    navigation.navigate(screen as never);
+    
+  };
+
   return (
     <View style={styles.div}>
     <View style={styles.container}>
       {[
-        'calendar',
-        'chemistry',
-        'bell',
-        'envelope',
-        'user',
-        'docs',
-      ].map((iconName, index) => (
-        <View key={index} style={styles.card}>
-          <Icon name={iconName} size={60} color="#FFFFF" />
-        </View>
+        { name: 'calendar', label: 'Timeavtaler', screen: 'Innsyn' },
+        { name: 'chemistry', label: 'Prøvesvar', screen: 'Innsyn' },
+        { name: 'bell', label: 'Legemidler', screen: 'Innsyn' },
+        { name: 'envelope', label: 'Meldinger', screen: 'Innsyn' },
+        { name: 'user', label: 'Tilganger', screen: 'Innsyn' },
+        { name: 'docs', label: 'Dokumenter', screen: 'Innsyn' },
+      ].map((icon, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.card}
+          onPress={() => handlePress(icon.screen)}
+        >
+          <Icon name={icon.name} size={60} color="#000" />
+          <Text style={styles.cardText}>{icon.label}</Text>
+        </TouchableOpacity>
       ))}
     </View>
-    </View>
+  </View>
+    // <View style={styles.div}>
+    // <View style={styles.container}>
+    //   {[
+    //     'calendar',
+    //     'chemistry',
+    //     'bell',
+    //     'envelope',
+    //     'user',
+    //     'docs',
+    //   ].map((iconName, index) => (
+    //     <View key={index} style={styles.card}>
+    //       <Icon name={iconName} size={60} color="#FFFFF" />
+    //     </View>
+    //   ))}
+    // </View>
+    // </View>
   );
 };
 
@@ -50,6 +80,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2, // Shadow transparency for iOS
     shadowRadius: 4, // Shadow blur for iOS
     elevation: 4, // Shadow for Android
+  },
+  cardText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#000',
   },
 });
 
