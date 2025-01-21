@@ -21,26 +21,46 @@ const HomeStyles = StyleSheet.create({
     alignItems: 'center',
   },
   currentPatientCard: {
-    backgroundColor: '#006A70',
+    backgroundColor: '#004D4F', // Darker teal color for better contrast
+    borderWidth: 2,
+    borderColor: '#00B3B3', // Highlight border
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // Shadow for Android
   },
   patientName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
+  currentPatientName: {
+    color: '#FFFFFF', // White text for selected patient
+  },
   patientInfo: {
     fontSize: 14,
     color: '#666',
   },
+  currentPatientInfo: {
+    color: '#E0FFFF', // Light text for better contrast
+  },
   patientKey: {
     fontSize: 14,
     color: '#999',
+  },
+  currentPatientKey: {
+    color: '#E0FFFF',
   },
   patientStatus: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
   },
-})
+  currentPatientStatus: {
+    color: '#FFFFFF',
+  },
+});
+
 
 export default HomeStyles;
