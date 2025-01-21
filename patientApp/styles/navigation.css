@@ -1,0 +1,31 @@
+div {
+    display: flex; /* Enables flexbox */
+    flex: 1; /* Takes up the full height */
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+    background-color: #f0f0f0; /* Light background color for better contrast */
+  }
+  
+  .container {
+    display: flex; /* Enables flexbox */
+    flex-direction: row; /* Arranges items in a row */
+    flex-wrap: wrap; /* Allows wrapping to the next row */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    /* padding: 10px; */ /* Uncomment if padding is needed */
+  }
+  
+  .card {
+    width: 35%; /* Slightly smaller than 50% to add spacing between cards */
+    aspect-ratio: 1; /* Ensures the card is a square */
+    display: flex; /* Enables flexbox for centering content */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    margin: 8px; /* Adds space between cards */
+    background-color: #fff; /* White background for the card */
+    border-radius: 10px; /* Rounded corners for the card */
+  
+    /* Box shadow for the card */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for both iOS and Android */
+  }
+  
