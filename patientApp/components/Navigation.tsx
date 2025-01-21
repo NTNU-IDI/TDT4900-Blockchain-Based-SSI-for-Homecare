@@ -34,52 +34,37 @@ const Navigation = () => {
       ))}
     </View>
   </View>
-    // <View style={styles.div}>
-    // <View style={styles.container}>
-    //   {[
-    //     'calendar',
-    //     'chemistry',
-    //     'bell',
-    //     'envelope',
-    //     'user',
-    //     'docs',
-    //   ].map((iconName, index) => (
-    //     <View key={index} style={styles.card}>
-    //       <Icon name={iconName} size={60} color="#FFFFF" />
-    //     </View>
-    //   ))}
-    // </View>
-    // </View>
+
   );
 };
 
 const styles = StyleSheet.create({
   div: {
-    flex: 1, // Takes up the full screen
-    justifyContent: 'center', // Centers the content vertically
-    alignItems: 'center', // Centers the content horizontally
-    backgroundColor: '#f0f0f0', // Light background color for better contrast
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#f0f0f0', 
   },
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center', // Center items horizontally
-    alignItems: 'center', // Center items vertically
-    //padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center', 
+ 
   },
   card: {
-    width: '35%', // Slightly smaller than 50% to add spacing between cards
-    aspectRatio: 1, // Ensures the card is a square
+    width: '35%', 
+    aspectRatio: 1, 
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 8, // Adds space between cards
-    backgroundColor: '#fff', // White background for the card
-    borderRadius: 10, // Rounded corners for the card
-    shadowColor: '#000', // Shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Shadow position for iOS
-    shadowOpacity: 0.2, // Shadow transparency for iOS
-    shadowRadius: 4, // Shadow blur for iOS
-    elevation: 4, // Shadow for Android
+    margin: 8, 
+    backgroundColor: '#fff', 
+    borderRadius: 10, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.2, 
+    shadowRadius: 4, 
+    elevation: 4, 
   },
   cardText: {
     marginTop: 8,
