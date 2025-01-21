@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center', // Center items horizontally
     alignItems: 'center', // Center items vertically
-    padding: 16,
+    //padding: 10,
   },
   card: {
     width: '35%', // Slightly smaller than 50% to add spacing between cards
