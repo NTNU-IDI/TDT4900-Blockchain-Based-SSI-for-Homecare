@@ -4,28 +4,32 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native'
-import React, { useState } from 'react'
+} from 'react-native';
+import React, { useState } from 'react';
 
-const PatientJournal: React.FC<{ patient: any ; onBack: () => void }> = ({ patient, onBack }) => {
-  const [openSections, setOpenSections] = useState<string[]>([])
+const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({
+  patient,
+  onBack,
+}) => {
+  const [openSections, setOpenSections] = useState<string[]>([]);
 
   const toggleSection = (section: string) => {
     setOpenSections((prevSections) =>
       prevSections.includes(section)
         ? prevSections.filter((s) => s !== section)
         : [...prevSections, section]
-    ) 
-  } 
+    );
+  };
 
   const renderSectionContent = (data: string[]) => (
-    <FlatList
-      data={data}
-      keyExtractor={(item, index) => index.toString()}
-      renderItem={({ item }) => <Text style={styles.sectionItem}>{item}</Text>}
-      contentContainerStyle={styles.sectionContent}
-    />
-  ) 
+    <View style={styles.sectionContent}>
+      {data.map((item, index) => (
+        <Text key={index.toString()} style={styles.sectionItem}>
+          {item}
+        </Text>
+      ))}
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -33,44 +37,50 @@ const PatientJournal: React.FC<{ patient: any ; onBack: () => void }> = ({ patie
         <Text style={styles.backButtonText}>Tilbake</Text>
       </TouchableOpacity>
       <Text style={styles.title}>Journal for {patient.name}</Text>
-      <TouchableOpacity
-        style={styles.sectionHeader}
-        onPress={() => toggleSection('diagnoses')}
-      >
-        <Text style={styles.sectionHeaderText}>Diagnoseliste</Text>
-        <Text style={styles.sectionToggle}>
-          {openSections.includes('diagnoses') ? '▲' : '▼'}
-        </Text>
-      </TouchableOpacity>
-      {openSections.includes('diagnoses') &&
-        renderSectionContent(patient.journal.diagnoses)}
-      <TouchableOpacity
-        style={styles.sectionHeader}
-        onPress={() => toggleSection('medications')}
-      >
-        <Text style={styles.sectionHeaderText}>Medikamenter</Text>
-        <Text style={styles.sectionToggle}>
-          {openSections.includes('medications') ? '▲' : '▼'}
-        </Text>
-      </TouchableOpacity>
-      {openSections.includes('medications') &&
-        renderSectionContent(patient.journal.medications)}
-      <TouchableOpacity
-        style={styles.sectionHeader}
-        onPress={() => toggleSection('previousTreatments')}
-      >
-        <Text style={styles.sectionHeaderText}>Tidligere behandlinger</Text>
-        <Text style={styles.sectionToggle}>
-          {openSections.includes('previousTreatments') ? '▲' : '▼'}
-        </Text>
-      </TouchableOpacity>
-      {openSections.includes('previousTreatments') &&
-        renderSectionContent(patient.journal.previousTreatments)}
+      <View style={styles.section}>
+        <TouchableOpacity
+          style={styles.sectionHeader}
+          onPress={() => toggleSection('diagnoses')}
+        >
+          <Text style={styles.sectionHeaderText}>Diagnoseliste</Text>
+          <Text style={styles.sectionToggle}>
+            {openSections.includes('diagnoses') ? '▲' : '▼'}
+          </Text>
+        </TouchableOpacity>
+        {openSections.includes('diagnoses') &&
+          renderSectionContent(patient.journal.diagnoses)}
+      </View>
+      <View style={styles.section}>
+        <TouchableOpacity
+          style={styles.sectionHeader}
+          onPress={() => toggleSection('medications')}
+        >
+          <Text style={styles.sectionHeaderText}>Medikamenter</Text>
+          <Text style={styles.sectionToggle}>
+            {openSections.includes('medications') ? '▲' : '▼'}
+          </Text>
+        </TouchableOpacity>
+        {openSections.includes('medications') &&
+          renderSectionContent(patient.journal.medications)}
+      </View>
+      <View style={styles.section}>
+        <TouchableOpacity
+          style={styles.sectionHeader}
+          onPress={() => toggleSection('previousTreatments')}
+        >
+          <Text style={styles.sectionHeaderText}>Tidligere behandlinger</Text>
+          <Text style={styles.sectionToggle}>
+            {openSections.includes('previousTreatments') ? '▲' : '▼'}
+          </Text>
+        </TouchableOpacity>
+        {openSections.includes('previousTreatments') &&
+          renderSectionContent(patient.journal.previousTreatments)}
+      </View>
     </View>
-  ) 
-} 
+  );
+};
 
-export default PatientJournal 
+export default PatientJournal;
 
 const styles = StyleSheet.create({
   container: {
@@ -92,6 +102,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
   },
+  section: {
+    marginBottom: 10,
+  },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -99,7 +112,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     backgroundColor: '#D8EFF4',
-    marginBottom: 10,
   },
   sectionHeaderText: {
     fontSize: 16,
@@ -116,11 +128,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: '#FFF',
     borderRadius: 10,
-    marginBottom: 10,
   },
   sectionItem: {
     fontSize: 14,
     color: '#666',
     marginBottom: 5,
   },
-}) 
+});
