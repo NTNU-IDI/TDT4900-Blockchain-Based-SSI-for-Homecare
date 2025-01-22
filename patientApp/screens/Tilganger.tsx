@@ -1,17 +1,27 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
+import { useNavigation } from "@react-navigation/native";
 
 const Tilganger = () => {
+  const navigation = useNavigation();
+
+  const handlePress = (screen: string) => {
+    navigation.navigate(screen as never);
+  };
   return (
     <View style={styles.screen}>
       <Header header="Tilganger" />
       <View style={styles.cardContainer}>
+      <TouchableOpacity
+          onPress={() => handlePress('Innsyn')}
+        >
         <Card
           title="Innsyn i journal"
           description="Her ser du hvem som har tilgang til din journal"
         />
+        </TouchableOpacity>
         <Card
           title="Forespørsler om innsyn"
           description="Her finner du forespørsler om tilgang til din journal"

@@ -2,14 +2,15 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons'; 
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/screens';
 
 const Navigation = () => {
 
   const navigation = useNavigation();
-  
+
   const handlePress = (screen: string) => {
     navigation.navigate(screen as never);
-    
   };
 
   return (
@@ -20,7 +21,7 @@ const Navigation = () => {
         { name: 'chemistry', label: 'Prøvesvar', screen: 'Innsyn' },
         { name: 'bell', label: 'Legemidler', screen: 'Innsyn' },
         { name: 'envelope', label: 'Meldinger', screen: 'Innsyn' },
-        { name: 'user', label: 'Tilganger', screen: 'Innsyn' },
+        { name: 'user', label: 'Tilganger', screen: 'Tilganger' },
         { name: 'docs', label: 'Dokumenter', screen: 'Innsyn' },
       ].map((icon, index) => (
         <TouchableOpacity

@@ -1,9 +1,16 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Header from "../components/Header";
 
 
 const Innsyn = () => {
+  const navigation = useNavigation();
+
+  const handlePress = (screen: string) => {
+    navigation.navigate(screen as never);
+  };
+
   const tableData = [
     ["Navn", "Rolle", "Sted"],
     ["Eva Pedersen", "Fastlege", "Moholt Legesenter" ],
@@ -13,7 +20,9 @@ const Innsyn = () => {
   return (
     <View style={styles.screen}>
       <Header header="Innsyn" />
-
+      <TouchableOpacity
+          onPress={() => handlePress('Endringslogg')}
+        >
       <View style={styles.table}>
         {tableData.map((row, rowIndex) => (
           <View
@@ -38,6 +47,7 @@ const Innsyn = () => {
           </View>
         ))}
       </View>
+      </TouchableOpacity>
     </View>
   );
 };

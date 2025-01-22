@@ -1,19 +1,43 @@
 import React from "react";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 interface HeaderProps {
   header: string;
   headerStyle?: TextStyle; // Text-specific styling
-  iconStyle?: ViewStyle;   // Icon container-specific styling
+  iconStyle?: ViewStyle; // Icon container-specific styling
 }
 
 const Header: React.FC<HeaderProps> = ({ header, headerStyle, iconStyle }) => {
+  const navigation = useNavigation();
+  const handlePress = (screen: string) => {
+    navigation.navigate(screen as never);
+  };
+
   return (
     <View style={styles.container}>
-      {/* Icon Container in the Top-Left Corner */}
       <View style={[styles.iconContainer, iconStyle]}>
-        {["arrow-left", "home"].map((iconName, index) => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon
+            name="arrow-left"
+            size={30}
+            color="#0D9276"
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress("Home")}>
+          <Icon name="home" size={30} color="#0D9276" style={styles.icon} />
+        </TouchableOpacity>
+      </View>
+      {/* {["arrow-left", "home"].map((iconName, index) => (
           <Icon
             key={index}
             name={iconName}
@@ -22,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ header, headerStyle, iconStyle }) => {
             style={styles.icon}
           />
         ))}
-      </View>
+      </View> */}
 
       {/* Header Text */}
       <Text style={[styles.header, headerStyle]}>{header}</Text>
@@ -35,33 +59,33 @@ const Header: React.FC<HeaderProps> = ({ header, headerStyle, iconStyle }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%", // Ensure the header spans the full width
+    width: "100%", 
     marginBottom: 20,
-    alignItems: "center", // Center the header text horizontally
+    alignItems: "center", 
+    marginTop: 20,
   },
   header: {
     fontFamily: '"Times New Roman", Times, serif',
     fontSize: 40,
-    color: "#333", // Darker color for better contrast
-    marginTop: 50, // Add space below the icons
-    marginBottom: 30, // Space between the header text and the line
+    color: "#333", 
+    marginTop: 50, 
+    marginBottom: 30, 
   },
   line: {
-    width: "100%", // Full screen width
+    width: "100%", 
     height: 5,
     backgroundColor: "#0D9276",
     marginTop: 10,
   },
   iconContainer: {
-    position: "absolute", // Place it relative to the top-left corner
-    top: 0, // Distance from the top of the screen
-    left: 5, // Distance from the left of the screen
-    flexDirection: "row", // Align icons horizontally
-    alignItems: "center", // Vertically align icons
-    
+    position: "absolute", 
+    top: 0, 
+    left: 5, 
+    flexDirection: "row", 
+    alignItems: "center", 
   },
   icon: {
-    margin: 15, // Space between icons
+    margin: 15, 
   },
 });
 
