@@ -4,22 +4,20 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import React, { useState } from 'react';
+} from 'react-native'
+import React, { useState } from 'react'
 
-const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({ patient, onBack }) => {
-  const [activeSections, setActiveSections] = useState<string[]>([]); // Track which sections are open
+const PatientJournal: React.FC<{ patient: any ; onBack: () => void }> = ({ patient, onBack }) => {
+  const [openSections, setOpenSections] = useState<string[]>([])
 
-  // Toggle section visibility
   const toggleSection = (section: string) => {
-    setActiveSections((prevSections) =>
+    setOpenSections((prevSections) =>
       prevSections.includes(section)
-        ? prevSections.filter((s) => s !== section) // Close section if already active
-        : [...prevSections, section] // Open section if not active
-    );
-  };
+        ? prevSections.filter((s) => s !== section)
+        : [...prevSections, section]
+    ) 
+  } 
 
-  // Render section content dynamically
   const renderSectionContent = (data: string[]) => (
     <FlatList
       data={data}
@@ -27,61 +25,52 @@ const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({ patien
       renderItem={({ item }) => <Text style={styles.sectionItem}>{item}</Text>}
       contentContainerStyle={styles.sectionContent}
     />
-  );
+  ) 
 
   return (
     <View style={styles.container}>
-      {/* Back Button */}
       <TouchableOpacity onPress={onBack} style={styles.backButton}>
         <Text style={styles.backButtonText}>Tilbake</Text>
       </TouchableOpacity>
-
-      {/* Patient Name */}
-      <Text style={styles.title}>{patient.name}</Text>
-
-      {/* Diagnoseliste Section */}
+      <Text style={styles.title}>Journal for {patient.name}</Text>
       <TouchableOpacity
         style={styles.sectionHeader}
         onPress={() => toggleSection('diagnoses')}
       >
         <Text style={styles.sectionHeaderText}>Diagnoseliste</Text>
         <Text style={styles.sectionToggle}>
-          {activeSections.includes('diagnoses') ? '▲' : '▼'}
+          {openSections.includes('diagnoses') ? '▲' : '▼'}
         </Text>
       </TouchableOpacity>
-      {activeSections.includes('diagnoses') &&
+      {openSections.includes('diagnoses') &&
         renderSectionContent(patient.journal.diagnoses)}
-
-      {/* Medikamenter Section */}
       <TouchableOpacity
         style={styles.sectionHeader}
         onPress={() => toggleSection('medications')}
       >
         <Text style={styles.sectionHeaderText}>Medikamenter</Text>
         <Text style={styles.sectionToggle}>
-          {activeSections.includes('medications') ? '▲' : '▼'}
+          {openSections.includes('medications') ? '▲' : '▼'}
         </Text>
       </TouchableOpacity>
-      {activeSections.includes('medications') &&
+      {openSections.includes('medications') &&
         renderSectionContent(patient.journal.medications)}
-
-      {/* Tidligere Behandlinger Section */}
       <TouchableOpacity
         style={styles.sectionHeader}
         onPress={() => toggleSection('previousTreatments')}
       >
         <Text style={styles.sectionHeaderText}>Tidligere behandlinger</Text>
         <Text style={styles.sectionToggle}>
-          {activeSections.includes('previousTreatments') ? '▲' : '▼'}
+          {openSections.includes('previousTreatments') ? '▲' : '▼'}
         </Text>
       </TouchableOpacity>
-      {activeSections.includes('previousTreatments') &&
+      {openSections.includes('previousTreatments') &&
         renderSectionContent(patient.journal.previousTreatments)}
     </View>
-  );
-};
+  ) 
+} 
 
-export default PatientJournal;
+export default PatientJournal 
 
 const styles = StyleSheet.create({
   container: {
@@ -134,4 +123,4 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 5,
   },
-});
+}) 

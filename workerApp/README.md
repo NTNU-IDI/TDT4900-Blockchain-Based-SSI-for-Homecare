@@ -2,5 +2,6 @@
 
 Run with
 ```shell
+npm install
 npx expo start
 ```

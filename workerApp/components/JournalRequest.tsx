@@ -1,38 +1,30 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-import { updateAccessRequest } from '../redux/store';
-import { useDispatch } from 'react-redux';
+import { updateAccessRequest } from '../redux/patientSlicer'
+import { useAppDispatch, } from '../redux/hooks'
 
-const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({ patient, onBack }) => {
-  const dispatch = useDispatch();
-  const [requestSent, setRequestSent] = useState(false);
-  const [note, setNote] = useState(''); // Input for adding a note to the request
+const JournalRequest: React.FC<{ patient: any ; onBack: () => void }> = ({ patient, onBack }) => {
+  const dispatch = useAppDispatch() 
+  const [requestSent, setRequestSent] = useState(false) 
+  const [note, setNote] = useState('')
 
   const handleRequestAccess = () => {
-    // Dispatch action to mark access as requested
-    dispatch(updateAccessRequest(patient.id));
-    setRequestSent(true);
-
-    // Simulate a delay and navigate back to the JournalsPage
-    setTimeout(() => onBack(), 2000);
-  };
+    dispatch(updateAccessRequest(patient.id)) 
+    setRequestSent(true) 
+    setTimeout(() => onBack(), 2000) 
+  } 
 
   return (
     <View style={styles.container}>
-      {/* Back Button */}
       <TouchableOpacity onPress={onBack} style={styles.backButton}>
         <Text style={styles.backButtonText}>Tilbake</Text>
       </TouchableOpacity>
-
-      {/* Title */}
       <Text style={styles.title}>Be om tilgang til journal</Text>
-
-      {/* Patient Info */}
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Navn: </Text>
-          {patient.name}
+          Mona Jensen {/* Hardcoded for example */}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Arbeidsplass: </Text>
@@ -44,13 +36,12 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({ patien
         </Text>
       </View>
 
-      {/* Request Form */}
       {!requestSent ? (
         <>
           <Text style={styles.noteLabel}>Notat:</Text>
           <TextInput
             style={styles.noteInput}
-            placeholder="Legg til en notat for forespørselen..."
+            placeholder="Legg til notat her..."
             multiline
             value={note}
             onChangeText={setNote}
@@ -65,10 +56,10 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({ patien
         </View>
       )}
     </View>
-  );
-};
+  ) 
+} 
 
-export default JournalRequest;
+export default JournalRequest 
 
 const styles = StyleSheet.create({
   container: {
@@ -138,4 +129,4 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
   },
-});
+}) 

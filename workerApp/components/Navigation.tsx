@@ -1,65 +1,54 @@
-// Screens
-import HomePage from '../screens/HomePage';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import JournalsPage from '../screens/JournalsPage';
-import MorePage from '../screens/MorePage';
-import { NavigationContainer } from '@react-navigation/native';
-import NavigationStyles from '../styles/NavigationStyles';
-import React from 'react';
-import { RootState } from '../redux/store';
-// Task Screens
-import StartTaskPage from '../screens/StartTaskPage';
-import StartedTaskPage from '../screens/StartedTaskPage';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useSelector } from 'react-redux';
+import HomePage from '../screens/HomePage'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import JournalsPage from '../screens/JournalsPage'
+import MorePage from '../screens/MorePage'
+import { NavigationContainer } from '@react-navigation/native'
+import NavigationStyles from '../styles/NavigationStyles'
+import React from 'react'
+import StartTaskPage from '../screens/StartTaskPage'
+import StartedTaskPage from '../screens/StartedTaskPage'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useAppSelector } from '../redux/hooks'
 
-// Define Tab Navigator
-const Tab = createBottomTabNavigator();
-
-type TabBarIconProps = {
-  color: string;
-  size: number;
-};
+const Tab = createBottomTabNavigator() 
 
 const Navigation: React.FC = () => {
-  const { currentPatientId, patients } = useSelector((state: RootState) => state.patient);
+  const { currentPatientId, patients } = useAppSelector((state) => state.patient) 
 
-  // Determine the appropriate task screen based on currentPatient sstarttaskstatus
+  // Determine task screen based on current patient status
   const getTaskScreen = () => {
-    const currentPatient = patients.find((p) => p.id === currentPatientId);
-
+    const currentPatient = patients.find((p) => p.id === currentPatientId) 
     if (currentPatient?.status === 'Påbegynt') {
-      return StartedTaskPage;
+      return StartedTaskPage 
     } else {
-      return StartTaskPage;
+      return StartTaskPage 
     }
-  };
+  } 
 
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }: TabBarIconProps) => {
-            let iconName: string;
+          tabBarIcon: ({ color, size }) => {
+            let iconName: string 
 
             switch (route.name) {
               case 'Home':
-                iconName = 'home';
-                break;
+                iconName = 'home' 
+                break 
               case 'Tasks':
-                iconName = 'clipboard-text-outline';
-                break;
+                iconName = 'clipboard-text-outline' 
+                break 
               case 'Journal':
-                iconName = 'folder-outline';
-                break;
+                iconName = 'folder-outline' 
+                break 
               case 'More':
-                iconName = 'dots-horizontal';
-                break;
+                iconName = 'dots-horizontal' 
+                break 
               default:
-                iconName = '';
+                iconName = '' 
             }
-
-            return <Icon name={iconName} color={color} size={size} />;
+            return <Icon name={iconName} color={color} size={size} /> 
           },
           tabBarActiveTintColor: '#006A70',
           tabBarInactiveTintColor: 'black',
@@ -67,17 +56,17 @@ const Navigation: React.FC = () => {
           headerShown: false,
         })}
       >
-        <Tab.Screen name="Home" component={HomePage} options={{ title: 'Hjem' }} />
+        <Tab.Screen name="Home" component={HomePage} options={{ title: 'Hjem'}} />
         <Tab.Screen
           name="Tasks"
-          component={getTaskScreen()} // Dynamically set the task screen
+          component={getTaskScreen()}
           options={{ title: 'Gjøremål' }}
         />
         <Tab.Screen name="Journal" component={JournalsPage} options={{ title: 'Journaler' }} />
         <Tab.Screen name="More" component={MorePage} options={{ title: 'Mer' }} />
       </Tab.Navigator>
     </NavigationContainer>
-  );
-};
+  ) 
+} 
 
-export default Navigation;
+export default Navigation 

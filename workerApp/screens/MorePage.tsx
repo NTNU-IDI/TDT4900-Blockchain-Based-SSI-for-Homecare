@@ -1,37 +1,34 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-import React from 'react';
+import React from 'react'
 
 const MorePage: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Mer</Text>
-
       <TouchableOpacity
         style={styles.optionButton}
-        onPress={() => Alert.alert('Navigating to Innstillinger')}
+        onPress={() => Alert.alert('Går til Innstillinger')}
       >
         <Text style={styles.optionText}>Innstillinger</Text>
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.optionButton}
-        onPress={() => Alert.alert('Navigating to Hjelp')}
+        onPress={() => Alert.alert('Går til Hjelp')}
       >
         <Text style={styles.optionText}>Hjelp</Text>
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.optionButton}
-        onPress={() => Alert.alert('Logging out...')}
+        onPress={() => Alert.alert('Logger ut...')}
       >
         <Text style={styles.optionText}>Logg ut</Text>
       </TouchableOpacity>
     </View>
-  );
-};
+  ) 
+} 
 
-export default MorePage;
+export default MorePage 
 
 const styles = StyleSheet.create({
   container: {
@@ -61,4 +58,4 @@ const styles = StyleSheet.create({
     color: '#006A70',
     fontWeight: '500',
   },
-});
+}) 

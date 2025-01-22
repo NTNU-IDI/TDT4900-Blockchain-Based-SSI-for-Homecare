@@ -1,25 +1,25 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
-import { RootState, setCurrentPatient } from '../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { Text, TouchableOpacity, View } from 'react-native'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 
-import styles from '../styles/HomeStyles';
+import React from 'react'
+import { setCurrentPatient } from '../redux/patientSlicer'
+import styles from '../styles/HomeStyles'
 
 const HomePage: React.FC = () => {
   const currentDate = new Date().toLocaleDateString('no-NO', {
     weekday: 'long',
-    day: 'numeric',
     month: 'long',
-  });
+    day: 'numeric'
+  }) 
   
-  const { currentPatientId, patients } = useSelector((state: RootState) => state.patient);
-  const dispatch = useDispatch();
+  const { currentPatientId, patients } = useAppSelector((state) => state.patient) 
+  const dispatch = useAppDispatch() 
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>I dag</Text>
       {patients.map((patient) => {
-        const isCurrentPatient = currentPatientId === patient.id;
+        const isCurrentPatient = currentPatientId === patient.id 
   
         return (
           <TouchableOpacity
@@ -67,10 +67,10 @@ const HomePage: React.FC = () => {
               {patient.status}
             </Text>
           </TouchableOpacity>
-        );
+        ) 
       })}
     </View>
-  );
+  ) 
 
 }
-export default HomePage;
+export default HomePage 

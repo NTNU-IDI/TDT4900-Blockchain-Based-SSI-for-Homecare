@@ -1,43 +1,38 @@
-import { RootState, updatePatientStatus } from '../redux/store';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 
-import React from 'react';
+import React from 'react'
+import { updatePatientStatus } from '../redux/patientSlicer'
 
-const StartTaskPage: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const { currentPatientId, patients } = useSelector((state: RootState) => state.patient);
-  const dispatch = useDispatch();
+const StartTaskPage: React.FC = () => {
+  const { currentPatientId, patients } = useAppSelector((state) => state.patient) 
+  const dispatch = useAppDispatch() 
 
-  const currentPatient = patients.find((p) => p.id === currentPatientId);
+  const currentPatient = patients.find((p) => p.id === currentPatientId) 
 
   if (!currentPatient) {
     return (
       <View style={styles.container}>
         <Text style={styles.noPatientText}>Ingen pasient valgt</Text>
       </View>
-    );
+    ) 
   }
 
-  // Parse start time and calculate total duration
-  const [startHour, startMinute] = currentPatient.time.split(':').map(Number); // Split "09:00" into [9, 0]
-  const totalDuration = currentPatient.tasks.reduce((sum, task) => sum + task.duration, 0); // Sum up task durations
+  const [startHour, startMinute] = currentPatient.time.split(':').map(Number)
+  const totalDuration = currentPatient.tasks.reduce((sum, task) => sum + task.duration, 0)
+  const endTime = new Date() 
+  
+  endTime.setHours(startHour, startMinute + totalDuration) 
 
-  // Calculate end time
-  const endTime = new Date();
-  endTime.setHours(startHour, startMinute + totalDuration);
-
-  const formattedEndTime = `${String(endTime.getHours()).padStart(2, '0')}:${String(
-    endTime.getMinutes()
-  ).padStart(2, '0')}`;
+  const formattedEndTime = endTime.toTimeString().slice(0, 5)
 
   const handleStart = () => {
-    dispatch(updatePatientStatus({ id: currentPatient.id, status: 'Påbegynt' }));
-  };
+    dispatch(updatePatientStatus({ status: 'Påbegynt' })) 
+  } 
 
   return (
     <View style={styles.container}>
       <Text style={styles.patientText}>{currentPatient.name}</Text>
-      {/* Display the time range */}
       <Text style={styles.patientTime}>
         {currentPatient.time} - {formattedEndTime}
       </Text>
@@ -53,10 +48,10 @@ const StartTaskPage: React.FC<{ navigation: any }> = ({ navigation }) => {
         </View>
       ) : null}
     </View>
-  );
-};
+  ) 
+} 
 
-export default StartTaskPage;
+export default StartTaskPage 
 
 const styles = StyleSheet.create({
   container: {
@@ -110,4 +105,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+}) 

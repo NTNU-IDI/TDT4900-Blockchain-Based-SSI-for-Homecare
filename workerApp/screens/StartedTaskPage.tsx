@@ -5,111 +5,100 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
+} from 'react-native'
+import React, { useEffect, useState } from 'react'
 import {
-    RootState,
-    setCurrentPatient,
-    updatePatientStatus,
-    updateTaskStatus,
-} from '../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+  setCurrentPatient,
+  updatePatientStatus,
+  updateTaskStatus,
+} from '../redux/patientSlicer'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 
-let visitTimer: NodeJS.Timeout | null = null;
+let visitTimer: NodeJS.Timeout | null = null 
   
-  const StartedTasksPage: React.FC<{ navigation: any }> = ({ navigation }) => {
-    const { currentPatientId, patients } = useSelector(
-      (state: RootState) => state.patient
-    );
-    const dispatch = useDispatch();
+  const StartedTasksPage: React.FC = () => {
+    const { currentPatientId, patients } = useAppSelector((state) => state.patient) 
+    const dispatch = useAppDispatch() 
   
-    const [timeElapsed, setTimeElapsed] = useState(0); // Total time elapsed
-    const [totalDuration, setTotalDuration] = useState(0); // Total visit duration
-    const [notes, setNotes] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedTaskDescription, setSelectedTaskDescription] = useState('');
+    const [timeElapsed, setTimeElapsed] = useState(0)
+    const [totalDuration, setTotalDuration] = useState(0)
+    const [notes, setNotes] = useState('') 
+    const [modalVisible, setModalVisible] = useState(false) 
+    const [selectedTaskDescription, setSelectedTaskDescription] = useState('') 
   
-    const currentPatient = patients.find((p) => p.id === currentPatientId);
+    const currentPatient = patients.find((p) => p.id === currentPatientId) 
+    const isOvertime = timeElapsed > totalDuration 
   
     useEffect(() => {
       if (currentPatient && currentPatient.tasks.length > 0) {
-        // Calculate the total visit duration
-        const totalTime = currentPatient.tasks.reduce(
+        const totalVisitTime = currentPatient.tasks.reduce(
           (sum, task) => sum + task.duration,
           0
-        );
-        setTotalDuration(totalTime * 60); // Convert minutes to seconds
-        startVisitTimer();
+        ) 
+        setTotalDuration(totalVisitTime * 60)
+        startVisitTimer() 
       }
   
-      return () => clearVisitTimer(); // Cleanup on unmount
-    }, [currentPatient]);
+      return () => clearVisitTimer()
+    }, [currentPatient]) 
   
     const startVisitTimer = () => {
       visitTimer = setInterval(() => {
-        setTimeElapsed((prev) => prev + 1);
-      }, 1000);
-    };
+        setTimeElapsed((prev) => prev + 1) 
+      }, 1000) 
+    } 
   
     const clearVisitTimer = () => {
       if (visitTimer) {
-        clearInterval(visitTimer);
-        visitTimer = null;
+        clearInterval(visitTimer) 
+        visitTimer = null 
       }
-    };
+    } 
   
     const formatTime = (seconds: number) => {
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-    };
+      const minutes = Math.floor(seconds / 60) 
+      const remainingSeconds = seconds % 60 
+      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}` 
+    } 
 
     const moveToNextPatient = () => {
-        const currentIndex = patients.findIndex((p) => p.id === currentPatientId);
-      
-        if (currentIndex >= 0 && currentIndex < patients.length - 1) {
-          const nextPatient = patients[currentIndex + 1];
-          dispatch(setCurrentPatient(nextPatient.id));
+        const currentIndex = patients.findIndex((p) => p.id === currentPatientId) 
+        if (currentIndex < patients.length - 1) {
+          const nextPatient = patients[currentIndex + 1] 
+          dispatch(setCurrentPatient(nextPatient.id)) 
         } else {
-          // If no more patients, reset or handle completion
-          console.log('Ferdig med alle besøk');
-          dispatch(setCurrentPatient(''));
+          dispatch(setCurrentPatient('')) 
         }
-      };
+      } 
   
     const finishTasks = () => {
       if (currentPatient) {
-        dispatch(updatePatientStatus({ id: currentPatient.id, status: 'Ferdig' }));
-        moveToNextPatient();
+        dispatch(updatePatientStatus({status: 'Ferdig' })) 
+        moveToNextPatient() 
       }
-    };
+    } 
   
     const openTaskDescription = (description: string) => {
-      setSelectedTaskDescription(description);
-      setModalVisible(true);
-    };
+      setSelectedTaskDescription(description) 
+      setModalVisible(true) 
+    } 
   
     if (!currentPatient) {
       return (
         <View style={styles.container}>
           <Text style={styles.message}>Ingen pasient valgt.</Text>
         </View>
-      );
+      ) 
     }
-  
-    const isOvertime = timeElapsed > totalDuration;
   
     return (
       <View style={styles.container}>
         <Text style={styles.patientText}>Oppgaver for: {currentPatient.name}</Text>
-  
-        {/* Display the timer */}
         <View style={styles.timerContainer}>
           <Text style={isOvertime ? styles.overtimeText : styles.timerText}>
             {isOvertime ? 'Overtid:' : 'Tid igjen:'} {formatTime(Math.abs(totalDuration - timeElapsed))}
           </Text>
         </View>
-  
         {currentPatient.tasks.map((task) => (
           <View key={task.id} style={styles.taskContainer}>
             <TouchableOpacity
@@ -140,12 +129,10 @@ let visitTimer: NodeJS.Timeout | null = null;
             </TouchableOpacity>
           </View>
         ))}
-  
-        {/* Task Description Modal */}
 <Modal
   visible={modalVisible}
   transparent={true}
-  animationType="fade" // Use "fade" for smooth appearance
+  animationType="fade"
   onRequestClose={() => setModalVisible(false)}
 >
   <View style={styles.modalBackground}>
@@ -160,32 +147,26 @@ let visitTimer: NodeJS.Timeout | null = null;
     </View>
   </View>
 </Modal>
-
-  
-        {/* General Notes */}
         <TextInput
           style={styles.notesInput}
           placeholder="Legg til notat her..."
           multiline
           value={notes}
           onChangeText={setNotes}
-          editable={currentPatient.status !== 'Ferdig'}
         />
   
         <TouchableOpacity
           style={styles.doneButton}
           onPress={finishTasks}
-          disabled={currentPatient.status === 'Ferdig'}
         >
-          <Text style={styles.doneButtonText}>
-            {currentPatient.status === 'Ferdig' ? 'All tasks done' : 'Ferdig'}
+          <Text style={styles.doneButtonText}> {'Ferdig'}
           </Text>
         </TouchableOpacity>
       </View>
-    );
-  };
+    ) 
+  } 
   
-  export default StartedTasksPage;
+  export default StartedTasksPage 
   
   const styles = StyleSheet.create({
     container: {
@@ -303,5 +284,5 @@ let visitTimer: NodeJS.Timeout | null = null;
       color: '#FFF',
       fontSize: 14,
     },
-  });
+  }) 
   

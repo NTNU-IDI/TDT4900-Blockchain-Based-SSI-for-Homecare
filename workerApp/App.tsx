@@ -1,7 +1,7 @@
 import Navigation from './components/Navigation';
 import { Provider } from 'react-redux';
 import React from 'react';
-import { store } from './redux/store'; // Adjust the path as needed
+import { store } from './redux/store';
 
 const App: React.FC = () => {
   return (
