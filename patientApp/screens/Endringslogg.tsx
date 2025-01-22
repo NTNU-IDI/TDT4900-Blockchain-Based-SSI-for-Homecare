@@ -49,24 +49,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   table: {
-    marginTop: 20, // Add spacing below the header
+    marginTop: 20,
     borderWidth: 1,
-    borderColor: "#ddd", // Light border color
+    borderColor: "#ddd",
   },
   tableRow: {
-    flexDirection: "row", // Arrange cells horizontally in each row
+    flexDirection: "row",
   },
   headerRow: {
-    backgroundColor: "#BBE2EC", // Different background color for the first row
+    backgroundColor: "#BBE2EC",
   },
   tableCell: {
     borderWidth: 1,
-    borderColor: "#ddd", // Light border color
+    borderColor: "#ddd",
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
-    width: 140, // Set cell width
-    height: 50, // Set cell height
+    width: 140,
+    height: 50,
   },
   cellText: {
     fontSize: 14,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 14,
-    fontWeight: "bold", // Bold text for the header
+    fontWeight: "bold",
   },
 });
 

@@ -22,9 +22,9 @@ const Homepage = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1, // Takes up the full screen
-    backgroundColor: "#f0f0f0", // Light background color for better contrast
-    alignItems: "center", // Center horizontally
+    flex: 1,
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
   },
   circleContainer: {
     width: "100%",
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     height: 290,
     borderRadius: 180,
     backgroundColor: "#FFF6E9",
-    zIndex: 0, // Ensures this circle is on top
-    left: "30%", // Adjust position horizontally
+    zIndex: 0,
+    left: "30%",
     top: 0,
   },
   secondCircle: {
@@ -49,29 +49,29 @@ const styles = StyleSheet.create({
     borderRadius: 180,
     backgroundColor: "#BBE2EC",
     zIndex: 1,
-    right: "25%", // Adjust position horizontally
-    top: -190, // Slightly lower to create the overlap effect
+    right: "25%",
+    top: -190,
   },
   circleText: {
-    position: "absolute", // Positioning the text absolutely within the container
-    zIndex: 1, // Ensure the text is above the circles
-    fontSize: 24, // Adjust font size
+    position: "absolute",
+    zIndex: 1,
+    fontSize: 24,
     fontFamily: '"Times New Roman", Times, serif',
-    color: "#000", // Black text color
+    color: "#000",
     textAlign: "center",
-    top: 50, // Move the text down
-    left: 30, // Move the text to the left
+    top: 50,
+    left: 30,
   },
 
   italicText: {
-    position: "absolute", // Position absolutely below the first text
-    zIndex: 1, // Ensure the text is above the circles
-    fontSize: 16, // Slightly smaller font size
-    fontStyle: "italic", // Make text italic
-    color: "#555", // Darker gray text color
+    position: "absolute",
+    zIndex: 1,
+    fontSize: 16,
+    fontStyle: "italic",
+    color: "#555",
     textAlign: "center",
-    top: 80, // Positioned below the first text
-    left: 30, // Align with the first text horizontally
+    top: 80,
+    left: 30,
     marginTop: 10,
   },
 });

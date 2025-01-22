@@ -3,7 +3,6 @@ import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Header from "../components/Header";
 
-
 const Innsyn = () => {
   const navigation = useNavigation();
 
@@ -13,40 +12,35 @@ const Innsyn = () => {
 
   const tableData = [
     ["Navn", "Rolle", "Sted"],
-    ["Eva Pedersen", "Fastlege", "Moholt Legesenter" ],
+    ["Eva Pedersen", "Fastlege", "Moholt Legesenter"],
     ["Isabelle Olsen", "Sykepleier", "Byåsen hjemmetjeneste"],
   ];
 
   return (
     <View style={styles.screen}>
       <Header header="Innsyn" />
-      <TouchableOpacity
-          onPress={() => handlePress('Endringslogg')}
-        >
-      <View style={styles.table}>
-        {tableData.map((row, rowIndex) => (
-          <View
-            key={rowIndex}
-            style={[
-              styles.tableRow,
-              rowIndex === 0 && styles.headerRow, 
-            ]}
-          >
-            {row.map((cell, cellIndex) => (
-              <View key={cellIndex} style={styles.tableCell}>
-                <Text
-                  style={[
-                    styles.cellText,
-                    rowIndex === 0 && styles.headerText, 
-                  ]}
-                >
-                  {cell}
-                </Text>
-              </View>
-            ))}
-          </View>
-        ))}
-      </View>
+      <TouchableOpacity onPress={() => handlePress("Endringslogg")}>
+        <View style={styles.table}>
+          {tableData.map((row, rowIndex) => (
+            <View
+              key={rowIndex}
+              style={[styles.tableRow, rowIndex === 0 && styles.headerRow]}
+            >
+              {row.map((cell, cellIndex) => (
+                <View key={cellIndex} style={styles.tableCell}>
+                  <Text
+                    style={[
+                      styles.cellText,
+                      rowIndex === 0 && styles.headerText,
+                    ]}
+                  >
+                    {cell}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -58,24 +52,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   table: {
-    marginTop: 20, // Add spacing below the header
+    marginTop: 20,
     borderWidth: 1,
-    borderColor: "#ddd", // Light border color
+    borderColor: "#ddd",
   },
   tableRow: {
-    flexDirection: "row", // Arrange cells horizontally in each row
+    flexDirection: "row",
   },
   headerRow: {
-    backgroundColor: "#BBE2EC", // Different background color for the first row
+    backgroundColor: "#BBE2EC",
   },
   tableCell: {
     borderWidth: 1,
-    borderColor: "#ddd", // Light border color
+    borderColor: "#ddd",
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
-    width: 140, // Set cell width
-    height: 50, // Set cell height
+    width: 140,
+    height: 50,
   },
   cellText: {
     fontSize: 14,
@@ -83,7 +77,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 14,
-    fontWeight: "bold", // Bold text for the header
+    fontWeight: "bold",
   },
 });
 

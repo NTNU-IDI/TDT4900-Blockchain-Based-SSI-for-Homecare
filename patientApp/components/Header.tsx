@@ -12,8 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 
 interface HeaderProps {
   header: string;
-  headerStyle?: TextStyle; // Text-specific styling
-  iconStyle?: ViewStyle; // Icon container-specific styling
+  headerStyle?: TextStyle; 
+  iconStyle?: ViewStyle; 
 }
 
 const Header: React.FC<HeaderProps> = ({ header, headerStyle, iconStyle }) => {
