@@ -6,7 +6,7 @@ import Innsyn from './screens/Innsyn';
 import Tilganger from './screens/Tilganger';
 import Homepage from './screens/Homepage';
 import DetailedInnsyn from './screens/DetailedInnsyn';
-
+import Endringslogg from './screens/Endringslogg';
 
 
 
@@ -17,7 +17,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         {/* <Stack.Screen name="Home" component={Homepage} /> */}
-        <Stack.Screen name="Innsyn" component={DetailedInnsyn} />
+        <Stack.Screen name="Innsyn" component={Endringslogg} />
         {/* <Stack.Screen name="Tilganger" component={Tilganger} /> */}
 
 

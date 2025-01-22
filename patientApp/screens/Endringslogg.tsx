@@ -1,35 +1,36 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+
 import Header from "../components/Header";
+import Icon from "react-native-vector-icons/SimpleLineIcons";
 
-
-const Innsyn = () => {
+const Endringslogg = () => {
   const tableData = [
-    ["Navn", "Rolle", "Sted"],
-    ["Eva Pedersen", "Fastlege", "Moholt Legesenter" ],
-    ["Isabelle Olsen", "Sykepleier", "Byåsen hjemmetjeneste"],
+    ["Data", "Behandling", "Dokument"],
+    [
+      "23/10/19",
+      "Lungemedisinsk",
+      <Icon name={"docs"} size={20} color="#000" />,
+    ],
+    [
+      "23/08/20",
+      "Hjertemedisinsk",
+      <Icon name={"docs"} size={20} color="#000" />,
+    ],
   ];
-
   return (
     <View style={styles.screen}>
-      <Header header="Innsyn" />
-
+      <Header header="Eva Pedersen" />
       <View style={styles.table}>
         {tableData.map((row, rowIndex) => (
           <View
             key={rowIndex}
-            style={[
-              styles.tableRow,
-              rowIndex === 0 && styles.headerRow, 
-            ]}
+            style={[styles.tableRow, rowIndex === 0 && styles.headerRow]}
           >
             {row.map((cell, cellIndex) => (
               <View key={cellIndex} style={styles.tableCell}>
                 <Text
-                  style={[
-                    styles.cellText,
-                    rowIndex === 0 && styles.headerText, 
-                  ]}
+                  style={[styles.cellText, rowIndex === 0 && styles.headerText]}
                 >
                   {cell}
                 </Text>
@@ -77,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Innsyn;
+export default Endringslogg;
