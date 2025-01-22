@@ -1,28 +1,28 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 
-import JournalRequest from '../components/JournalRequest'
-import PatientJournal from '../components/PatientJournal'
-import { useAppSelector } from '../redux/hooks'
+import JournalRequest from '../components/JournalRequest';
+import PatientJournal from '../components/PatientJournal';
+import { useAppSelector } from '../redux/hooks';
 
 const JournalsPage: React.FC = () => {
-  const { patients } = useAppSelector((state) => state.patient) 
-  const [selectedJournalPatient, setSelectedJournalPatient] = useState<any>(null)
-  const [viewType, setViewType] = useState<'journal' | 'request' | null>(null)
+  const { patients } = useAppSelector((state) => state.patient);
+  const [selectedJournalPatient, setSelectedJournalPatient] = useState<any>(null);
+  const [viewType, setViewType] = useState<'journal' | 'request' | null>(null);
 
   const handlePatientPress = (patient: any) => {
-    setSelectedJournalPatient(patient) 
-    if (patient.access === 'Tilgang') { 
-      setViewType('journal')
+    setSelectedJournalPatient(patient);
+    if (patient.access === 'Tilgang') {
+      setViewType('journal');
     } else {
-      setViewType('request')
+      setViewType('request');
     }
-  } 
+  };
 
   const onBack = () => {
-    setSelectedJournalPatient(null) 
-    setViewType(null) 
-  }
+    setSelectedJournalPatient(null);
+    setViewType(null);
+  };
 
   if (viewType === 'journal' && selectedJournalPatient) {
     return (
@@ -30,7 +30,7 @@ const JournalsPage: React.FC = () => {
         patient={selectedJournalPatient}
         onBack={onBack}
       />
-    ) 
+    );
   }
 
   if (viewType === 'request' && selectedJournalPatient) {
@@ -39,7 +39,7 @@ const JournalsPage: React.FC = () => {
         patient={selectedJournalPatient}
         onBack={onBack}
       />
-    ) 
+    );
   }
 
   const renderPatient = ({ item }: { item: any }) => (
@@ -61,7 +61,7 @@ const JournalsPage: React.FC = () => {
           : 'Ikke tilgang'}
       </Text>
     </TouchableOpacity>
-  ) 
+  );
 
   return (
     <View style={styles.container}>
@@ -73,10 +73,10 @@ const JournalsPage: React.FC = () => {
         contentContainerStyle={styles.list}
       />
     </View>
-  ) 
-} 
+  );
+};
 
-export default JournalsPage 
+export default JournalsPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -93,17 +93,16 @@ const styles = StyleSheet.create({
   },
   list: {
     flexGrow: 1,
-    alignItems: 'center',
   },
   patientCard: {
-    width: '90%',
-    padding: 15,
-    borderRadius: 15,
     backgroundColor: '#D8EFF4',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
   },
   patientName: {
     fontSize: 16,
@@ -113,16 +112,16 @@ const styles = StyleSheet.create({
   accessGranted: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#006A70',
-  },
+    color: '#006A70', 
   accessDenied: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#FF5733',
+    color: '#FF5733', 
   },
   accessRequested: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#FFA500',
   },
-}) 
+})
+
