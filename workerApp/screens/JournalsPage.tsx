@@ -1,43 +1,68 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
-import JournalRequest from '../components/JournalRequest';
+import JournalRequestPage from '../components/JournalRequest';
+import PatientJournalPage from '../components/PatientJournal';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 
 const JournalsPage: React.FC = () => {
   const { patients } = useSelector((state: RootState) => state.patient);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null); // Track the selected patient
+  const [viewType, setViewType] = useState<'journal' | 'request' | null>(null); // View type for navigation
 
   const handlePatientPress = (patient: any) => {
     if (patient.access === 'Tilgang') {
-      console.log('Navigate to detailed journal page (not implemented).');
+      setSelectedPatient(patient);
+      setViewType('journal'); // Navigate to PatientJournalPage
     } else {
       setSelectedPatient(patient);
+      setViewType('request'); // Navigate to JournalRequestPage
     }
   };
 
-  if (selectedPatient) {
-    return <JournalRequest patient={selectedPatient} onBack={() => setSelectedPatient(null)} />;
+  // Render the appropriate page based on the `viewType`
+  if (viewType === 'journal' && selectedPatient) {
+    return (
+      <PatientJournalPage
+        patient={selectedPatient}
+        onBack={() => {
+          setSelectedPatient(null);
+          setViewType(null);
+        }}
+      />
+    );
+  }
+
+  if (viewType === 'request' && selectedPatient) {
+    return (
+      <JournalRequestPage
+        patient={selectedPatient}
+        onBack={() => {
+          setSelectedPatient(null);
+          setViewType(null);
+        }}
+      />
+    );
   }
 
   const renderPatient = ({ item }: { item: any }) => (
-    <TouchableOpacity
-      style={styles.patientCard}
-      onPress={() => handlePatientPress(item)}
-      disabled={item.accessRequest}
-    >
+    <TouchableOpacity style={styles.patientCard} onPress={() => handlePatientPress(item)}>
       <Text style={styles.patientName}>{item.name}</Text>
       <Text
         style={
           item.access === 'Tilgang'
             ? styles.accessGranted
             : item.accessRequest
-            ? styles.accessRequested
+            ? styles.accessRequested // New style for "Bedt om tilgang"
             : styles.accessDenied
         }
       >
-        {item.accessRequest ? 'Bedt om tilgang' : item.access}
+        {item.access === 'Tilgang'
+          ? 'Tilgang'
+          : item.accessRequest
+          ? 'Bedt om tilgang'
+          : 'Ikke tilgang'}
       </Text>
     </TouchableOpacity>
   );
@@ -102,6 +127,6 @@ const styles = StyleSheet.create({
   accessRequested: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#FFA500',
+    color: '#FFA500', // Orange color for "Bedt om tilgang"
   },
 });

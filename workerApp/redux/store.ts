@@ -8,6 +8,12 @@ type Task = {
   status: string; // 'Ikke startet', 'Påbegynt', 'Ferdig'
 };
 
+type Journal = {
+  diagnoses: string[];
+  medications: string[];
+  previousTreatments: string[];
+};
+
 type Patient = {
   id: string;
   time: string;
@@ -18,6 +24,7 @@ type Patient = {
   tasks: Task[];
   access: string; // 'Tilgang' or 'Ikke tilgang'
   accessRequest: boolean; // Tracks if access has been requested
+  journal: Journal; // Patient-specific journal data
 };
 
 type PatientState = {
@@ -42,6 +49,11 @@ const initialState: PatientState = {
       ],
       access: 'Tilgang',
       accessRequest: false,
+      journal: {
+        diagnoses: ['Hypertensjon, diagnostisert 2015', 'Diabetes type 2, diagnostisert 2018'],
+        medications: ['Metformin - 500mg daglig', 'Simvastatin - 10mg ved behov'],
+        previousTreatments: ['Ernæringsrådgivning', 'Fysioterapi for mobilitetsproblemer'],
+      },
     },
     {
       id: '2',
@@ -55,6 +67,11 @@ const initialState: PatientState = {
       ],
       access: 'Tilgang',
       accessRequest: false,
+      journal: {
+        diagnoses: ['Osteoporose, diagnostisert 2020'],
+        medications: ['Vitamin D - daglig', 'Kalsiumtilskudd - 500mg daglig'],
+        previousTreatments: ['Behandling for brudd i venstre arm'],
+      },
     },
     {
       id: '3',
@@ -70,6 +87,11 @@ const initialState: PatientState = {
       ],
       access: 'Ikke tilgang',
       accessRequest: false,
+      journal: {
+        diagnoses: ['Kols, diagnostisert 2019'],
+        medications: ['Albuterol inhalator - 2 ganger daglig'],
+        previousTreatments: ['Rehabilitering etter sykehusopphold'],
+      },
     },
     {
       id: '4',
@@ -84,6 +106,11 @@ const initialState: PatientState = {
       ],
       access: 'Tilgang',
       accessRequest: false,
+      journal: {
+        diagnoses: ['Alzheimers, diagnostisert 2020'],
+        medications: ['Donepezil - daglig'],
+        previousTreatments: ['Kognitiv terapi for hukommelsestap'],
+      },
     },
     {
       id: '5',
@@ -93,12 +120,17 @@ const initialState: PatientState = {
       nøkkelnummer: '',
       status: 'Ikke startet',
       tasks: [
-        { id: 1, name: 'Rengjøring', description: 'Hjelp pasienten med rengjøring av rommet.', duration: 15, status: 'Ikke startet' },
+        { id: 1, name: 'Rengjøring', description: 'Vasking og støvsuging av gang, kjøkken og stue', duration: 15, status: 'Ikke startet' },
         { id: 2, name: 'Lese avisen', description: 'Lese dagens nyheter sammen med pasienten.', duration: 10, status: 'Ikke startet' },
         { id: 3, name: 'Lage middag', description: 'Lag middag sammen med pasienten.', duration: 20, status: 'Ikke startet' },
       ],
-      access: 'Tilgang',
+      access: 'Ikke tilgang',
       accessRequest: false,
+      journal: {
+        diagnoses: ['Hjertesykdom, diagnostisert 2017'],
+        medications: ['Aspirin - 100mg daglig', 'Atorvastatin - 20mg daglig'],
+        previousTreatments: ['Hjertesykdom kirurgi - 2017'],
+      },
     },
   ],
 };
