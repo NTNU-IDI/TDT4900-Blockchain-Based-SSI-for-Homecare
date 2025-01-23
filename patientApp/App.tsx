@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Home">
+      <Stack.Navigator screenOptions={{headerShown: false, cardStyle: {backgroundColor: "#FFFFFF" }}} initialRouteName="Home">
         <Stack.Screen name="Home" component={Homepage} />
         <Stack.Screen name="Tilganger" component={Tilganger} />
         <Stack.Screen name="Innsyn" component={Innsyn} />

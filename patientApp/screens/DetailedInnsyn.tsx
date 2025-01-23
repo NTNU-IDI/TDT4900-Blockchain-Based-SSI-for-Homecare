@@ -24,7 +24,6 @@ const DetailedInnsyn = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#FFFFF",
     alignItems: "center",
   },
   cardContainer: {

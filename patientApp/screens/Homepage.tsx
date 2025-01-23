@@ -5,7 +5,6 @@ import Navigation from "../components/Navigation";
 const Homepage = () => {
   return (
     <View style={styles.screen}>
-      {/* Overlapping Half-Circles */}
 
       <View style={styles.circleContainer}>
         <View style={[styles.firstCircle]} />
@@ -24,6 +23,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
+    
   },
   circleContainer: {
     width: "100%",
@@ -31,20 +31,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    zIndex: 0,
   },
 
   firstCircle: {
-    width: 290,
-    height: 290,
+    width: 320,
+    height: 320,
     borderRadius: 180,
     backgroundColor: "#FFF6E9",
     zIndex: 0,
     left: "30%",
-    top: 0,
+    top: 60,
   },
   secondCircle: {
-    width: 300,
-    height: 300,
+    width: 320,
+    height: 320,
     borderRadius: 180,
     backgroundColor: "#BBE2EC",
     zIndex: 1,
@@ -55,11 +56,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1,
     fontSize: 24,
-    // fontFamily: '"Times New Roman", Times, serif',
     color: "#000",
     textAlign: "center",
     top: 50,
     left: 30,
+    marginTop: 40,
   },
 
   italicText: {
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     top: 80,
     left: 30,
-    marginTop: 10,
+    marginTop: 50,
   },
 });
 

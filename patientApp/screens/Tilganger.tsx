@@ -39,9 +39,7 @@ const Tilganger = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#FFFFF",
     alignItems: "center",
-    // paddingTop: 40,
   },
   cardContainer: {
     marginTop: 20,

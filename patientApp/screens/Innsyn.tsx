@@ -26,14 +26,12 @@ const Innsyn = () => {
             title="Eva Pedersen"
             description="Fastlege"
             workPlace="Moholt legesenter"
-            containerStyle={{ backgroundColor: "#BBE2EC" }}
           ></Card>
         </TouchableOpacity>
         <Card
             title="Isabelle Olsen"
             description="Sykepleier"
             workPlace="Byåsen hjemmetjeneste"
-            containerStyle={{ backgroundColor: "#BBE2EC" }}
           ></Card>
       </View>
     </View>
@@ -42,7 +40,6 @@ const Innsyn = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#FFFFF",
     alignItems: "center",
   },
   cardContainer: {

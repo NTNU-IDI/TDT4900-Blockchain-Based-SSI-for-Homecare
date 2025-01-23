@@ -23,8 +23,6 @@ const Card: React.FC<CardProps> = ({
       <Text style={[styles.title, titleStyle]}>{title}</Text>
       <Text style={[styles.description, descriptionStyle]}>{description}</Text>
       <Text style={[styles.description, descriptionStyle]}>{workPlace}</Text>
-
-
     </View>
   );
 };
@@ -33,6 +31,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 30,
     borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#D3D3D3",
     backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

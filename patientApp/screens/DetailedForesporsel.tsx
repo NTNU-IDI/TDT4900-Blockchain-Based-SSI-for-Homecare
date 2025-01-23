@@ -23,7 +23,6 @@ const DetailedForesporsel = () => {
         </Text>
       </View>
 
-      {/* Buttons Section */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={[styles.button, styles.approveButton]}>
           <Text style={styles.buttonText}>Godkjenn</Text>
@@ -39,9 +38,7 @@ const DetailedForesporsel = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
     alignItems: "center",
-    paddingTop: 40,
   },
 
   infoContainer: {
@@ -52,41 +49,43 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 18,
     marginBottom: 10,
-    color: "#333", // Dark gray color for readability
+    color: "#333", 
+    padding: 10,
+
   },
 
   label: {
-    fontStyle: "italic", // Italic for the label
-    fontWeight: "bold", // Bold to make it stand out
+    fontStyle: "italic", 
+    fontWeight: "bold", 
   },
 
   buttonContainer: {
-    flexDirection: "row", // Align buttons in a row
-    justifyContent: "space-between", // Space between the buttons
+    flexDirection: "row", 
+    justifyContent: "space-between", 
     width: "90%",
     marginTop: 40,
   },
 
   button: {
     height: 50,
-    flex: 1, // Make buttons take equal space
-    marginHorizontal: 5, // Add spacing between buttons
+    flex: 1, 
+    marginHorizontal: 5, 
     borderRadius: 10,
-    alignItems: "center", // Centers text horizontally
-    justifyContent: "center", // Centers text vertically
+    alignItems: "center", 
+    justifyContent: "center", 
   },
 
   approveButton: {
-    backgroundColor: "#0D9276", // Green for approve
+    backgroundColor: "#0D9276", 
   },
 
   denyButton: {
-    backgroundColor: "#FF6347", // Red for deny
+    backgroundColor: "#FF6347", 
   },
 
   buttonText: {
     fontSize: 16,
-    color: "#FFFFFF", // White text for contrast
+    color: "#FFFFFF", 
   },
 });
 

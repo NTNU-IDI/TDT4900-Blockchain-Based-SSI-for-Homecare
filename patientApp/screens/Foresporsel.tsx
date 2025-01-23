@@ -38,9 +38,7 @@ const Foresporsel = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#FFFFF", //endre denne for bakgrunn
     alignItems: "center",
-    paddingTop: 40,
   },
 
   text: {
