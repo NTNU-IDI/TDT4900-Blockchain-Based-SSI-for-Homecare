@@ -1,7 +1,9 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 
+import GreenButton from '../components/GreenButton'
 import React from 'react'
+import SharedStyles from '../styles/SharedStyles'
 import { updatePatientStatus } from '../redux/patientSlicer'
 
 const StartTaskPage: React.FC = () => {
@@ -37,12 +39,10 @@ const StartTaskPage: React.FC = () => {
         {currentPatient.time} - {formattedEndTime}
       </Text>
       {currentPatient.status === 'Ikke startet' ? (
-        <TouchableOpacity style={styles.startButton} onPress={handleStart}>
-          <Text style={styles.startButtonText}>Start besøk</Text>
-        </TouchableOpacity>
+        <GreenButton onPress={handleStart} title="Start besøk" />
       ) : currentPatient.status === 'Ferdig' ? (
         <View>
-          <Text style={styles.message}>
+          <Text style={SharedStyles.message}>
             Oppgavene for {currentPatient.name} er fullført.
           </Text>
         </View>
@@ -76,33 +76,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     marginBottom: 20,
-  },
-  startButton: {
-    backgroundColor: '#006A70',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  startButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  message: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  viewTasksButton: {
-    backgroundColor: '#004D40',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  viewTasksButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 }) 

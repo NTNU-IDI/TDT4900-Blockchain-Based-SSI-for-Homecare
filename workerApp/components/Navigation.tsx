@@ -1,5 +1,5 @@
 import HomePage from '../screens/HomePage'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import JournalsPage from '../screens/JournalsPage'
 import MorePage from '../screens/MorePage'
 import { NavigationContainer } from '@react-navigation/native'
@@ -7,6 +7,7 @@ import NavigationStyles from '../styles/NavigationStyles'
 import React from 'react'
 import StartTaskPage from '../screens/StartTaskPage'
 import StartedTaskPage from '../screens/StartedTaskPage'
+import { StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useAppSelector } from '../redux/hooks'
 
@@ -37,20 +38,20 @@ const Navigation: React.FC = () => {
                 iconName = 'home' 
                 break 
               case 'Tasks':
-                iconName = 'clipboard-text-outline' 
+                iconName = 'notebook' 
                 break 
               case 'Journal':
-                iconName = 'folder-outline' 
+                iconName = 'folder' 
                 break 
               case 'More':
-                iconName = 'dots-horizontal' 
+                iconName = 'options' 
                 break 
               default:
                 iconName = '' 
             }
-            return <Icon name={iconName} color={color} size={size} /> 
+            return <Icon name={iconName} color={color} size={20} /> 
           },
-          tabBarActiveTintColor: '#006A70',
+          tabBarActiveTintColor: '#0D9276',
           tabBarInactiveTintColor: 'black',
           tabBarStyle: NavigationStyles.tabBar,
           headerShown: false,
@@ -70,3 +71,13 @@ const Navigation: React.FC = () => {
 } 
 
 export default Navigation 
+
+const styles = StyleSheet.create({
+  tabBar: {
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+    backgroundColor: '#FFFFFF',
+    height: 60,
+    paddingBottom: 5,
+  }
+})

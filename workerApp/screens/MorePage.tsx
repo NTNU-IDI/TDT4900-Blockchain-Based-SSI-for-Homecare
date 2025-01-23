@@ -1,28 +1,26 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import React from 'react'
+import SharedStyles from '../styles/SharedStyles'
 
 const MorePage: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Mer</Text>
+    <View style={SharedStyles.container}>
+      <Text style={SharedStyles.title}>Mer</Text>
       <TouchableOpacity
-        style={styles.optionButton}
-        onPress={() => Alert.alert('Går til Innstillinger')}
+        style={SharedStyles.patientCard}
       >
-        <Text style={styles.optionText}>Innstillinger</Text>
+        <Text style={styles.text}>Innstillinger</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.optionButton}
-        onPress={() => Alert.alert('Går til Hjelp')}
+        style={SharedStyles.patientCard}
       >
-        <Text style={styles.optionText}>Hjelp</Text>
+        <Text style={styles.text}>Hjelp</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.optionButton}
-        onPress={() => Alert.alert('Logger ut...')}
+        style={SharedStyles.patientCard}
       >
-        <Text style={styles.optionText}>Logg ut</Text>
+        <Text style={styles.text}>Logg ut</Text>
       </TouchableOpacity>
     </View>
   ) 
@@ -31,31 +29,9 @@ const MorePage: React.FC = () => {
 export default MorePage 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9F9F9',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  optionButton: {
-    backgroundColor: '#FFF',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 2,
-  },
-  optionText: {
+  text: {
     fontSize: 16,
-    color: '#006A70',
+    color: '#black',
     fontWeight: '500',
   },
 }) 

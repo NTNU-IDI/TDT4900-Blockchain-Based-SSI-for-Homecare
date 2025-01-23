@@ -14,6 +14,9 @@ import {
 } from '../redux/patientSlicer'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 
+import GreenButton from '../components/GreenButton'
+import SharedStyles from '../styles/SharedStyles'
+
 let visitTimer: NodeJS.Timeout | null = null 
   
   const StartedTasksPage: React.FC = () => {
@@ -22,9 +25,9 @@ let visitTimer: NodeJS.Timeout | null = null
   
     const [timeElapsed, setTimeElapsed] = useState(0)
     const [totalDuration, setTotalDuration] = useState(0)
-    const [notes, setNotes] = useState('') 
     const [modalVisible, setModalVisible] = useState(false) 
     const [selectedTaskDescription, setSelectedTaskDescription] = useState('') 
+    const [note, setNote] = useState('')
   
     const currentPatient = patients.find((p) => p.id === currentPatientId) 
     const isOvertime = timeElapsed > totalDuration 
@@ -85,15 +88,15 @@ let visitTimer: NodeJS.Timeout | null = null
   
     if (!currentPatient) {
       return (
-        <View style={styles.container}>
-          <Text style={styles.message}>Ingen pasient valgt.</Text>
+        <View style={SharedStyles.container}>
+          <Text style={SharedStyles.message}>Ingen pasient valgt.</Text>
         </View>
       ) 
     }
   
     return (
-      <View style={styles.container}>
-        <Text style={styles.patientText}>Oppgaver for: {currentPatient.name}</Text>
+      <View style={SharedStyles.container}>
+        <Text style={SharedStyles.title}>Oppgaver for: {currentPatient.name}</Text>
         <View style={styles.timerContainer}>
           <Text style={isOvertime ? styles.overtimeText : styles.timerText}>
             {isOvertime ? 'Overtid:' : 'Tid igjen:'} {formatTime(Math.abs(totalDuration - timeElapsed))}
@@ -116,7 +119,6 @@ let visitTimer: NodeJS.Timeout | null = null
               onPress={() =>
                 dispatch(
                   updateTaskStatus({
-                    patientId: currentPatient.id,
                     taskId: task.id,
                     status: task.status === 'Ferdig' ? 'Ikke startet' : 'Ferdig',
                   })
@@ -148,20 +150,13 @@ let visitTimer: NodeJS.Timeout | null = null
   </View>
 </Modal>
         <TextInput
-          style={styles.notesInput}
-          placeholder="Legg til notat her..."
-          multiline
-          value={notes}
-          onChangeText={setNotes}
-        />
-  
-        <TouchableOpacity
-          style={styles.doneButton}
-          onPress={finishTasks}
-        >
-          <Text style={styles.doneButtonText}> {'Ferdig'}
-          </Text>
-        </TouchableOpacity>
+                    style={SharedStyles.noteInput}
+                    placeholder="Legg til notat her..."
+                    multiline
+                    value={note}
+                    onChangeText={setNote}
+                  />
+        <GreenButton onPress={finishTasks} title="Ferdig" />
       </View>
     ) 
   } 
@@ -169,22 +164,18 @@ let visitTimer: NodeJS.Timeout | null = null
   export default StartedTasksPage 
   
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#F9F9F9',
-      padding: 20,
-    },
     patientText: {
       fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 20,
       color: '#333',
+      textAlign: 'center',
     },
     timerContainer: {
       marginBottom: 20,
       padding: 15,
       borderRadius: 10,
-      backgroundColor: '#D8EFF4',
+      backgroundColor: '#BBE2EC',
       alignItems: 'center',
     },
     timerText: {
@@ -206,7 +197,7 @@ let visitTimer: NodeJS.Timeout | null = null
     taskWrapper: {
       flex: 1,
       padding: 15,
-      backgroundColor: '#D8EFF4',
+      backgroundColor: '#BBE2EC',
       borderRadius: 10,
       marginRight: 10,
     },
@@ -216,7 +207,7 @@ let visitTimer: NodeJS.Timeout | null = null
     },
     taskStatus: {
       fontSize: 14,
-      color: '#666',
+      color: '#555',
     },
     checkbox: {
       width: 30,
@@ -228,33 +219,12 @@ let visitTimer: NodeJS.Timeout | null = null
       justifyContent: 'center',
     },
     checkboxCompleted: {
-      backgroundColor: '#4CAF50',
-      borderColor: '#4CAF50',
+      backgroundColor: '#0D9276',
+      borderColor: '#0D9276',
     },
     checkboxText: {
       fontSize: 16,
       color: '#FFF',
-      fontWeight: 'bold',
-    },
-    notesInput: {
-      height: 80,
-      borderColor: '#CCC',
-      borderWidth: 1,
-      borderRadius: 10,
-      padding: 10,
-      marginTop: 20,
-      backgroundColor: '#FFF',
-    },
-    doneButton: {
-      backgroundColor: '#FF5733',
-      padding: 15,
-      borderRadius: 10,
-      alignItems: 'center',
-      marginTop: 20,
-    },
-    doneButtonText: {
-      color: '#FFF',
-      fontSize: 16,
       fontWeight: 'bold',
     },
     modalBackground: {
@@ -276,7 +246,7 @@ let visitTimer: NodeJS.Timeout | null = null
       textAlign: 'center',
     },
     modalCloseButton: {
-      backgroundColor: '#FF5733',
+      backgroundColor: '#0D9276',
       padding: 10,
       borderRadius: 5,
     },

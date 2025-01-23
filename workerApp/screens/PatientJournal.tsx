@@ -1,25 +1,27 @@
+import React, { useState } from 'react'
 import {
-  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import React, { useState } from 'react';
+} from 'react-native'
+
+import BackButton from '../components/BackButton'
+import SharedStyles from '../styles/SharedStyles'
 
 const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({
   patient,
   onBack,
 }) => {
-  const [openSections, setOpenSections] = useState<string[]>([]);
+  const [openSections, setOpenSections] = useState<string[]>([])
 
   const toggleSection = (section: string) => {
     setOpenSections((prevSections) =>
       prevSections.includes(section)
         ? prevSections.filter((s) => s !== section)
         : [...prevSections, section]
-    );
-  };
+    )
+  }
 
   const renderSectionContent = (data: string[]) => (
     <View style={styles.sectionContent}>
@@ -29,14 +31,12 @@ const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({
         </Text>
       ))}
     </View>
-  );
+  )
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={onBack} style={styles.backButton}>
-        <Text style={styles.backButtonText}>Tilbake</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>Journal for {patient.name}</Text>
+    <View style={SharedStyles.container}>
+      <BackButton onPress={onBack} />
+      <Text style={SharedStyles.title}>Journal for {patient.name}</Text>
       <View style={styles.section}>
         <TouchableOpacity
           style={styles.sectionHeader}
@@ -77,31 +77,12 @@ const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({
           renderSectionContent(patient.journal.previousTreatments)}
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default PatientJournal;
+export default PatientJournal
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9F9F9',
-    padding: 20,
-  },
-  backButton: {
-    marginBottom: 20,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#006A70',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#333',
-  },
   section: {
     marginBottom: 10,
   },
@@ -111,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#D8EFF4',
+    backgroundColor: '#BBE2EC',
   },
   sectionHeaderText: {
     fontSize: 16,
@@ -131,7 +112,7 @@ const styles = StyleSheet.create({
   },
   sectionItem: {
     fontSize: 14,
-    color: '#666',
+    color: '#444',
     marginBottom: 5,
   },
-});
+})

@@ -1,28 +1,29 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import JournalRequest from '../components/JournalRequest';
-import PatientJournal from '../components/PatientJournal';
-import { useAppSelector } from '../redux/hooks';
+import JournalRequest from './JournalRequest'
+import PatientJournal from './PatientJournal'
+import SharedStyles from '../styles/SharedStyles'
+import { useAppSelector } from '../redux/hooks'
 
 const JournalsPage: React.FC = () => {
-  const { patients } = useAppSelector((state) => state.patient);
-  const [selectedJournalPatient, setSelectedJournalPatient] = useState<any>(null);
-  const [viewType, setViewType] = useState<'journal' | 'request' | null>(null);
+  const { patients } = useAppSelector((state) => state.patient)
+  const [selectedJournalPatient, setSelectedJournalPatient] = useState<any>(null)
+  const [viewType, setViewType] = useState<'journal' | 'request' | null>(null)
 
   const handlePatientPress = (patient: any) => {
-    setSelectedJournalPatient(patient);
+    setSelectedJournalPatient(patient)
     if (patient.access === 'Tilgang') {
-      setViewType('journal');
+      setViewType('journal')
     } else {
-      setViewType('request');
+      setViewType('request')
     }
-  };
+  }
 
   const onBack = () => {
-    setSelectedJournalPatient(null);
-    setViewType(null);
-  };
+    setSelectedJournalPatient(null)
+    setViewType(null)
+  }
 
   if (viewType === 'journal' && selectedJournalPatient) {
     return (
@@ -30,7 +31,7 @@ const JournalsPage: React.FC = () => {
         patient={selectedJournalPatient}
         onBack={onBack}
       />
-    );
+    )
   }
 
   if (viewType === 'request' && selectedJournalPatient) {
@@ -39,90 +40,59 @@ const JournalsPage: React.FC = () => {
         patient={selectedJournalPatient}
         onBack={onBack}
       />
-    );
+    )
   }
 
-  const renderPatient = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.patientCard} onPress={() => handlePatientPress(item)}>
-      <Text style={styles.patientName}>{item.name}</Text>
-      <Text
-        style={
-          item.access === 'Tilgang'
-            ? styles.accessGranted
-            : item.accessRequest
-            ? styles.accessRequested
-            : styles.accessDenied
-        }
-      >
-        {item.access === 'Tilgang'
-          ? 'Tilgang'
-          : item.accessRequest
-          ? 'Bedt om tilgang'
-          : 'Ikke tilgang'}
-      </Text>
-    </TouchableOpacity>
-  );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pasientjournaler</Text>
-      <FlatList
-        data={patients}
-        keyExtractor={(item) => item.id}
-        renderItem={renderPatient}
-        contentContainerStyle={styles.list}
-      />
-    </View>
-  );
-};
+    <View style={SharedStyles.container}>
+      <Text style={SharedStyles.title}>Pasientjournaler</Text>
+      {patients.map((patient) => {
+        const hasAccess = patient.access === 'Tilgang'
+        const accessText = hasAccess
+          ? 'Tilgang'
+          : patient.accessRequest
+          ? 'Bedt om tilgang'
+          : 'Ikke tilgang'
 
-export default JournalsPage;
+        const accessStyle = hasAccess
+          ? styles.accessGranted
+          : patient.accessRequest
+          ? styles.accessRequested
+          : styles.accessDenied
+
+        return (
+          <TouchableOpacity
+            key={patient.id}
+            style={SharedStyles.patientCard}
+            onPress={() => handlePatientPress(patient)}
+          >
+            <View >
+              <Text style={SharedStyles.patientName}>{patient.name}</Text>
+            </View>
+            <Text style={accessStyle}>{accessText}</Text>
+          </TouchableOpacity>
+        )
+      })}
+    </View>
+  )
+}
+export default JournalsPage
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9F9F9',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#333',
-  },
-  list: {
-    flexGrow: 1,
-  },
-  patientCard: {
-    backgroundColor: '#D8EFF4',
-    borderRadius: 10,
-    marginBottom: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-  },
-  patientName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
   accessGranted: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#006A70', 
+    color: '#0D9276', 
   },
   accessDenied: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#FF5733', 
+    color: '#D44F3A', 
   },
   accessRequested: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#FFA500',
-  },
+    color: '#D98A00',
+  }
 })
-

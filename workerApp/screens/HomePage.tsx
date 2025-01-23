@@ -2,8 +2,9 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 
 import React from 'react'
+import SharedStyles from '../styles/SharedStyles'
+import { StyleSheet } from 'react-native'
 import { setCurrentPatient } from '../redux/patientSlicer'
-import styles from '../styles/HomeStyles'
 
 const HomePage: React.FC = () => {
   const currentDate = new Date().toLocaleDateString('no-NO', {
@@ -16,8 +17,8 @@ const HomePage: React.FC = () => {
   const dispatch = useAppDispatch() 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>I dag</Text>
+    <View style={SharedStyles.container}>
+      <Text style={SharedStyles.title}>I dag</Text>
       {patients.map((patient) => {
         const isCurrentPatient = currentPatientId === patient.id 
   
@@ -25,7 +26,7 @@ const HomePage: React.FC = () => {
           <TouchableOpacity
             key={patient.id}
             style={[
-              styles.patientCard,
+              SharedStyles.patientCard,
               isCurrentPatient && styles.currentPatientCard,
             ]}
             onPress={() => dispatch(setCurrentPatient(patient.id))}
@@ -33,7 +34,7 @@ const HomePage: React.FC = () => {
             <View>
               <Text
                 style={[
-                  styles.patientName,
+                  SharedStyles.patientName,
                   isCurrentPatient && styles.currentPatientName,
                 ]}
               >
@@ -74,3 +75,41 @@ const HomePage: React.FC = () => {
 
 }
 export default HomePage 
+
+const styles = StyleSheet.create({
+  currentPatientCard: {
+    backgroundColor: '#0D9276',
+    borderWidth: 2,
+    borderColor: '#00B3B3',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  currentPatientName: {
+    color: '#FFFFFF',
+  },
+  patientInfo: {
+    fontSize: 14,
+    color: '#444',
+  },
+  currentPatientInfo: {
+    color: '#E0FFFF',
+  },
+  patientKey: {
+    fontSize: 14,
+    color: '#555',
+  },
+  currentPatientKey: {
+    color: '#E0FFFF',
+  },
+  patientStatus: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  currentPatientStatus: {
+    color: '#FFFFFF',
+  },
+})

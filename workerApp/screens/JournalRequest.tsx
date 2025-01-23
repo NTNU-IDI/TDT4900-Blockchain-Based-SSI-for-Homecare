@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 
+import BackButton from '../components/BackButton'
+import GreenButton from '../components/GreenButton'
+import SharedStyles from '../styles/SharedStyles'
 import { updateAccessRequest } from '../redux/patientSlicer'
 import { useAppDispatch, } from '../redux/hooks'
 
@@ -16,11 +19,9 @@ const JournalRequest: React.FC<{ patient: any ; onBack: () => void }> = ({ patie
   } 
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={onBack} style={styles.backButton}>
-        <Text style={styles.backButtonText}>Tilbake</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>Be om tilgang til journal</Text>
+    <View style={SharedStyles.container}>
+      <BackButton onPress={onBack} />
+      <Text style={SharedStyles.title}>Be om tilgang til journal</Text>
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Navn: </Text>
@@ -38,17 +39,14 @@ const JournalRequest: React.FC<{ patient: any ; onBack: () => void }> = ({ patie
 
       {!requestSent ? (
         <>
-          <Text style={styles.noteLabel}>Notat:</Text>
           <TextInput
-            style={styles.noteInput}
+            style={SharedStyles.noteInput}
             placeholder="Legg til notat her..."
             multiline
             value={note}
             onChangeText={setNote}
           />
-          <TouchableOpacity style={styles.requestButton} onPress={handleRequestAccess}>
-            <Text style={styles.requestButtonText}>Send forespørsel</Text>
-          </TouchableOpacity>
+          <GreenButton onPress={handleRequestAccess} title="Send forespørsel" />
         </>
       ) : (
         <View style={styles.requestSentContainer}>
@@ -62,25 +60,6 @@ const JournalRequest: React.FC<{ patient: any ; onBack: () => void }> = ({ patie
 export default JournalRequest 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9F9F9',
-    padding: 20,
-  },
-  backButton: {
-    marginBottom: 20,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#006A70',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#333',
-  },
   infoContainer: {
     marginBottom: 20,
   },
@@ -92,34 +71,8 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
   },
-  noteLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
-  },
-  noteInput: {
-    height: 100,
-    borderColor: '#CCC',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 20,
-    backgroundColor: '#FFF',
-  },
-  requestButton: {
-    backgroundColor: '#006A70',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  requestButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   requestSentContainer: {
-    backgroundColor: '#D8EFF4',
+    backgroundColor: '#BBE2EC',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

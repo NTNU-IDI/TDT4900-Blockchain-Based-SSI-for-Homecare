@@ -43,8 +43,8 @@ const initialState: PatientState = {
         nøkkelnummer: '123',
         status: 'Ikke startet',
         tasks: [
-          { id: 1, name: 'Sjekk blodtrykk', description: 'Mål blodtrykket før frokost.', duration: 1, status: 'Ikke startet' },
-          { id: 2, name: 'Hjelp med frokost', description: 'Assister pasienten med å lage frokost.', duration: 2, status: 'Ikke startet' },
+          { id: 1, name: 'Sjekk blodtrykk', description: 'Mål blodtrykket før frokost.', duration: 5, status: 'Ikke startet' },
+          { id: 2, name: 'Hjelp med frokost', description: 'Assister pasienten med å lage frokost.', duration: 10, status: 'Ikke startet' },
         ],
         access: 'Tilgang',
         accessRequest: false,
