@@ -17,12 +17,10 @@ const Card: React.FC<CardProps> = ({
   descriptionStyle,
 }) => {
   return (
-      <View style={[styles.container, containerStyle]}>
-        <Text style={[styles.title, titleStyle]}>{title}</Text>
-        <Text style={[styles.description, descriptionStyle]}>
-          {description}
-        </Text>
-      </View>
+    <View style={[styles.container, containerStyle]}>
+      <Text style={[styles.title, titleStyle]}>{title}</Text>
+      <Text style={[styles.description, descriptionStyle]}>{description}</Text>
+    </View>
   );
 };
 
@@ -40,7 +38,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: '"Times New Roman", Times, serif',
     fontWeight: "bold",
     marginBottom: 8,
     color: "#333",

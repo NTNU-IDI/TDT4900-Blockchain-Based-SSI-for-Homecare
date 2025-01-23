@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1,
     fontSize: 24,
-    fontFamily: '"Times New Roman", Times, serif',
+    // fontFamily: '"Times New Roman", Times, serif',
     color: "#000",
     textAlign: "center",
     top: 50,

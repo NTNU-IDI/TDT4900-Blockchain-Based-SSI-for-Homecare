@@ -22,11 +22,16 @@ const Tilganger = () => {
           description="Her ser du hvem som har tilgang til din journal"
         />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handlePress('Foresporsel')}
+        >
         <Card
           title="Forespørsler om innsyn"
           description="Her finner du forespørsler om tilgang til din journal"
         />
+        </TouchableOpacity>
       </View>
+      
     </View>
   );
 };
