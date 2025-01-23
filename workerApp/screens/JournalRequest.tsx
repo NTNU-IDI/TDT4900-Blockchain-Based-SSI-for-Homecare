@@ -1,22 +1,25 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-import BackButton from '../components/BackButton'
-import GreenButton from '../components/GreenButton'
-import SharedStyles from '../styles/SharedStyles'
-import { updateAccessRequest } from '../redux/patientSlicer'
-import { useAppDispatch, } from '../redux/hooks'
+import BackButton from '../components/BackButton';
+import GreenButton from '../components/GreenButton';
+import SharedStyles from '../styles/SharedStyles';
+import { updateAccessRequest } from '../redux/patientSlicer';
+import { useAppDispatch } from '../redux/hooks';
 
-const JournalRequest: React.FC<{ patient: any ; onBack: () => void }> = ({ patient, onBack }) => {
-  const dispatch = useAppDispatch() 
-  const [requestSent, setRequestSent] = useState(false) 
-  const [note, setNote] = useState('')
+const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
+  patient,
+  onBack
+}) => {
+  const dispatch = useAppDispatch();
+  const [requestSent, setRequestSent] = useState(false);
+  const [note, setNote] = useState('');
 
   const handleRequestAccess = () => {
-    dispatch(updateAccessRequest(patient.id)) 
-    setRequestSent(true) 
-    setTimeout(() => onBack(), 2000) 
-  } 
+    dispatch(updateAccessRequest(patient.id));
+    setRequestSent(true);
+    setTimeout(() => onBack(), 2000);
+  };
 
   return (
     <View style={SharedStyles.container}>
@@ -54,32 +57,32 @@ const JournalRequest: React.FC<{ patient: any ; onBack: () => void }> = ({ patie
         </View>
       )}
     </View>
-  ) 
-} 
+  );
+};
 
-export default JournalRequest 
+export default JournalRequest;
 
 const styles = StyleSheet.create({
   infoContainer: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   infoText: {
     fontSize: 16,
     color: '#333',
-    marginBottom: 10,
+    marginBottom: 10
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   requestSentContainer: {
     backgroundColor: '#BBE2EC',
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   requestSentText: {
     fontSize: 18,
     color: '#333',
-    fontWeight: 'bold',
-  },
-}) 
+    fontWeight: 'bold'
+  }
+});

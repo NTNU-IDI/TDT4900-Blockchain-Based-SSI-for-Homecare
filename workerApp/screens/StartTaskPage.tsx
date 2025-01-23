@@ -1,36 +1,41 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { StyleSheet, Text, View } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
-import GreenButton from '../components/GreenButton'
-import React from 'react'
-import SharedStyles from '../styles/SharedStyles'
-import { updatePatientStatus } from '../redux/patientSlicer'
+import GreenButton from '../components/GreenButton';
+import React from 'react';
+import SharedStyles from '../styles/SharedStyles';
+import { updatePatientStatus } from '../redux/patientSlicer';
 
 const StartTaskPage: React.FC = () => {
-  const { currentPatientId, patients } = useAppSelector((state) => state.patient) 
-  const dispatch = useAppDispatch() 
+  const { currentPatientId, patients } = useAppSelector(
+    (state) => state.patient
+  );
+  const dispatch = useAppDispatch();
 
-  const currentPatient = patients.find((p) => p.id === currentPatientId) 
+  const currentPatient = patients.find((p) => p.id === currentPatientId);
 
   if (!currentPatient) {
     return (
       <View style={styles.container}>
         <Text style={styles.noPatientText}>Ingen pasient valgt</Text>
       </View>
-    ) 
+    );
   }
 
-  const [startHour, startMinute] = currentPatient.time.split(':').map(Number)
-  const totalDuration = currentPatient.tasks.reduce((sum, task) => sum + task.duration, 0)
-  const endTime = new Date() 
-  
-  endTime.setHours(startHour, startMinute + totalDuration) 
+  const [startHour, startMinute] = currentPatient.time.split(':').map(Number);
+  const totalDuration = currentPatient.tasks.reduce(
+    (sum, task) => sum + task.duration,
+    0
+  );
+  const endTime = new Date();
 
-  const formattedEndTime = endTime.toTimeString().slice(0, 5)
+  endTime.setHours(startHour, startMinute + totalDuration);
+
+  const formattedEndTime = endTime.toTimeString().slice(0, 5);
 
   const handleStart = () => {
-    dispatch(updatePatientStatus({ status: 'Påbegynt' })) 
-  } 
+    dispatch(updatePatientStatus({ status: 'Påbegynt' }));
+  };
 
   return (
     <View style={styles.container}>
@@ -48,10 +53,10 @@ const StartTaskPage: React.FC = () => {
         </View>
       ) : null}
     </View>
-  ) 
-} 
+  );
+};
 
-export default StartTaskPage 
+export default StartTaskPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -59,22 +64,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9F9F9',
     padding: 20,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   noPatientText: {
     fontSize: 18,
     color: '#666',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   patientText: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333',
+    color: '#333'
   },
   patientTime: {
     fontSize: 16,
     color: '#666',
-    marginBottom: 20,
-  },
-}) 
+    marginBottom: 20
+  }
+});

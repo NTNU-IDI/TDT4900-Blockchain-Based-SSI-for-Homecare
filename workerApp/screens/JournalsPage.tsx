@@ -1,65 +1,55 @@
-import React, { useState } from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import JournalRequest from './JournalRequest'
-import PatientJournal from './PatientJournal'
-import SharedStyles from '../styles/SharedStyles'
-import { useAppSelector } from '../redux/hooks'
+import JournalRequest from './JournalRequest';
+import PatientJournal from './PatientJournal';
+import SharedStyles from '../styles/SharedStyles';
+import { useAppSelector } from '../redux/hooks';
 
 const JournalsPage: React.FC = () => {
-  const { patients } = useAppSelector((state) => state.patient)
-  const [selectedJournalPatient, setSelectedJournalPatient] = useState<any>(null)
-  const [viewType, setViewType] = useState<'journal' | 'request' | null>(null)
+  const { patients } = useAppSelector((state) => state.patient);
+  const [selectedJournalPatient, setSelectedJournalPatient] =
+    useState<any>(null);
+  const [viewType, setViewType] = useState<'journal' | 'request' | null>(null);
 
   const handlePatientPress = (patient: any) => {
-    setSelectedJournalPatient(patient)
+    setSelectedJournalPatient(patient);
     if (patient.access === 'Tilgang') {
-      setViewType('journal')
+      setViewType('journal');
     } else {
-      setViewType('request')
+      setViewType('request');
     }
-  }
+  };
 
   const onBack = () => {
-    setSelectedJournalPatient(null)
-    setViewType(null)
-  }
+    setSelectedJournalPatient(null);
+    setViewType(null);
+  };
 
   if (viewType === 'journal' && selectedJournalPatient) {
-    return (
-      <PatientJournal
-        patient={selectedJournalPatient}
-        onBack={onBack}
-      />
-    )
+    return <PatientJournal patient={selectedJournalPatient} onBack={onBack} />;
   }
 
   if (viewType === 'request' && selectedJournalPatient) {
-    return (
-      <JournalRequest
-        patient={selectedJournalPatient}
-        onBack={onBack}
-      />
-    )
+    return <JournalRequest patient={selectedJournalPatient} onBack={onBack} />;
   }
-
 
   return (
     <View style={SharedStyles.container}>
       <Text style={SharedStyles.title}>Pasientjournaler</Text>
       {patients.map((patient) => {
-        const hasAccess = patient.access === 'Tilgang'
+        const hasAccess = patient.access === 'Tilgang';
         const accessText = hasAccess
           ? 'Tilgang'
           : patient.accessRequest
-          ? 'Bedt om tilgang'
-          : 'Ikke tilgang'
+            ? 'Bedt om tilgang'
+            : 'Ikke tilgang';
 
         const accessStyle = hasAccess
           ? styles.accessGranted
           : patient.accessRequest
-          ? styles.accessRequested
-          : styles.accessDenied
+            ? styles.accessRequested
+            : styles.accessDenied;
 
         return (
           <TouchableOpacity
@@ -67,32 +57,32 @@ const JournalsPage: React.FC = () => {
             style={SharedStyles.patientCard}
             onPress={() => handlePatientPress(patient)}
           >
-            <View >
+            <View>
               <Text style={SharedStyles.patientName}>{patient.name}</Text>
             </View>
             <Text style={accessStyle}>{accessText}</Text>
           </TouchableOpacity>
-        )
+        );
       })}
     </View>
-  )
-}
-export default JournalsPage
+  );
+};
+export default JournalsPage;
 
 const styles = StyleSheet.create({
   accessGranted: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#0D9276', 
+    color: '#0D9276'
   },
   accessDenied: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#D44F3A', 
+    color: '#D44F3A'
   },
   accessRequested: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#D98A00',
+    color: '#D98A00'
   }
-})
+});

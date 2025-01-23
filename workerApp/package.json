@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "format": "npx prettier --write **/*.{js,jsx,ts,tsx,json} && npx prettier --write *.{js,jsx,ts,tsx,json}"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
@@ -19,6 +20,7 @@
     "expo-status-bar": "~2.0.1",
     "js-yaml": "^4.1.0",
     "metro-minify-terser": "^0.81.0",
+    "prettier": "^3.4.2",
     "react": "18.3.1",
     "react-native": "0.76.6",
     "react-native-gesture-handler": "~2.20.2",

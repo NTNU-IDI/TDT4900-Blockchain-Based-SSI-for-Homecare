@@ -1,11 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
-import patientReducer from './patientSlicer'
+import { configureStore } from '@reduxjs/toolkit';
+import patientReducer from './patientSlicer';
 
 export const store = configureStore({
   reducer: {
-    patient: patientReducer,
-  },
-}) 
+    patient: patientReducer
+  }
+});
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

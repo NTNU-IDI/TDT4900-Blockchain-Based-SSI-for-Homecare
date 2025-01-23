@@ -1,27 +1,22 @@
-import React, { useState } from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import BackButton from '../components/BackButton'
-import SharedStyles from '../styles/SharedStyles'
+import BackButton from '../components/BackButton';
+import SharedStyles from '../styles/SharedStyles';
 
 const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({
   patient,
-  onBack,
+  onBack
 }) => {
-  const [openSections, setOpenSections] = useState<string[]>([])
+  const [openSections, setOpenSections] = useState<string[]>([]);
 
   const toggleSection = (section: string) => {
     setOpenSections((prevSections) =>
       prevSections.includes(section)
         ? prevSections.filter((s) => s !== section)
         : [...prevSections, section]
-    )
-  }
+    );
+  };
 
   const renderSectionContent = (data: string[]) => (
     <View style={styles.sectionContent}>
@@ -31,7 +26,7 @@ const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({
         </Text>
       ))}
     </View>
-  )
+  );
 
   return (
     <View style={SharedStyles.container}>
@@ -77,14 +72,14 @@ const PatientJournal: React.FC<{ patient: any; onBack: () => void }> = ({
           renderSectionContent(patient.journal.previousTreatments)}
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default PatientJournal
+export default PatientJournal;
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 10,
+    marginBottom: 10
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -92,27 +87,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#BBE2EC',
+    backgroundColor: '#BBE2EC'
   },
   sectionHeaderText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333'
   },
   sectionToggle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333'
   },
   sectionContent: {
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: '#FFF',
-    borderRadius: 10,
+    borderRadius: 10
   },
   sectionItem: {
     fontSize: 14,
     color: '#444',
-    marginBottom: 5,
-  },
-})
+    marginBottom: 5
+  }
+});

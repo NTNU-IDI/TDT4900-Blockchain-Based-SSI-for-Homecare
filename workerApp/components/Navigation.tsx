@@ -1,76 +1,89 @@
-import HomePage from '../screens/HomePage'
-import Icon from 'react-native-vector-icons/SimpleLineIcons'
-import JournalsPage from '../screens/JournalsPage'
-import MorePage from '../screens/MorePage'
-import { NavigationContainer } from '@react-navigation/native'
-import NavigationStyles from '../styles/NavigationStyles'
-import React from 'react'
-import StartTaskPage from '../screens/StartTaskPage'
-import StartedTaskPage from '../screens/StartedTaskPage'
-import { StyleSheet } from 'react-native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { useAppSelector } from '../redux/hooks'
+import HomePage from '../screens/HomePage';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import JournalsPage from '../screens/JournalsPage';
+import MorePage from '../screens/MorePage';
+import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import StartTaskPage from '../screens/StartTaskPage';
+import StartedTaskPage from '../screens/StartedTaskPage';
+import { StyleSheet } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useAppSelector } from '../redux/hooks';
 
-const Tab = createBottomTabNavigator() 
+const Tab = createBottomTabNavigator();
 
 const Navigation: React.FC = () => {
-  const { currentPatientId, patients } = useAppSelector((state) => state.patient) 
+  const { currentPatientId, patients } = useAppSelector(
+    (state) => state.patient
+  );
 
   // Determine task screen based on current patient status
   const getTaskScreen = () => {
-    const currentPatient = patients.find((p) => p.id === currentPatientId) 
+    const currentPatient = patients.find((p) => p.id === currentPatientId);
     if (currentPatient?.status === 'Påbegynt') {
-      return StartedTaskPage 
+      return StartedTaskPage;
     } else {
-      return StartTaskPage 
+      return StartTaskPage;
     }
-  } 
+  };
 
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
-            let iconName: string 
+            let iconName: string;
 
             switch (route.name) {
               case 'Home':
-                iconName = 'home' 
-                break 
+                iconName = 'home';
+                break;
               case 'Tasks':
-                iconName = 'notebook' 
-                break 
+                iconName = 'notebook';
+                break;
               case 'Journal':
-                iconName = 'folder' 
-                break 
+                iconName = 'folder';
+                break;
               case 'More':
-                iconName = 'options' 
-                break 
+                iconName = 'options';
+                break;
               default:
-                iconName = '' 
+                iconName = '';
             }
-            return <Icon name={iconName} color={color} size={20} /> 
+            return <Icon name={iconName} color={color} size={20} />;
           },
           tabBarActiveTintColor: '#0D9276',
           tabBarInactiveTintColor: 'black',
-          tabBarStyle: NavigationStyles.tabBar,
-          headerShown: false,
+          tabBarStyle: styles.tabBar,
+          headerShown: false
         })}
       >
-        <Tab.Screen name="Home" component={HomePage} options={{ title: 'Hjem'}} />
+        <Tab.Screen
+          name="Home"
+          component={HomePage}
+          options={{ title: 'Hjem' }}
+        />
         <Tab.Screen
           name="Tasks"
           component={getTaskScreen()}
           options={{ title: 'Gjøremål' }}
         />
-        <Tab.Screen name="Journal" component={JournalsPage} options={{ title: 'Journaler' }} />
-        <Tab.Screen name="More" component={MorePage} options={{ title: 'Mer' }} />
+        <Tab.Screen
+          name="Journal"
+          component={JournalsPage}
+          options={{ title: 'Journaler' }}
+        />
+        <Tab.Screen
+          name="More"
+          component={MorePage}
+          options={{ title: 'Mer' }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
-  ) 
-} 
+  );
+};
 
-export default Navigation 
+export default Navigation;
 
 const styles = StyleSheet.create({
   tabBar: {
@@ -78,6 +91,6 @@ const styles = StyleSheet.create({
     borderTopColor: '#E0E0E0',
     backgroundColor: '#FFFFFF',
     height: 60,
-    paddingBottom: 5,
+    paddingBottom: 5
   }
-})
+});
