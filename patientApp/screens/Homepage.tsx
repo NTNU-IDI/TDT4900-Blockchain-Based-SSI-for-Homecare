@@ -5,7 +5,6 @@ import Navigation from "../components/Navigation";
 const Homepage = () => {
   return (
     <View style={styles.screen}>
-      {/* Overlapping Half-Circles */}
 
       <View style={styles.circleContainer}>
         <View style={[styles.firstCircle]} />
@@ -22,9 +21,9 @@ const Homepage = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1, // Takes up the full screen
-    backgroundColor: "#f0f0f0", // Light background color for better contrast
-    alignItems: "center", // Center horizontally
+    flex: 1,
+    alignItems: "center",
+    
   },
   circleContainer: {
     width: "100%",
@@ -32,47 +31,48 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    zIndex: 0,
   },
 
   firstCircle: {
-    width: 290,
-    height: 290,
+    width: 320,
+    height: 320,
     borderRadius: 180,
     backgroundColor: "#FFF6E9",
-    zIndex: 0, // Ensures this circle is on top
-    left: "30%", // Adjust position horizontally
-    top: 0,
+    zIndex: 0,
+    left: "30%",
+    top: 60,
   },
   secondCircle: {
-    width: 300,
-    height: 300,
+    width: 320,
+    height: 320,
     borderRadius: 180,
     backgroundColor: "#BBE2EC",
     zIndex: 1,
-    right: "25%", // Adjust position horizontally
-    top: -190, // Slightly lower to create the overlap effect
+    right: "25%",
+    top: -190,
   },
   circleText: {
-    position: "absolute", // Positioning the text absolutely within the container
-    zIndex: 1, // Ensure the text is above the circles
-    fontSize: 24, // Adjust font size
-    fontFamily: '"Times New Roman", Times, serif',
-    color: "#000", // Black text color
+    position: "absolute",
+    zIndex: 1,
+    fontSize: 24,
+    color: "#000",
     textAlign: "center",
-    top: 50, // Move the text down
-    left: 30, // Move the text to the left
+    top: 50,
+    left: 30,
+    marginTop: 40,
   },
 
   italicText: {
-    position: "absolute", // Position absolutely below the first text
-    zIndex: 1, // Ensure the text is above the circles
-    fontSize: 16, // Slightly smaller font size
-    fontStyle: "italic", // Make text italic
-    color: "#555", // Darker gray text color
+    position: "absolute",
+    zIndex: 1,
+    fontSize: 16,
+    fontStyle: "italic",
+    color: "#555",
     textAlign: "center",
-    top: 80, // Positioned below the first text
-    left: 30, // Align with the first text horizontally
-    marginTop: 10,
+    top: 80,
+    left: 30,
+    marginTop: 50,
   },
 });
 
