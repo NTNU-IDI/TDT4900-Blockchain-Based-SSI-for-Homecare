@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
 interface CardProps {
   title: string;
   description: string;
+  workPlace?: string;
   containerStyle?: ViewStyle;
   titleStyle?: TextStyle;
   descriptionStyle?: TextStyle;
@@ -12,6 +13,7 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({
   title,
   description,
+  workPlace,
   containerStyle,
   titleStyle,
   descriptionStyle,
@@ -20,6 +22,9 @@ const Card: React.FC<CardProps> = ({
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.title, titleStyle]}>{title}</Text>
       <Text style={[styles.description, descriptionStyle]}>{description}</Text>
+      <Text style={[styles.description, descriptionStyle]}>{workPlace}</Text>
+
+
     </View>
   );
 };

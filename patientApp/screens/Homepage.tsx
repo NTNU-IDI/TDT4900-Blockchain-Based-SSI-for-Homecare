@@ -23,7 +23,6 @@ const Homepage = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
     alignItems: "center",
   },
   circleContainer: {

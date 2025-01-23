@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Header from "../components/Header";
+import Card from "../components/Card";
 
 const Innsyn = () => {
   const navigation = useNavigation();
@@ -19,29 +20,22 @@ const Innsyn = () => {
   return (
     <View style={styles.screen}>
       <Header header="Innsyn" />
-      <TouchableOpacity onPress={() => handlePress("Endringslogg")}>
-        <View style={styles.table}>
-          {tableData.map((row, rowIndex) => (
-            <View
-              key={rowIndex}
-              style={[styles.tableRow, rowIndex === 0 && styles.headerRow]}
-            >
-              {row.map((cell, cellIndex) => (
-                <View key={cellIndex} style={styles.tableCell}>
-                  <Text
-                    style={[
-                      styles.cellText,
-                      rowIndex === 0 && styles.headerText,
-                    ]}
-                  >
-                    {cell}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          ))}
-        </View>
-      </TouchableOpacity>
+      <View style={styles.cardContainer}>
+        <TouchableOpacity onPress={() => handlePress("Endringslogg")}>
+          <Card
+            title="Eva Pedersen"
+            description="Fastlege"
+            workPlace="Moholt legesenter"
+            containerStyle={{ backgroundColor: "#BBE2EC" }}
+          ></Card>
+        </TouchableOpacity>
+        <Card
+            title="Isabelle Olsen"
+            description="Sykepleier"
+            workPlace="Byåsen hjemmetjeneste"
+            containerStyle={{ backgroundColor: "#BBE2EC" }}
+          ></Card>
+      </View>
     </View>
   );
 };
@@ -51,33 +45,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFF",
     alignItems: "center",
   },
-  table: {
+  cardContainer: {
     marginTop: 20,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  tableRow: {
-    flexDirection: "row",
-  },
-  headerRow: {
-    backgroundColor: "#BBE2EC",
-  },
-  tableCell: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 140,
-    height: 50,
-  },
-  cellText: {
-    fontSize: 14,
-    color: "#333",
-  },
-  headerText: {
-    fontSize: 14,
-    fontWeight: "bold",
+    width: "90%",
   },
 });
 

@@ -30,28 +30,16 @@ const Header: React.FC<HeaderProps> = ({ header, headerStyle, iconStyle }) => {
             name="arrow-left"
             size={30}
             color="#0D9276"
-            style={styles.icon}
+            style={styles.backIcon}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handlePress("Home")}>
-          <Icon name="home" size={30} color="#0D9276" style={styles.icon} />
+          <Icon name="home" size={33} color="#0D9276" style={styles.homeIcon} />
         </TouchableOpacity>
       </View>
-      {/* {["arrow-left", "home"].map((iconName, index) => (
-          <Icon
-            key={index}
-            name={iconName}
-            size={30}
-            color="#0D9276"
-            style={styles.icon}
-          />
-        ))}
-      </View> */}
-
-      {/* Header Text */}
+    
       <Text style={[styles.header, headerStyle]}>{header}</Text>
 
-      {/* Green Line */}
       <View style={styles.line} />
     </View>
   );
@@ -65,7 +53,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   header: {
-    // fontFamily: '"Times New Roman", Times, serif',
     fontSize: 40,
     color: "#333", 
     marginTop: 50, 
@@ -73,20 +60,27 @@ const styles = StyleSheet.create({
   },
   line: {
     width: "100%", 
-    height: 5,
+    height: 3,
     backgroundColor: "#0D9276",
     marginTop: 10,
   },
   iconContainer: {
+    width: "100%", 
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
     position: "absolute", 
     top: 0, 
-    left: 5, 
-    flexDirection: "row", 
-    alignItems: "center", 
+    paddingHorizontal: 20, 
   },
-  icon: {
-    margin: 15, 
+  backIcon: {
+    marginRight: 10,
   },
+  homeIcon: {
+    marginLeft: 10,
+  },
+  
+  
 });
 
 export default Header;
