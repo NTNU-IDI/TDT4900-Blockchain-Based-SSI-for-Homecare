@@ -6,12 +6,14 @@
 npx hardhat node
 npx hardhat run scripts/deploy.ts --network localhost
 ```
-Update .env with the contract address
+Update .env in all modules with the contract address
 
 ```shell
 npx hardhat run scripts/updateHealthRecord.ts --network localhost
 npx hardhat run scripts/getHealthRecord.ts --network localhost
 ```
+
+Update .env in all modules with the user (owner) address
 
 ### To get a list of updates done to the health record:
 ```shell
