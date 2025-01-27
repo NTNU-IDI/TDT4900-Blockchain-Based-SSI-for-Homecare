@@ -23,19 +23,18 @@ contract HealthInfo {
     event AccessRevoked(address indexed owner, address indexed permissionedUser);
 
     /**
-     * @dev Updates the health record for the sender with a single IPFS hash.
+     * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
      * @param _ipfsHash The IPFS hash of the complete health record JSON.
      */
     function addOrUpdateHealthRecord(string memory _ipfsHash) public {
         HealthRecord storage record = healthRecords[msg.sender];
         
         if (record.owner == address(0)) {
-            record.owner= msg.sender; // Set the creator if it's a new record
+            record.owner= msg.sender;
         }
 
         record.ipfsHash = _ipfsHash;
         
-        // Log the update
         record.updates.push(Update({
             updater: msg.sender,
             timestamp: block.timestamp
@@ -52,7 +51,7 @@ contract HealthInfo {
         require(!accessPermissions[msg.sender][permissionedUser], "Access already granted");
 
         accessPermissions[msg.sender][permissionedUser] = true;
-        accessList[msg.sender].push(permissionedUser); // Add to grantees list
+        accessList[msg.sender].push(permissionedUser);
         emit AccessGranted(msg.sender, permissionedUser);
     }
 
