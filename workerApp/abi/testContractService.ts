@@ -29,17 +29,17 @@ async function main() {
             );
         }
 
-        // 1. Get Health Record
-        console.log("Fetching health record hash...");
+        // 1. Get own Health Record
+        console.log("Fetching own health record hash...");
         const fetchedIpfsHash = await getHealthRecordHash(ownerAddress);
         console.log(`Fetched IPFS Hash: ${fetchedIpfsHash}`);
         console.log("Fetching data from IPFS...");
         const data = await fetchIPFSData(fetchedIpfsHash);
         console.log("Data:", data);
 
-        // 2. Add or Update Health Record
-        console.log("Updating health record...");
-        await updateHealthRecord(fetchedIpfsHash, otherPrivateKey);
+        // 2. Update Health Record without access (should fail)
+        //console.log("Updating health record...");
+        //await updateHealthRecord(fetchedIpfsHash, otherPrivateKey);
 
         // 3. Get Access List
         console.log("Fetching access list...");
@@ -86,6 +86,10 @@ async function main() {
         console.log("Fetching access list...");
         const accessList3 = await getAccessList();
         console.log("Access List:", accessList3);
+
+        // 2. Update Health Record with access
+        console.log("Updating health record...");
+        await updateHealthRecord(ownerAddress, otherPrivateKey);
 
         // 5. Revoke Access
         console.log(`Revoking access from ${otherAddress}...`);

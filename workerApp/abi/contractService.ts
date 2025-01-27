@@ -28,11 +28,10 @@ const contract = new ethers.Contract(CONTRACT_ADDRESS, HealthInfoABI.abi, provid
  * @param ipfsHash - The IPFS hash of the health record.
  * @param privateKey - The private key of the sender.
  */
-export async function updateHealthRecord(ipfsHash: string, privateKey: string): Promise<void> {
+export async function updateHealthRecord(owner: string, privateKey: string): Promise<void> {
     const signer = new ethers.Wallet(privateKey, provider);
-    //const contractWithSigner = contract.connect(signer);
 
-    const tx = await (contract!.connect(signer!) as Contract).addOrUpdateHealthRecord(ipfsHash);
+    const tx = await (contract!.connect(signer!) as Contract).updateHealthRecord(owner);
     await tx.wait();
     console.log("Health record updated successfully.");
 }
@@ -96,7 +95,7 @@ export async function requestAccess(recordOwner: string, privateKey: string): Pr
 
     const tx = await (contract!.connect(signer!) as Contract).requestAccess(recordOwner);
     await tx.wait();
-    console.log(`Access requested from ${recordOwner}`);
+    console.log(`Access requested from ${signer.address} to ${recordOwner}`);
 }
 
 /**
@@ -142,7 +141,7 @@ export async function getAccessRequests(): Promise<string[]> {
  * @param recordOwner - The address of the record owner.
  * @returns - An object containing arrays of addresses and timestamps.
  */
-export async function getUpdates(): Promise<{ addresses: string[]; timestamps: number[] }> {
-    const [addresses, timestamps] = await contract.getUpdates();
-    return { addresses, timestamps };
+export async function getUpdates(): Promise<{ addresses: string[]; timestamps: number[] ; descriptions: string[] }> {
+    const [addresses, timestamps, descriptions] = await contract.getUpdates();
+    return { addresses, timestamps ,descriptions};
 }

@@ -6,10 +6,10 @@ contract HealthInfo {
     struct Update {
         address updater;
         uint256 timestamp;
+        string description;
     }
     struct HealthRecord {
         string ipfsHash; // Single IPFS hash storing all patient data as a JSON object
-        address owner;
         Update[] updates;
     }
 
@@ -29,20 +29,35 @@ contract HealthInfo {
      * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
      * @param _ipfsHash The IPFS hash of the complete health record JSON.
      */
-    function addOrUpdateHealthRecord(string memory _ipfsHash) public {
-        HealthRecord storage record = healthRecords[msg.sender];
-        
-        if (record.owner == address(0)) {
-            record.owner= msg.sender;
-        }
+    function setOwner(string memory _ipfsHash, address owner) public {
+        HealthRecord storage record = healthRecords[owner];
 
         record.ipfsHash = _ipfsHash;
+        record.updates.push(Update({
+            updater: msg.sender,
+            timestamp: block.timestamp,
+            description: "Initial record creation"
+        }));
+        
+
+    }
+
+    /**
+     * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
+     * 
+     */
+    function updateHealthRecord(address owner) public {
+        require(msg.sender == owner || accessPermissions[owner][msg.sender],
+        "Not authorized to update this record"
+    );
+        HealthRecord storage record = healthRecords[owner];
         
         record.updates.push(Update({
             updater: msg.sender,
-            timestamp: block.timestamp
+            timestamp: block.timestamp,
+            description: "Record updated"
         }));
-        emit HealthRecordUpdated(msg.sender, _ipfsHash);
+        emit HealthRecordUpdated(owner, " ");
     }
 
     /**
@@ -141,18 +156,20 @@ contract HealthInfo {
         return healthRecords[recordOwner].ipfsHash;
     }
 
-    function getUpdates() public view returns (address[] memory, uint256[] memory) {
+    function getUpdates() public view returns (address[] memory, uint256[] memory, string[] memory) {
         HealthRecord storage record = healthRecords[msg.sender];
         uint256 length = record.updates.length;
         address[] memory updaters = new address[](length);
         uint256[] memory timestamps = new uint256[](length);
+        string[] memory description = new string[](length);
 
         for (uint256 i = 0; i < length; i++) {
             updaters[i] = record.updates[i].updater;
             timestamps[i] = record.updates[i].timestamp;
+            description[i] = record.updates[i].description;
         }
 
-        return (updaters, timestamps);
+        return (updaters, timestamps, description);
 }
     function getAccessList() public view returns (address[] memory) {
         return accessList[msg.sender];
