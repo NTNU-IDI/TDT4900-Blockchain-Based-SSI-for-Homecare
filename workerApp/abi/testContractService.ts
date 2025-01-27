@@ -1,8 +1,11 @@
 import {
+    denyAccessRequest,
     getAccessList,
+    getAccessRequests,
     getHealthRecordHash,
     getUpdates,
     grantAccess,
+    requestAccess,
     revokeAccess,
     updateHealthRecord,
 } from "./contractService";
@@ -16,15 +19,16 @@ dotenv.config();
 async function main() {
     try {
         const ownerAddress = process.env.OWNER_ADDRESS;
-        const permissionedUser = process.env.PERMISSIONED_USER_ADDRESS;
-        const privateKey = process.env.PRIVATE_KEY;
+        const ownerPrivateKey = process.env.OWNER_PRIVATE_KEY;
+        const otherPrivateKey = process.env.OTHER_PRIVATE_KEY;
+        const otherAddress = process.env.OTHER_ADDRESS
 
-        if (!ownerAddress || !permissionedUser || !privateKey) {
+        if (!ownerAddress  || !ownerPrivateKey || !otherPrivateKey || !otherAddress) {
             throw new Error(
-                "Required environment variables are missing: OWNER_ADDRESS, PERMISSIONED_USER_ADDRESS, PRIVATE_KEY"
+                "Required environment variables are missing: OWNER_ADDRESS, PERMISSIONED_USER_ADDRESS, OWNER_PRIVATE_KEY, OTHER_PRIVATE_KEY, OTHER_ADDRESS"
             );
         }
-        
+
         // 1. Get Health Record
         console.log("Fetching health record hash...");
         const fetchedIpfsHash = await getHealthRecordHash(ownerAddress);
@@ -34,35 +38,67 @@ async function main() {
         console.log("Data:", data);
 
         // 2. Add or Update Health Record
-        console.log("Adding or updating health record...");
-        await updateHealthRecord(fetchedIpfsHash, privateKey);
+        console.log("Updating health record...");
+        await updateHealthRecord(fetchedIpfsHash, otherPrivateKey);
 
         // 3. Get Access List
         console.log("Fetching access list...");
-        const accessList1 = await getAccessList(ownerAddress);
+        const accessList1 = await getAccessList();
         console.log("Access List:", accessList1);
 
-        // 4. Grant Access
-        console.log(`Granting access to ${permissionedUser}...`);
-        await grantAccess(permissionedUser, privateKey);
+        // 6. Request Access
+        console.log(`Requesting access to ${ownerAddress}...`);
+        await requestAccess(ownerAddress, otherPrivateKey);
+
+        // 6. Get requested access
+        console.log("Fetching access requests...");
+        const accessRequests1 = await getAccessRequests();
+        console.log("Access Requests:", accessRequests1);
+
+        // 7. Deny Access Request
+        console.log(`Denying access request from ${otherAddress}...`);
+        await denyAccessRequest(otherAddress, ownerPrivateKey);
+
+        // 6. Get requested access
+        console.log("Fetching access requests...");
+        const accessRequests2 = await getAccessRequests();
+        console.log("Access Requests:", accessRequests2);
 
         // 3. Get Access List
         console.log("Fetching access list...");
-        const accessList2 = await getAccessList(ownerAddress);
+        const accessList2 = await getAccessList();
         console.log("Access List:", accessList2);
 
-        // 5. Revoke Access
-        console.log(`Revoking access from ${permissionedUser}...`);
-        await revokeAccess(permissionedUser, privateKey);
+        // 6. Request Access
+        console.log(`Requesting access to ${ownerAddress}...`);
+        await requestAccess(ownerAddress, otherPrivateKey);
+
+        // 4. Grant Access
+        console.log(`Granting access to ${otherAddress}...`);
+        await grantAccess(otherAddress, ownerPrivateKey);
+
+        // 6. Get requested access
+        console.log("Fetching access requests...");
+        const accessRequests3 = await getAccessRequests();
+        console.log("Access Requests:", accessRequests3);
 
         // 3. Get Access List
         console.log("Fetching access list...");
-        const accessList3 = await getAccessList(ownerAddress);
+        const accessList3 = await getAccessList();
         console.log("Access List:", accessList3);
+
+        // 5. Revoke Access
+        console.log(`Revoking access from ${otherAddress}...`);
+        await revokeAccess(otherAddress, ownerPrivateKey);
+
+        // 3. Get Access List
+        console.log("Fetching access list...");
+        const accessList4 = await getAccessList();
+        console.log("Access List:", accessList4);
 
         // 6. Get Updates
         console.log("Fetching updates...");
-        const updates = await getUpdates(ownerAddress);
+        const updates = await getUpdates();
         console.log("Updates:", updates);
 
     } catch (error) {

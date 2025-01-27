@@ -16,11 +16,14 @@ contract HealthInfo {
     mapping(address => HealthRecord) private healthRecords;
     mapping(address => mapping(address => bool)) private accessPermissions;
     mapping(address => address[]) private accessList;
+    mapping(address => address[]) private accessRequests;
 
 
     event HealthRecordUpdated(address indexed owner, string ipfsHash);
-    event AccessGranted(address indexed owner, address indexed permissionedUser);
     event AccessRevoked(address indexed owner, address indexed permissionedUser);
+    event AccessRequested(address indexed owner, address indexed requester);
+    event AccessRequestAccepted(address indexed owner, address indexed requester);
+    event AccessRequestRejected(address indexed owner, address indexed requester);
 
     /**
      * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
@@ -44,15 +47,57 @@ contract HealthInfo {
 
     /**
      * @dev Grants access to the sender's health record to a specified address.
-     * @param permissionedUser The address to grant access to.
+     * @param requester The address to grant access to.
      */
-    function grantAccess(address permissionedUser) public {
-        require(permissionedUser != address(0), "Invalid grantee address");
-        require(!accessPermissions[msg.sender][permissionedUser], "Access already granted");
+    function grantAccess(address requester) public {
+        require(requester != address(0), "Invalid grantee address");
+        require(!accessPermissions[msg.sender][requester], "Access already granted");
+        require(isAccessRequested(msg.sender, requester), "No access request found");
 
-        accessPermissions[msg.sender][permissionedUser] = true;
-        accessList[msg.sender].push(permissionedUser);
-        emit AccessGranted(msg.sender, permissionedUser);
+        accessPermissions[msg.sender][requester] = true;
+        accessList[msg.sender].push(requester);
+        for (uint256 i = 0; i < accessRequests[msg.sender].length; i++) {
+            if (accessRequests[msg.sender][i] == requester) {
+                accessRequests[msg.sender][i] = accessRequests[msg.sender][accessRequests[msg.sender].length - 1];
+                accessRequests[msg.sender].pop();
+                break;
+            }
+        }
+        emit AccessRequestAccepted(msg.sender, requester);
+    }
+
+    /**
+     * @dev Denies an access request.
+     * @param requester The address of the user requesting access.
+     */
+    function denyAccessRequest(address requester) public {
+        require(requester != address(0), "Invalid requester");
+        require(isAccessRequested(msg.sender, requester), "No access request found");
+
+        for (uint256 i = 0; i < accessRequests[msg.sender].length; i++) {
+            if (accessRequests[msg.sender][i] == requester) {
+                accessRequests[msg.sender][i] = accessRequests[msg.sender][accessRequests[msg.sender].length - 1];
+                accessRequests[msg.sender].pop();
+                break;
+            }
+        }
+        emit AccessRequestRejected(msg.sender, requester);
+    }
+
+    /**
+     * @dev Requests access to another user's health record.
+     * @param recordOwner The address of the health record owner.
+     */
+    function requestAccess(address recordOwner) public {
+        require(recordOwner != address(0), "Invalid record owner");
+        require(recordOwner != msg.sender, "Cannot request access to your own record");
+
+        for (uint256 i = 0; i < accessRequests[recordOwner].length; i++) {
+            require(accessRequests[recordOwner][i] != msg.sender, "Access already requested");
+        }
+
+        accessRequests[recordOwner].push(msg.sender);
+        emit AccessRequested(msg.sender, recordOwner);
     }
 
     /**
@@ -74,6 +119,15 @@ contract HealthInfo {
         emit AccessRevoked(msg.sender, permissionedUser);
     }
 
+    function isAccessRequested(address owner, address requester) internal view returns (bool) {
+        for (uint256 i = 0; i < accessRequests[owner].length; i++) {
+            if (accessRequests[owner][i] == requester) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @dev Retrieves the health record of a specified owner if the caller has access.
      * @param recordOwner The address of the health record owner.
@@ -87,13 +141,8 @@ contract HealthInfo {
         return healthRecords[recordOwner].ipfsHash;
     }
 
-    function getUpdates(address recordOwner) public view returns (address[] memory, uint256[] memory) {
-        HealthRecord storage record = healthRecords[recordOwner];
-        require(
-            recordOwner == msg.sender || accessPermissions[recordOwner][msg.sender],
-            "Access denied"
-        );
-
+    function getUpdates() public view returns (address[] memory, uint256[] memory) {
+        HealthRecord storage record = healthRecords[msg.sender];
         uint256 length = record.updates.length;
         address[] memory updaters = new address[](length);
         uint256[] memory timestamps = new uint256[](length);
@@ -105,12 +154,12 @@ contract HealthInfo {
 
         return (updaters, timestamps);
 }
-    function getAccessList(address owner) public view returns (address[] memory) {
-        require(
-            owner == msg.sender || accessPermissions[owner][msg.sender],
-            "Access denied"
-        );
-        return accessList[owner];
+    function getAccessList() public view returns (address[] memory) {
+        return accessList[msg.sender];
+    }
+
+    function getAccessRequests() public view returns (address[] memory) {
+        return accessRequests[msg.sender];
     }
 
 

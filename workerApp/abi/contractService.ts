@@ -54,11 +54,8 @@ export async function getHealthRecordHash(ownerAddress: string): Promise<string>
  * @param ownerAddress - The Ethereum address of the owner.
  * @returns - An array of addresses.
  */
-export async function getAccessList(ownerAddress: string): Promise<string[]> {
-    if (!ethers.isAddress(ownerAddress)) {
-        throw new Error(`Invalid Ethereum address: ${ownerAddress}`);
-    }
-    return await contract.getAccessList(ownerAddress);
+export async function getAccessList(): Promise<string[]> {
+    return await contract.getAccessList();
 }
 
 /**
@@ -90,14 +87,62 @@ export async function revokeAccess(permissionedUser: string, privateKey: string)
 }
 
 /**
+ * Request access to another user's health record.
+ * @param recordOwner - The address of the health record owner.
+ * @param privateKey - The private key of the requester.
+ */
+export async function requestAccess(recordOwner: string, privateKey: string): Promise<void> {
+    const signer = new ethers.Wallet(privateKey, provider);
+
+    const tx = await (contract!.connect(signer!) as Contract).requestAccess(recordOwner);
+    await tx.wait();
+    console.log(`Access requested from ${recordOwner}`);
+}
+
+/**
+ * Approve an access request from a user.
+ * @param requester - The address of the user requesting access.
+ * @param privateKey - The private key of the record owner.
+ */
+export async function approveAccessRequest(requester: string, privateKey: string): Promise<void> {
+    const signer = new ethers.Wallet(privateKey, provider);
+
+    const tx = await (contract!.connect(signer!) as Contract).approveAccessRequest(requester);
+    await tx.wait();
+    console.log(`Access request from ${requester} approved.`);
+}
+
+/**
+ * Deny an access request from a user.
+ * @param requester - The address of the user requesting access.
+ * @param privateKey - The private key of the record owner.
+ */
+export async function denyAccessRequest(requester: string, privateKey: string): Promise<void> {
+    const signer = new ethers.Wallet(privateKey, provider);
+
+    if (!ethers.isAddress(requester)) {
+        throw new Error(`Invalid Ethereum address: ${requester}`);
+    }
+
+    const tx = await (contract!.connect(signer!) as Contract).denyAccessRequest(requester);
+    await tx.wait();
+    console.log(`Access request from ${requester} denied.`);
+}
+
+/**
+ * Fetch the list of addresses with access to the owner's health record.
+ * @param ownerAddress - The Ethereum address of the owner.
+ * @returns - An array of addresses.
+ */
+export async function getAccessRequests(): Promise<string[]> {
+    return await contract.getAccessRequests();
+}
+/**
  * Get updates for a health record, including the addresses and timestamps.
  * @param recordOwner - The address of the record owner.
  * @returns - An object containing arrays of addresses and timestamps.
  */
-export async function getUpdates(recordOwner: string): Promise<{ addresses: string[]; timestamps: number[] }> {
-    if (!ethers.isAddress(recordOwner)) {
-        throw new Error(`Invalid Ethereum address: ${recordOwner}`);
-    }
-    const [addresses, timestamps] = await contract.getUpdates(recordOwner);
+export async function getUpdates(): Promise<{ addresses: string[]; timestamps: number[] }> {
+    const [addresses, timestamps] = await contract.getUpdates();
     return { addresses, timestamps };
 }
