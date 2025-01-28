@@ -1,13 +1,14 @@
 import { Contract, ethers } from "ethers";
 
 import HealthInfoABI from "./HealthInfoABI.json";
-import dotenv from "dotenv";
 
-dotenv.config({ path: "../.env" });
+//import dotenv from "dotenv";
+
+//dotenv.config({ path: "../.env" });
 
 // Load environment variables
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-const RPC_URL = process.env.RPC_URL;
+const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const RPC_URL = "http://127.0.0.1:8545/";
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {
@@ -34,6 +35,44 @@ export async function updateHealthRecord(owner: string, privateKey: string): Pro
     const tx = await (contract!.connect(signer!) as Contract).updateHealthRecord(owner);
     await tx.wait();
     console.log("Health record updated successfully.");
+}
+
+/**
+ * Check if access is requested for a specific owner by a requester.
+ * @param owner - The Ethereum address of the health record owner.
+ * @returns - A boolean indicating whether access is requested.
+ */
+export async function hasRequestedAccess(owner: string): Promise<boolean> {
+    if (!ethers.isAddress(owner)) {
+        throw new Error(`Invalid Ethereum address: ${owner}`);
+    }
+
+    try {
+        const result = await contract.hasRequestedAccess(owner);
+        return result;
+    } catch (error) {
+        console.error(`Error checking access request: ${error}`);
+        throw error;
+    }
+}
+
+/**
+ * Check if access is requested for a specific owner by a requester.
+ * @param owner - The Ethereum address of the health record owner.
+ * @returns - A boolean indicating whether access is requested.
+ */
+export async function hasAccess(owner: string): Promise<boolean> {
+    if (!ethers.isAddress(owner)) {
+        throw new Error(`Invalid Ethereum address: ${owner}`);
+    }
+
+    try {
+        const result = await contract.hasAccess(owner);
+        return result;
+    } catch (error) {
+        console.error(`Error checking access request: ${error}`);
+        throw error;
+    }
 }
 
 /**
