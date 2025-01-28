@@ -23,7 +23,7 @@ export const requestPatientAccess = createAsyncThunk(
   'patients/requestPatientAccess',
   async (patientId: string, thunkAPI) => {
     try {
-      await requestAccess(patientId,"0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"); // Trigger access request via contract
+      await requestAccess(patientId,"0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"); // Trigger access request via contract
       return patientId; // Return the patient ID upon success
     } catch (error) {
       console.error('Error requesting access:', error);

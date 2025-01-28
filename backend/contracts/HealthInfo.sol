@@ -33,6 +33,7 @@ contract HealthInfo {
     function setOwner(string memory _ipfsHash, address owner) public {
         require(healthRecords[owner].updates.length == 0, "Record owner already set");
         HealthRecord storage record = healthRecords[owner];
+        access[owner][owner] = true;
 
         record.ipfsHash = _ipfsHash;
         record.updates.push(Update({

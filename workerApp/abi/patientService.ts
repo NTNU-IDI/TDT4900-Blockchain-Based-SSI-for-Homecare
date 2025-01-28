@@ -49,6 +49,25 @@ export async function fetchAllPatients(ownerAddresses: string[]): Promise<Patien
             patients.push(patient);
         } catch (error) {
             console.error(`Error fetching patient for address ${ownerAddress}:`, error);
+            
+            const requestedAccess = await hasRequestedAccess(ownerAddress);
+            
+            patients.push({
+                id: ownerAddress, // Use ownerAddress as the ID
+                time: "", // Default empty values
+                name: "Ukjent", // Placeholder name
+                address: "null", // Default empty address
+                nøkkelnummer: "",
+                status: "", // Indicate failure
+                tasks: [],
+                access: false, // No access by default
+                accessRequest: requestedAccess, // No request made by default
+                journal: {
+                    diagnoses: [],
+                    medications: [],
+                    previousTreatments: []
+                } // Empty journal
+            });
         }
     }
     console.log(patients)
