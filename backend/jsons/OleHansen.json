@@ -1,0 +1,34 @@
+{
+    "time": "09:00",
+    "name": "Ole Hansen",
+    "address": "Osloveien 123",
+    "nøkkelnummer": "123",
+    "tasks": [
+      {
+        "id": 1,
+        "name": "Sjekk blodtrykk",
+        "description": "Mål blodtrykket før frokost.",
+        "duration": 5
+      },
+      {
+        "id": 2,
+        "name": "Hjelp med frokost",
+        "description": "Assister pasienten med å lage frokost.",
+        "duration": 10
+      }
+    ],
+    "journal": {
+      "diagnoses": [
+        "Hypertensjon, diagnostisert 2015",
+        "Diabetes type 2, diagnostisert 2018"
+      ],
+      "medications": [
+        "Metformin - 500mg daglig",
+        "Simvastatin - 10mg ved behov"
+      ],
+      "previousTreatments": [
+        "Ernæringsrådgivning",
+        "Fysioterapi for mobilitetsproblemer"
+      ]
+    }
+  }

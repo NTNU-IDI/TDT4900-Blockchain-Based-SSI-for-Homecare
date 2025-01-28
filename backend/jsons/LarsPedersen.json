@@ -1,0 +1,38 @@
+{
+    "time": "10:00",
+    "name": "Lars Pedersen",
+    "address": "Midtbyveien 1",
+    "nøkkelnummer": "",
+    "tasks": [
+      {
+        "id": 1,
+        "name": "Støtte til gåtur",
+        "description": "Gå en kort tur med pasienten for trening.",
+        "duration": 15
+      },
+      {
+        "id": 2,
+        "name": "Måle blodsukker",
+        "description": "Hjelp pasienten med å måle blodsukker.",
+        "duration": 5
+      },
+      {
+        "id": 3,
+        "name": "Administrere medisin",
+        "description": "Gi pasienten medisin som foreskrevet.",
+        "duration": 5
+      }
+    ],
+    "journal": {
+      "diagnoses": [
+        "Kols, diagnostisert 2019"
+      ],
+      "medications": [
+        "Albuterol inhalator - 2 ganger daglig"
+      ],
+      "previousTreatments": [
+        "Rehabilitering etter sykehusopphold"
+      ]
+    }
+  }
+  

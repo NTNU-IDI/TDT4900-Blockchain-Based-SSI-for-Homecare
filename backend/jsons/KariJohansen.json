@@ -1,0 +1,32 @@
+{
+    "time": "10:40",
+    "name": "Kari Johansen",
+    "address": "Moholtveien 2",
+    "nøkkelnummer": "567",
+    "tasks": [
+      {
+        "id": 1,
+        "name": "Tilberedning av lunsj",
+        "description": "Lag en enkel lunsj sammen med pasienten.",
+        "duration": 10
+      },
+      {
+        "id": 2,
+        "name": "Medisinering",
+        "description": "Administrer pasientens faste medisiner.",
+        "duration": 5
+      }
+    ],
+    "journal": {
+      "diagnoses": [
+        "Alzheimers, diagnostisert 2020"
+      ],
+      "medications": [
+        "Donepezil - daglig"
+      ],
+      "previousTreatments": [
+        "Kognitiv terapi for hukommelsestap"
+      ]
+    }
+  }
+  

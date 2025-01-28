@@ -30,6 +30,7 @@ contract HealthInfo {
      * @param _ipfsHash The IPFS hash of the complete health record JSON.
      */
     function setOwner(string memory _ipfsHash, address owner) public {
+        require(healthRecords[owner].updates.length == 0, "Record owner already set");
         HealthRecord storage record = healthRecords[owner];
 
         record.ipfsHash = _ipfsHash;
