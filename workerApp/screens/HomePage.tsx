@@ -1,9 +1,8 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import React from 'react';
 import SharedStyles from '../styles/SharedStyles';
-import { StyleSheet } from 'react-native';
 import { setCurrentPatient } from '../redux/patientSlicer';
 
 const HomePage: React.FC = () => {
@@ -25,6 +24,9 @@ const HomePage: React.FC = () => {
       </Text>
       {patients.map((patient) => {
         const isCurrentPatient = currentPatientId === patient.id;
+        const noAccessMessage = !patient.access
+          ? 'Ingen tilgang. Be om tilgang på journalsiden.'
+          : null;
 
         return (
           <TouchableOpacity
@@ -44,15 +46,17 @@ const HomePage: React.FC = () => {
               >
                 {patient.name}
               </Text>
-              <Text
-                style={[
-                  styles.patientInfo,
-                  isCurrentPatient && styles.currentPatientInfo
-                ]}
-              >
-                {patient.time} - {patient.address}
-              </Text>
-              {patient.nøkkelnummer ? (
+              {patient.access && patient.time && (
+                <Text
+                  style={[
+                    styles.patientInfo,
+                    isCurrentPatient && styles.currentPatientInfo
+                  ]}
+                >
+                  {patient.time} - {patient.address}
+                </Text>
+              )}
+              {patient.nøkkelnummer && patient.access && (
                 <Text
                   style={[
                     styles.patientKey,
@@ -61,7 +65,10 @@ const HomePage: React.FC = () => {
                 >
                   Nøkkelnummer: {patient.nøkkelnummer}
                 </Text>
-              ) : null}
+              )}
+              {noAccessMessage && (
+                <Text style={styles.noAccessMessage}>{noAccessMessage}</Text>
+              )}
             </View>
             <Text
               style={[
@@ -77,6 +84,7 @@ const HomePage: React.FC = () => {
     </View>
   );
 };
+
 export default HomePage;
 
 const styles = StyleSheet.create({
@@ -114,5 +122,11 @@ const styles = StyleSheet.create({
   },
   currentPatientStatus: {
     color: '#FFFFFF'
+  },
+  noAccessMessage: {
+    fontSize: 14,
+    color: '#D44F3A',
+    fontStyle: 'italic',
+    marginTop: 5
   }
 });

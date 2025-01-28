@@ -37,11 +37,11 @@ export const SharedStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
-    shadowColor: '#000',
+    elevation: 5, // For Android shadows
+    shadowColor: '#000', // For iOS shadows
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 2
+    shadowRadius: 5
   },
   cardText: {
     fontSize: 16,
@@ -65,7 +65,12 @@ export const SharedStyles = StyleSheet.create({
     paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    elevation: 3, // For Android
+    shadowColor: '#000', // For iOS
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5
   },
   patientName: {
     fontSize: 16,
