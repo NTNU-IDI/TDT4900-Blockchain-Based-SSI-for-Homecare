@@ -1,0 +1,39 @@
+{
+    "time": "11:05",
+    "name": "Ingrid Olsen",
+    "address": "Trondheimsveien 9",
+    "nøkkelnummer": "",
+    "tasks": [
+      {
+        "id": 1,
+        "name": "Rengjøring",
+        "description": "Vasking og støvsuging av gang, kjøkken og stue",
+        "duration": 15
+      },
+      {
+        "id": 2,
+        "name": "Lese avisen",
+        "description": "Lese dagens nyheter sammen med pasienten.",
+        "duration": 10
+      },
+      {
+        "id": 3,
+        "name": "Lage middag",
+        "description": "Lag middag sammen med pasienten.",
+        "duration": 20
+      }
+    ],
+    "journal": {
+      "diagnoses": [
+        "Hjertesykdom, diagnostisert 2017"
+      ],
+      "medications": [
+        "Aspirin - 100mg daglig",
+        "Atorvastatin - 20mg daglig"
+      ],
+      "previousTreatments": [
+        "Hjertesykdom kirurgi - 2017"
+      ]
+    }
+  }
+  
