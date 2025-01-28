@@ -41,7 +41,7 @@ export const SharedStyles = StyleSheet.create({
     shadowColor: '#000', // For iOS shadows
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
+    shadowRadius: 5
   },
   cardText: {
     fontSize: 16,
@@ -70,7 +70,7 @@ export const SharedStyles = StyleSheet.create({
     shadowColor: '#000', // For iOS
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
+    shadowRadius: 5
   },
   patientName: {
     fontSize: 16,
