@@ -2,6 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { Patient } from "../types/patientInterfaces";
 import { fetchAllPatients } from "../abi/patientService";
+import { requestAccess } from "../abi/contractService";
 
 export const fetchAndSetPatients = createAsyncThunk(
   "patients/fetchAndSetPatients",
@@ -18,6 +19,18 @@ export const fetchAndSetPatients = createAsyncThunk(
   }
 );
 
+export const requestPatientAccess = createAsyncThunk(
+  'patients/requestPatientAccess',
+  async (patientId: string, thunkAPI) => {
+    try {
+      await requestAccess(patientId,"0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"); // Trigger access request via contract
+      return patientId; // Return the patient ID upon success
+    } catch (error) {
+      console.error('Error requesting access:', error);
+      return thunkAPI.rejectWithValue('Failed to send request');
+    }
+  }
+);
 
 interface PatientState {
   currentPatientId: string | null;
@@ -66,12 +79,6 @@ const patientSlice = createSlice({
       if (patient) {
         patient.access = action.payload.access;
       }
-    },
-    updateAccessRequest: (state, action: PayloadAction<string>) => {
-      const patient = state.patients.find((p) => p.id === action.payload);
-      if (patient) {
-        patient.accessRequest = true;
-      }
     }
   },
   extraReducers: (builder) => {
@@ -84,6 +91,13 @@ const patientSlice = createSlice({
     builder.addCase(fetchAndSetPatients.rejected, (state, action) => {
       console.error('Error fetching patients:', action.payload);
     });
+    builder.addCase(requestPatientAccess.fulfilled, (state, action: PayloadAction<string>) => {
+      const patient = state.patients.find((p) => p.id === action.payload);
+      if (patient) {
+        patient.accessRequest = true;
+        console.log('Access requested for patient:', patient.name);
+      }
+    });
   },
 });
 
@@ -92,7 +106,6 @@ export const {
   updatePatientStatus,
   updateTaskStatus,
   updatePatientAccess,
-  updateAccessRequest
 } = patientSlice.actions;
 
 export default patientSlice.reducer;

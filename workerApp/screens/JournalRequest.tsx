@@ -4,7 +4,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import BackButton from '../components/BackButton';
 import GreenButton from '../components/GreenButton';
 import SharedStyles from '../styles/SharedStyles';
-import { updateAccessRequest } from '../redux/patientSlicer';
+import { requestPatientAccess } from '../redux/patientSlicer';
 import { useAppDispatch } from '../redux/hooks';
 
 const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
@@ -16,7 +16,7 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
   const [note, setNote] = useState('');
 
   const handleRequestAccess = () => {
-    dispatch(updateAccessRequest(patient.id));
+    dispatch(requestPatientAccess(patient.id));
     setRequestSent(true);
     setTimeout(() => onBack(), 2000);
   };
