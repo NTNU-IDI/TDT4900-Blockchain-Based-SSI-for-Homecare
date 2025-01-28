@@ -1,5 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+import { OWNER_PRIVATE_KEY } from '@env';
 import { Patient } from '../types/patientInterfaces';
 import { fetchAllPatients } from '../abi/patientService';
 import { requestAccess } from '../abi/contractService';
@@ -10,7 +11,6 @@ export const fetchAndSetPatients = createAsyncThunk(
     try {
       return await fetchAllPatients(ownerAddresses);
     } catch (error) {
-      // Ensure error is cast to an appropriate type
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(error.message);
       }
@@ -23,11 +23,8 @@ export const requestPatientAccess = createAsyncThunk(
   'patients/requestPatientAccess',
   async (patientId: string, thunkAPI) => {
     try {
-      await requestAccess(
-        patientId,
-        '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-      ); // Trigger access request via contract
-      return patientId; // Return the patient ID upon success
+      await requestAccess(patientId, OWNER_PRIVATE_KEY);
+      return patientId;
     } catch (error) {
       console.error('Error requesting access:', error);
       return thunkAPI.rejectWithValue('Failed to send request');
@@ -88,7 +85,6 @@ const patientSlice = createSlice({
     builder.addCase(
       fetchAndSetPatients.fulfilled,
       (state, action: PayloadAction<Patient[]>) => {
-        // Update state when fetch is successful
         state.patients = action.payload;
         state.currentPatientId =
           action.payload.length > 0 ? action.payload[0].id : null;

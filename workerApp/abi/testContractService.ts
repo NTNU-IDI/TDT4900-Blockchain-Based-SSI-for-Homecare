@@ -1,4 +1,10 @@
 import {
+  OTHER_ADDRESS,
+  OTHER_PRIVATE_KEY,
+  OWNER_ADDRESS,
+  OWNER_PRIVATE_KEY
+} from '@env';
+import {
   denyAccessRequest,
   getAccessList,
   getAccessRequests,
@@ -10,24 +16,15 @@ import {
   updateHealthRecord
 } from './contractService';
 
-import dotenv from 'dotenv';
-import { ethers } from 'ethers';
 import fetchIPFSData from './pinataService';
-
-dotenv.config();
 
 async function main() {
   try {
-    const ownerAddress = process.env.OWNER_ADDRESS;
-    const ownerPrivateKey = process.env.OWNER_PRIVATE_KEY;
-    const otherPrivateKey = process.env.OTHER_PRIVATE_KEY;
-    const otherAddress = process.env.OTHER_ADDRESS;
-
     if (
-      !ownerAddress ||
-      !ownerPrivateKey ||
-      !otherPrivateKey ||
-      !otherAddress
+      !OWNER_ADDRESS ||
+      !OWNER_PRIVATE_KEY ||
+      !OTHER_PRIVATE_KEY ||
+      !OTHER_ADDRESS
     ) {
       throw new Error(
         'Required environment variables are missing: OWNER_ADDRESS, PERMISSIONED_USER_ADDRESS, OWNER_PRIVATE_KEY, OTHER_PRIVATE_KEY, OTHER_ADDRESS'
@@ -36,7 +33,7 @@ async function main() {
 
     // 1. Get own Health Record
     console.log('Fetching own health record hash...');
-    const fetchedIpfsHash = await getHealthRecordHash(ownerAddress);
+    const fetchedIpfsHash = await getHealthRecordHash(OWNER_ADDRESS);
     console.log(`Fetched IPFS Hash: ${fetchedIpfsHash}`);
     console.log('Fetching data from IPFS...');
     const data = await fetchIPFSData(fetchedIpfsHash);
@@ -52,8 +49,8 @@ async function main() {
     console.log('Access List:', accessList1);
 
     // 6. Request Access
-    console.log(`Requesting access to ${ownerAddress}...`);
-    await requestAccess(ownerAddress, otherPrivateKey);
+    console.log(`Requesting access to ${OWNER_ADDRESS}...`);
+    await requestAccess(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
 
     // 6. Get requested access
     console.log('Fetching access requests...');
@@ -61,8 +58,8 @@ async function main() {
     console.log('Access Requests:', accessRequests1);
 
     // 7. Deny Access Request
-    console.log(`Denying access request from ${otherAddress}...`);
-    await denyAccessRequest(otherAddress, ownerPrivateKey);
+    console.log(`Denying access request from ${OTHER_ADDRESS}...`);
+    await denyAccessRequest(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
 
     // 6. Get requested access
     console.log('Fetching access requests...');
@@ -75,12 +72,12 @@ async function main() {
     console.log('Access List:', accessList2);
 
     // 6. Request Access
-    console.log(`Requesting access to ${ownerAddress}...`);
-    await requestAccess(ownerAddress, otherPrivateKey);
+    console.log(`Requesting access to ${OWNER_ADDRESS}...`);
+    await requestAccess(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
 
     // 4. Grant Access
-    console.log(`Granting access to ${otherAddress}...`);
-    await grantAccess(otherAddress, ownerPrivateKey);
+    console.log(`Granting access to ${OTHER_ADDRESS}...`);
+    await grantAccess(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
 
     // 6. Get requested access
     console.log('Fetching access requests...');
@@ -94,11 +91,11 @@ async function main() {
 
     // 2. Update Health Record with access
     console.log('Updating health record...');
-    await updateHealthRecord(ownerAddress, otherPrivateKey);
+    await updateHealthRecord(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
 
     // 5. Revoke Access
-    console.log(`Revoking access from ${otherAddress}...`);
-    await revokeAccess(otherAddress, ownerPrivateKey);
+    console.log(`Revoking access from ${OTHER_ADDRESS}...`);
+    await revokeAccess(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
 
     // 3. Get Access List
     console.log('Fetching access list...');

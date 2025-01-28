@@ -1,14 +1,7 @@
+import { CONTRACT_ADDRESS, RPC_URL } from '@env';
 import { Contract, ethers } from 'ethers';
 
 import HealthInfoABI from './HealthInfoABI.json';
-
-//import dotenv from "dotenv";
-
-//dotenv.config({ path: "../.env" });
-
-// Load environment variables
-const CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-const RPC_URL = 'http://127.0.0.1:8545/';
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {
