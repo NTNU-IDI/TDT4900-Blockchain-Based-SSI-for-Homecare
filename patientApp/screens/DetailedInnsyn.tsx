@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { getAccessList, revokeAccess } from "../services/BlockchainService";
 import Card from "../components/Card";
 import Header from "../components/Header";
 
-
 const DetailedInnsyn = () => {
   const patientAddress: string = process.env.OWNER_ADDRESS || "";
-  const patientPrivateKey: string= process.env.OWNER_PRIVATE_KEY || "";
-  const workerPrivateKey: string = process.env.OTHER_PRIVATE_KEY || "" ;
+  const patientPrivateKey: string = process.env.OWNER_PRIVATE_KEY || "";
+  const workerPrivateKey: string = process.env.OTHER_PRIVATE_KEY || "";
   const workerAddress: string = process.env.OTHER_ADDRESS || "";
   const [accessList, setAccessList] = useState<string[]>([]);
-  
-  
 
   useEffect(() => {
     fetchAccessList();
@@ -54,7 +51,7 @@ const DetailedInnsyn = () => {
       </View>
       <TouchableOpacity style={styles.button} onPress={handleRemoveAccess}>
         <Text style={styles.buttonText}>Fjern innsynsrettigheter</Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -70,19 +67,17 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 100,
-    width: '90%',
+    width: "90%",
     marginTop: 40,
-    backgroundColor: '#0D9276',
+    backgroundColor: "#0D9276",
     borderRadius: 20,
     alignItems: "center", // Centers text horizontally
     justifyContent: "center", // Centers text vertically
-
   },
   buttonText: {
     fontFamily: '"Times New Roman", Times, serif',
     fontSize: 30,
-
-  }
+  },
 });
 
 export default DetailedInnsyn;

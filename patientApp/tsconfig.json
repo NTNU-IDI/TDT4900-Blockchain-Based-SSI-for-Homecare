@@ -1,13 +1,12 @@
 {
   "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "typeRoots": ["./node_modules/@types", "./types"], // Add this line
-    "baseUrl": ".", // Optional: Helps with module resolution
-    "paths": {
-      "@env": ["./env.d.ts"] // Optional: Helps resolve the @env module
+  "typeRoots": ["./types"],
+  
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true
     }
-  },
-  "include": ["**/*.ts", "**/*.tsx", "env.d.ts"], // Add this line
-  "exclude": ["node_modules"]
+  
 }

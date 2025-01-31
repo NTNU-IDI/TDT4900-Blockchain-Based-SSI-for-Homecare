@@ -5,15 +5,13 @@ import Header from "../components/Header";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import { getAccessList, revokeAccess } from "../services/BlockchainService";
 
-import { OTHER_ADDRESS, OTHER_PRIVATE_KEY, OWNER_PRIVATE_KEY } from '@env';
-
+import { OTHER_ADDRESS, OWNER_PRIVATE_KEY } from "@env";
 
 const Endringslogg = () => {
   const [accessList, setAccessList] = useState<string[]>([]);
 
   // const patientAddress: string = process.env.OWNER_ADDRESS || "";
   // const workerPrivateKey: string = process.env.OTHER_PRIVATE_KEY || "";
-
 
   useEffect(() => {
     fetchAccessList();
