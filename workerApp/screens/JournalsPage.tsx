@@ -38,14 +38,13 @@ const JournalsPage: React.FC = () => {
     <View style={SharedStyles.container}>
       <Text style={SharedStyles.title}>Pasientjournaler</Text>
       {patients.map((patient) => {
-        const hasAccess = patient.access === 'Tilgang';
-        const accessText = hasAccess
+        const accessText = patient.access
           ? 'Tilgang'
           : patient.accessRequest
             ? 'Bedt om tilgang'
             : 'Ikke tilgang';
 
-        const accessStyle = hasAccess
+        const accessStyle = patient.access
           ? styles.accessGranted
           : patient.accessRequest
             ? styles.accessRequested

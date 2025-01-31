@@ -22,6 +22,17 @@ const StartTaskPage: React.FC = () => {
     );
   }
 
+  if (!currentPatient.access) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.patientText}>
+          Du har ikke tilgang til gjøremål for denne brukeren.
+        </Text>
+        <Text style={styles.patientTime}>Be om tilgang på journalsiden.</Text>
+      </View>
+    );
+  }
+
   const [startHour, startMinute] = currentPatient.time.split(':').map(Number);
   const totalDuration = currentPatient.tasks.reduce(
     (sum, task) => sum + task.duration,
