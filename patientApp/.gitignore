@@ -32,10 +32,9 @@ yarn-error.*
 # local env files
 .env*.local
 .env
-.env.d.ts
 
 # typescript
 *.tsbuildinfo
 
 # worker information
-homecare_workers.json
+assets/homecare_workers.json
