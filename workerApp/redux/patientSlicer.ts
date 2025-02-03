@@ -21,10 +21,10 @@ export const fetchAndSetPatients = createAsyncThunk(
 
 export const requestPatientAccess = createAsyncThunk(
   'patients/requestPatientAccess',
-  async (patientId: string, thunkAPI) => {
+  async ({patientId, note}: {patientId: string; note: string}, thunkAPI) => {
     try {
-      await requestAccess(patientId, HOMECARE_WORKER_PRIVATE_KEY);
-      return patientId;
+      await requestAccess(patientId, HOMECARE_WORKER_PRIVATE_KEY, note);
+      return {patientId, note};
     } catch (error) {
       console.error('Error requesting access:', error);
       return thunkAPI.rejectWithValue('Failed to send request');
@@ -96,8 +96,8 @@ const patientSlice = createSlice({
     });
     builder.addCase(
       requestPatientAccess.fulfilled,
-      (state, action: PayloadAction<string>) => {
-        const patient = state.patients.find((p) => p.id === action.payload);
+      (state, action: PayloadAction<{ patientId: string; note: string }>) => {
+        const patient = state.patients.find((p) => p.id === action.payload.patientId);
         if (patient) {
           patient.accessRequest = true;
           console.log('Access requested for patient:', patient.name);
