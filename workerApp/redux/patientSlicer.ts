@@ -1,15 +1,15 @@
+import { HOMECARE_WORKER_PRIVATE_KEY, PATIENT_ADDRESSES } from '@env';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { OWNER_PRIVATE_KEY } from '@env';
 import { Patient } from '../types/patientInterfaces';
 import { fetchAllPatients } from '../abi/patientService';
 import { requestAccess } from '../abi/contractService';
 
 export const fetchAndSetPatients = createAsyncThunk(
   'patients/fetchAndSetPatients',
-  async (ownerAddresses: string[], thunkAPI) => {
+  async (_: void, thunkAPI) => {
     try {
-      return await fetchAllPatients(ownerAddresses);
+      return await fetchAllPatients(PATIENT_ADDRESSES.split(','), HOMECARE_WORKER_PRIVATE_KEY);
     } catch (error) {
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(error.message);
@@ -23,7 +23,7 @@ export const requestPatientAccess = createAsyncThunk(
   'patients/requestPatientAccess',
   async (patientId: string, thunkAPI) => {
     try {
-      await requestAccess(patientId, OWNER_PRIVATE_KEY);
+      await requestAccess(patientId, HOMECARE_WORKER_PRIVATE_KEY);
       return patientId;
     } catch (error) {
       console.error('Error requesting access:', error);
