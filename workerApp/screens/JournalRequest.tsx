@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import BackButton from '../components/BackButton';
 import GreenButton from '../components/GreenButton';
 import SharedStyles from '../styles/SharedStyles';
+import data from '../assets/homecare_workers.json';
 import { requestPatientAccess } from '../redux/patientSlicer';
-import { useAppDispatch } from '../redux/hooks';
 
 const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
   patient,
   onBack
 }) => {
   const dispatch = useAppDispatch();
+  const workerData = useAppSelector((state) => state.worker.worker);
   const [requestSent, setRequestSent] = useState(false);
   const [note, setNote] = useState('');
 
@@ -28,15 +30,15 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Navn: </Text>
-          Mona Jensen {/* Hardcoded for example */}
+          {workerData?.navn || 'Ukjent'}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Arbeidsplass: </Text>
-          Byåsen hjemmetjeneste {/* Hardcoded for example */}
+          {workerData?.arbeidsplass || 'Ukjent'}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Yrke: </Text>
-          Sykepleier {/* Hardcoded for example */}
+          {workerData?.yrke || 'Ukjent'}
         </Text>
       </View>
 
