@@ -9,7 +9,7 @@ export const fetchAndSetPatients = createAsyncThunk(
   'patients/fetchAndSetPatients',
   async (_: void, thunkAPI) => {
     try {
-      return await fetchAllPatients(PATIENT_ADDRESSES.split(','), HOMECARE_WORKER_PRIVATE_KEY);
+      return await fetchAllPatients(PATIENT_ADDRESSES.split(','));
     } catch (error) {
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(error.message);
