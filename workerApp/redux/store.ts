@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import patientReducer from './patientSlicer';
+import workerReducer from './workerSlicer';
 
 export const store = configureStore({
   reducer: {
-    patient: patientReducer
+    patient: patientReducer,
+    worker: workerReducer
   }
 });
 
