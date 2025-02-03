@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { getAccessList, revokeAccess } from "../services/BlockchainService";
+import { getAccessList, revokeAccess } from "../components/BlockchainService";
 import Card from "../components/Card";
 import Header from "../components/Header";
 
@@ -25,21 +25,21 @@ const DetailedInnsyn = () => {
     }
   };
 
-  const handleRemoveAccess = async () => {
-    if (!accessList.includes(workerAddress)) {
-      console.log("Error", "User does not have access.");
-      return;
-    }
+  // const handleRemoveAccess = async () => {
+  //   if (!accessList.includes(workerAddress)) {
+  //     console.log("Error", "User does not have access.");
+  //     return;
+  //   }
 
-    try {
-      await revokeAccess(workerAddress, patientPrivateKey);
-      console.log("Success", "Access revoked successfully.");
-      fetchAccessList(); // Refresh access list
-    } catch (error) {
-      console.error("Error revoking access:", error);
-      console.log("Error", "Failed to revoke access.");
-    }
-  };
+  //   try {
+  //     await revokeAccess(workerAddress, patientPrivateKey);
+  //     console.log("Success", "Access revoked successfully.");
+  //     fetchAccessList(); // Refresh access list
+  //   } catch (error) {
+  //     console.error("Error revoking access:", error);
+  //     console.log("Error", "Failed to revoke access.");
+  //   }
+  // };
   return (
     <View style={styles.screen}>
       <Header header="Eva Pedersen" />
@@ -49,7 +49,7 @@ const DetailedInnsyn = () => {
           description="Her finner du endringer vedrørende har gjort i din journal"
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleRemoveAccess}>
+      <TouchableOpacity style={styles.button} onPress={fetchAccessList}>
         <Text style={styles.buttonText}>Fjern innsynsrettigheter</Text>
       </TouchableOpacity>
     </View>
