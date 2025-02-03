@@ -7,7 +7,7 @@ import {
 
 import fetchIPFSData from './pinataService';
 
-async function fetchPatientData(ownerAddress: string): Promise<Patient> {
+async function fetchPatientData(ownerAddress: string, privateKey: string): Promise<Patient> {
   try {
     // Get IPFS hash from the contract
     console.log(`Fetching health record for owner: ${ownerAddress}`);
@@ -18,7 +18,7 @@ async function fetchPatientData(ownerAddress: string): Promise<Patient> {
     console.log('Fetching patient data from IPFS...');
     const data = await fetchIPFSData(ipfsHash);
 
-    const access = await hasAccess(ownerAddress);
+    const access = await hasAccess(ownerAddress, privateKey);
     const requestedAccess = await hasRequestedAccess(ownerAddress);
 
     // Map the fetched data to the Patient interface
@@ -46,12 +46,13 @@ async function fetchPatientData(ownerAddress: string): Promise<Patient> {
 }
 
 export async function fetchAllPatients(
-  ownerAddresses: string[]
+  ownerAddresses: string[],
+    privateKey: string
 ): Promise<Patient[]> {
   const patients: Patient[] = [];
   for (const ownerAddress of ownerAddresses) {
     try {
-      const patient = await fetchPatientData(ownerAddress);
+      const patient = await fetchPatientData(ownerAddress, privateKey);
       patients.push(patient);
     } catch (error) {
       console.error(

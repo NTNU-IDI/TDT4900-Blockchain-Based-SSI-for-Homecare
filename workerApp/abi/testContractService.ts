@@ -1,10 +1,4 @@
 import {
-  OTHER_ADDRESS,
-  OTHER_PRIVATE_KEY,
-  OWNER_ADDRESS,
-  OWNER_PRIVATE_KEY
-} from '@env';
-import {
   denyAccessRequest,
   getAccessList,
   getAccessRequests,
@@ -16,7 +10,15 @@ import {
   updateHealthRecord
 } from './contractService';
 
+import dotenv from 'dotenv';
 import fetchIPFSData from './pinataService';
+
+dotenv.config();
+
+const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
+const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
+const OTHER_PRIVATE_KEY = process.env.OTHER_PRIVATE_KEY;
+const OTHER_ADDRESS = process.env.OTHER_ADDRESS;
 
 async function main() {
   try {

@@ -7,6 +7,11 @@ npx hardhat node
 ```
 Check accounts list in .env matches the accounts that shows up
 
+If you want to use as a homeworker:
+```shell
+npx hardhat run scripts/useHomeworkerAccount.ts --network localhost
+```
+
 ```shell
 npx hardhat run scripts/deploy.ts --network localhost
 ```

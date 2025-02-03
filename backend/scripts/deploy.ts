@@ -5,7 +5,7 @@ async function main() {
     const healthInfo = await HealthInfo.deploy();
 
     console.log("Deploying contract...");
-    await healthInfo.waitForDeployment(); // Updated method for ethers v6.x
+    await healthInfo.waitForDeployment()
 
     console.log("Contract deployed to address:", await healthInfo.getAddress());
 }
