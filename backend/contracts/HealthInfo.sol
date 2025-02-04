@@ -18,11 +18,12 @@ contract HealthInfo {
     mapping(address => mapping(address => bool)) private requestedAccess;
     mapping(address => address[]) private accessList;
     mapping(address => address[]) private accessRequests;
+    mapping(address => mapping(address => string)) public accessRequestNotes;
 
 
     event HealthRecordUpdated(address indexed owner, string ipfsHash);
     event AccessRevoked(address indexed owner, address indexed permissionedUser);
-    event AccessRequested(address indexed owner, address indexed requester);
+    event AccessRequested(address indexed owner, address indexed requester, string note);
     event AccessRequestAccepted(address indexed owner, address indexed requester);
     event AccessRequestRejected(address indexed owner, address indexed requester);
 
@@ -108,7 +109,7 @@ contract HealthInfo {
      * @dev Requests access to another user's health record.
      * @param recordOwner The address of the health record owner.
      */
-    function requestAccess(address recordOwner) public {
+    function requestAccess(address recordOwner, string memory note) public {
         require(recordOwner != address(0), "Invalid record owner");
         require(recordOwner != msg.sender, "Cannot request access to your own record");
         require(!access[recordOwner][msg.sender], "Access already granted");
@@ -119,7 +120,9 @@ contract HealthInfo {
 
         accessRequests[recordOwner].push(msg.sender);
         requestedAccess[recordOwner][msg.sender] = true;
-        emit AccessRequested(msg.sender, recordOwner);
+
+        accessRequestNotes[recordOwner][msg.sender] = note;
+        emit AccessRequested(msg.sender, recordOwner, note);
     }
 
     /**

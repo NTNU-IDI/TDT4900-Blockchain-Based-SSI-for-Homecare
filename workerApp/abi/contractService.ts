@@ -147,12 +147,13 @@ export async function revokeAccess(
  */
 export async function requestAccess(
   recordOwner: string,
-  privateKey: string
+  privateKey: string,
+  note: string
 ): Promise<void> {
   const signer = new ethers.Wallet(privateKey, provider);
 
   const tx = await (contract!.connect(signer!) as Contract).requestAccess(
-    recordOwner
+    recordOwner, note
   );
   await tx.wait();
   console.log(`Access requested from ${signer.address} to ${recordOwner}`);
