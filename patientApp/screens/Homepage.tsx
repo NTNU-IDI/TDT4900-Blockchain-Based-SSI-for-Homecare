@@ -1,3 +1,78 @@
+// import React, { useState } from "react";
+// import { View, Button, Text } from "react-native";
+// import { ethers } from "ethers";
+// //import BlockchainService from "../services/BlockchainService";
+// import PinataService from "../services/PinataService";
+// import contractABI from "../abi/HealthInfoABI.json"; // Ensure ABI is correctly imported
+
+// const rpcUrl = "http://127.0.0.1:8545";
+// const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // Replace with your deployed contract address
+// const blockchainService = new BlockchainService(rpcUrl, contractAddress, contractABI);
+
+
+// const Homepage = () => {
+//   const [data, setData] = useState("");
+//   const [message, setMessage] = useState("");
+//   const [loading, setLoading] = useState(false);
+
+//   const ipfsHash = "qqq"; // Replace with your actual IPFS hash
+
+  
+
+//   const fetchData = async () => {
+//     setMessage("Checking access...");
+//     try {
+//       //const r = await blockchainService.grantAccess("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+
+//       setMessage("Fetching health record...");
+//       const ipfsHash = await blockchainService.getHealthRecord("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+  
+//       if (ipfsHash) {
+//         setData(ipfsHash);
+//         setMessage("IPFS hash fetched successfully!");
+//       } else {
+//         setMessage("No health record found.");
+//       }
+//     } catch (error) {
+//       setMessage("Failed to fetch health record.");
+//       console.error(error);
+//     }
+//   };
+  
+  
+
+//   // Fetch IPFS data
+//   const handleFetchData = async () => {
+//     setMessage("Fetching health data from IPFS...");
+//     setLoading(true);
+//     try {
+//       const healthData = await PinataService.fetchHealthInfo(ipfsHash);
+//       setData(JSON.stringify(healthData, null, 2));
+//       setMessage("Data fetched successfully!");
+//     } catch (error) {
+//       setMessage("Failed to fetch data.");
+//       setData("");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <View>
+//       <Button title="Fetch Blockchain Data" onPress={fetchData} />
+//       <Button title="Fetch IPFS Data" onPress={handleFetchData} />
+//       {loading && <Text>Loading...</Text>}
+//       {message && <Text>{message}</Text>}
+//       {data && <Text>{JSON.stringify(data, null, 2)}</Text>}
+//     </View>
+//   );
+// };
+
+// export default Homepage;
+
+ 
+
+
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Navigation from "../components/Navigation";
@@ -23,7 +98,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-    
+
   },
   circleContainer: {
     width: "100%",

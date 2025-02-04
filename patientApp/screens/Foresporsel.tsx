@@ -1,33 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { useNavigation } from "@react-navigation/native";
+import { getAccessList, getAccessRequests, hasAccess, hasRequestedAccess } from "../components/BlockchainService"
+import {HOMECARE_WORKER_ADDRESS, OTHER_ADDRESS} from '@env';
 
 const Foresporsel = () => {
   const navigation = useNavigation();
+  const [requests, setRequests] = useState<any[]>([]);
 
-  const cards = [
-    { id: 1, title: "Andrea Markussen", description: "Sykepleier" },
-  ];
+  useEffect(() => {
+    const fetchRequests = async () => {
+      const accessRequests = await getAccessRequests();
+      const a = await hasRequestedAccess(HOMECARE_WORKER_ADDRESS);
+      setRequests(accessRequests)
+      
+      console.log(accessRequests)
+      console.log(a)
+    };
+
+    fetchRequests();
+  }, [HOMECARE_WORKER_ADDRESS]);
 
   const handlePress = (screen: string) => {
     navigation.navigate(screen as never);
   };
 
+
   return (
     <View style={styles.screen}>
       <Header header="Forespørsler" />
 
-      <Text style={styles.text}>Antall forespørsler: {cards.length}</Text>
+      <Text style={styles.text}>Antall forespørsler: {requests.length}</Text>
 
       <View style={styles.cardContainer}>
-        {cards.map((card) => (
+        {requests.map((request, index) => (
           <TouchableOpacity
-            key={card.id}
+            key={index}
             onPress={() => handlePress("DetailedForesporsel")}
           >
-            <Card title={card.title} description={card.description} />
+            <Card
+              title={request.navn}
+              description={`${request.yrke} - ${request.arbeidsplass}`}
+            />
           </TouchableOpacity>
         ))}
       </View>
