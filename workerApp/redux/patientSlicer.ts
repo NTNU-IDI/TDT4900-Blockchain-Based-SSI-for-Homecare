@@ -38,11 +38,15 @@ export const requestPatientAccess = createAsyncThunk(
 export const addPatientTasksNote = createAsyncThunk(
   'patients/addPatientTasksNote',
   async (
-    { patientId, note }: { patientId: string; note: string },
+    {
+      patientId,
+      note,
+      workerName
+    }: { patientId: string; note: string; workerName: string },
     thunkAPI
   ) => {
     try {
-      await addPatientNote(patientId, OWNER_PRIVATE_KEY, note);
+      await addPatientNote(patientId, OWNER_PRIVATE_KEY, note, workerName);
       return { patientId, note };
     } catch (error) {
       console.error('Error requesting access:', error);

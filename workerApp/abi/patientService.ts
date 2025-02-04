@@ -6,7 +6,6 @@ import {
   hasRequestedAccess
 } from './contractService';
 
-import { store } from '../redux/store';
 import { updateHealthRecord } from './contractService';
 
 async function fetchPatientData(ownerAddress: string): Promise<Patient> {
@@ -90,21 +89,14 @@ export async function fetchAllPatients(
 export async function addPatientNote(
   ownerAddress: string,
   privateKey: string,
-  newNote: string
+  newNote: string,
+  workerName: string
 ) {
   try {
     const hasPermission = await hasAccess(ownerAddress);
     if (!hasPermission) {
       throw new Error('Access denied. Unable to add note.');
     }
-
-    const state = store.getState();
-    const workerName = state.worker.worker?.navn
-
-    if (!workerName) {
-        throw new Error('No worker name found in state.');
-    }
-
 
     const oldIpfsHash = await getHealthRecordHash(ownerAddress);
 
@@ -121,14 +113,14 @@ export async function addPatientNote(
     }
 
     const formattedDate = new Intl.DateTimeFormat('no-NO', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(new Date())
-      
-    data.notes.push([newNote, formattedDate,workerName]);
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date());
+
+    data.notes.push([newNote, formattedDate, workerName]);
 
     console.log('Uploading updated patient data to IPFS...');
     const filename = `${data.name.replace(/\s+/g, '')}.json`;

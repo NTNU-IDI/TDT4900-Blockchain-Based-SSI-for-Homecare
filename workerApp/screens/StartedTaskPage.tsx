@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import GreenButton from '../components/GreenButton';
 import SharedStyles from '../styles/SharedStyles';
+import { store } from '../redux/store';
 
 let visitTimer: NodeJS.Timeout | null = null;
 
@@ -80,7 +81,19 @@ const StartedTasksPage: React.FC = () => {
   const finishTasks = async () => {
     if (currentPatient) {
       if (note != '') {
-        dispatch(addPatientTasksNote({ patientId: currentPatient.id, note }));
+        const state = store.getState();
+        const workerName = state.worker.worker?.navn;
+
+        if (!workerName) {
+          throw new Error('No worker name found in state.');
+        }
+        dispatch(
+          addPatientTasksNote({
+            patientId: currentPatient.id,
+            note,
+            workerName
+          })
+        );
       }
       dispatch(updatePatientStatus({ status: 'Ferdig' }));
       moveToNextPatient();
