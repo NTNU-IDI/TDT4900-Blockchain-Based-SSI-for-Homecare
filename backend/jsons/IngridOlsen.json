@@ -19,10 +19,11 @@
       {
         "id": 3,
         "name": "Lage middag",
-        "description": "Lag middag sammen med pasienten.",
+        "description": "Lag middag til pasienten.",
         "duration": 20
       }
     ],
+    "notes": [],
     "journal": {
       "diagnoses": [
         "Hjertesykdom, diagnostisert 2017"

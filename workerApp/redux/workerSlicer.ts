@@ -3,21 +3,28 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { HOMECARE_WORKER_ADDRESS } from '@env';
 import { Worker } from '../types/workerInterfaces';
 
-const workerData: Record<string, Worker> = require('../assets/homecare_workers.json');
+const workerData: Record<
+  string,
+  Worker
+> = require('../assets/homecare_workers.json');
 
-export const fetchWorker = createAsyncThunk('worker/fetchWorker', async (_, thunkAPI) => {
-  try {
-    const worker: Worker = {
-      navn: workerData[HOMECARE_WORKER_ADDRESS]?.navn || 'Ukjent',
-      arbeidsplass: workerData[HOMECARE_WORKER_ADDRESS]?.arbeidsplass || 'Ukjent',
-      yrke: workerData[HOMECARE_WORKER_ADDRESS]?.yrke || 'Ukjent'
-    };
+export const fetchWorker = createAsyncThunk(
+  'worker/fetchWorker',
+  async (_, thunkAPI) => {
+    try {
+      const worker: Worker = {
+        navn: workerData[HOMECARE_WORKER_ADDRESS]?.navn || 'Ukjent',
+        arbeidsplass:
+          workerData[HOMECARE_WORKER_ADDRESS]?.arbeidsplass || 'Ukjent',
+        yrke: workerData[HOMECARE_WORKER_ADDRESS]?.yrke || 'Ukjent'
+      };
 
-    return worker;
-  } catch (error) {
-    return thunkAPI.rejectWithValue('Failed to fetch worker data');
+      return worker;
+    } catch (error) {
+      return thunkAPI.rejectWithValue('Failed to fetch worker data');
+    }
   }
-});
+);
 
 interface WorkerState {
   worker: Worker | null;
@@ -32,9 +39,12 @@ const workerSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchWorker.fulfilled, (state, action: PayloadAction<Worker>) => {
-      state.worker = action.payload;
-    });
+    builder.addCase(
+      fetchWorker.fulfilled,
+      (state, action: PayloadAction<Worker>) => {
+        state.worker = action.payload;
+      }
+    );
   }
 });
 
