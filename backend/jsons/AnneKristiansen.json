@@ -11,6 +11,9 @@
         "duration": 5
       }
     ],
+    "notes": [
+        "Pasienten har nylig fått diagnosen osteoporose og trenger hjelp til å huske medisinering."
+    ],
     "journal": {
       "diagnoses": [
         "Osteoporose, diagnostisert 2020"
@@ -20,7 +23,7 @@
         "Kalsiumtilskudd - 500mg daglig"
       ],
       "previousTreatments": [
-        "Behandling for brudd i venstre arm"
+        "Behandling for brudd i venstre arm januar 2023"
       ]
     }
   }

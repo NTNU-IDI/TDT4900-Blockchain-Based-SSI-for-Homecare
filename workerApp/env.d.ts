@@ -8,4 +8,7 @@ declare module '@env' {
     export const PATIENT_ADDRESSES: string;
     export const HOMECARE_WORKER_ADDRESS: string;
     export const HOMECARE_WORKER_PRIVATE_KEY: string;
+    export const PINATA_API_KEY: string;
+    export const PINATA_SECRET_API_KEY: string;
+    export const PINATA_JWT: string;
   }

@@ -50,18 +50,20 @@ contract HealthInfo {
      * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
      * 
      */
-    function updateHealthRecord(address owner) public {
+    function updateHealthRecord(address owner, string memory newIpfsHash) public {
         require(msg.sender == owner || access[owner][msg.sender],
         "Not authorized to update this record"
     );
         HealthRecord storage record = healthRecords[owner];
+
+        record.ipfsHash = newIpfsHash;
         
         record.updates.push(Update({
             updater: msg.sender,
             timestamp: block.timestamp,
-            description: "Record updated"
+            description: "Added note to record"
         }));
-        emit HealthRecordUpdated(owner, " ");
+        emit HealthRecordUpdated(owner, newIpfsHash);
     }
 
     /**

@@ -1,8 +1,8 @@
-import { HOMECARE_WORKER_PRIVATE_KEY, PATIENT_ADDRESSES } from '@env';
+import { OWNER_PRIVATE_KEY, PATIENT_ADDRESSES } from '@env';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { addPatientNote, fetchAllPatients } from '../abi/patientService';
 
 import { Patient } from '../types/patientInterfaces';
-import { fetchAllPatients } from '../abi/patientService';
 import { requestAccess } from '../abi/contractService';
 
 export const fetchAndSetPatients = createAsyncThunk(
@@ -23,7 +23,20 @@ export const requestPatientAccess = createAsyncThunk(
   'patients/requestPatientAccess',
   async ({patientId, note}: {patientId: string; note: string}, thunkAPI) => {
     try {
-      await requestAccess(patientId, HOMECARE_WORKER_PRIVATE_KEY, note);
+      await requestAccess(patientId, OWNER_PRIVATE_KEY, note);
+      return {patientId, note};
+    } catch (error) {
+      console.error('Error requesting access:', error);
+      return thunkAPI.rejectWithValue('Failed to send request');
+    }
+  }
+);
+
+export const addPatientTasksNote = createAsyncThunk(
+  'patients/addPatientTasksNote',
+  async ({patientId, note}: {patientId: string; note: string}, thunkAPI) => {
+    try {
+      await addPatientNote(patientId, OWNER_PRIVATE_KEY, note);
       return {patientId, note};
     } catch (error) {
       console.error('Error requesting access:', error);

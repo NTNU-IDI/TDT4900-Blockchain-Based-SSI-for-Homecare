@@ -16,7 +16,7 @@ import {
   updateHealthRecord
 } from './contractService';
 
-import fetchIPFSData from './pinataService';
+import {fetchIPFSData} from './pinataService';
 
 async function main() {
   try {
@@ -91,7 +91,7 @@ async function main() {
 
     // 2. Update Health Record with access
     console.log('Updating health record...');
-    await updateHealthRecord(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
+    await updateHealthRecord(OWNER_ADDRESS, OTHER_PRIVATE_KEY, "");
 
     // 5. Revoke Access
     console.log(`Revoking access from ${OTHER_ADDRESS}...`);
