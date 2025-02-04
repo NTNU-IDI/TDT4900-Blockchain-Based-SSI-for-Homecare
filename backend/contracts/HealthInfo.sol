@@ -149,18 +149,18 @@ contract HealthInfo {
  * @param owner The address of the health record owner.
  * @return A boolean indicating if the requester has access.
  */
-function hasRequestedAccess(address owner) public view returns (bool) {
-    return requestedAccess[owner][msg.sender];
-}
+    function hasRequestedAccess(address owner) public view returns (bool) {
+        return requestedAccess[owner][msg.sender];
+    }
 
-/**
- * @dev Checks if a specific requester has access to the owner's health record.
- * @param owner The address of the health record owner.
- * @return A boolean indicating if the requester has access.
- */
-function hasAccess(address owner) public view returns (bool) {
-    return access[owner][msg.sender];
-}
+    /**
+     * @dev Checks if a specific requester has access to the owner's health record.
+     * @param owner The address of the health record owner.
+     * @return A boolean indicating if the requester has access.
+     */
+    function hasAccess(address owner) public view returns (bool) {
+        return access[owner][msg.sender];
+    }
 
     /**
      * @dev Retrieves the health record of a specified owner if the caller has access.

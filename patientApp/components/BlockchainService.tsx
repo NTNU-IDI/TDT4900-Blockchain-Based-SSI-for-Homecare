@@ -8,6 +8,7 @@ if (!CONTRACT_ADDRESS) {
   throw new Error(
     "CONTRACT_ADDRESS is not defined in the environment variables."
   );
+
 }
 if (!RPC_URL) {
   throw new Error("RPC_URL is not defined in the environment variables.");
