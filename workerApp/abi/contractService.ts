@@ -36,7 +36,8 @@ export async function updateHealthRecord(
   const signer = new ethers.Wallet(privateKey, provider);
 
   const tx = await (contract!.connect(signer!) as Contract).updateHealthRecord(
-    owner, newIpfsHash
+    owner,
+    newIpfsHash
   );
   await tx.wait();
   console.log('Health record updated successfully.');
@@ -154,7 +155,8 @@ export async function requestAccess(
   const signer = new ethers.Wallet(privateKey, provider);
 
   const tx = await (contract!.connect(signer!) as Contract).requestAccess(
-    recordOwner, note
+    recordOwner,
+    note
   );
   await tx.wait();
   console.log(`Access requested from ${signer.address} to ${recordOwner}`);

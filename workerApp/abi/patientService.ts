@@ -1,5 +1,5 @@
 import { Patient, Task } from '../types/patientInterfaces';
-import {fetchIPFSData, unpinFromIPFS, uploadToIPFS} from './pinataService';
+import { fetchIPFSData, unpinFromIPFS, uploadToIPFS } from './pinataService';
 import {
   getHealthRecordHash,
   hasAccess,
@@ -86,8 +86,11 @@ export async function fetchAllPatients(
   return patients;
 }
 
-
-export async function addPatientNote(ownerAddress: string, privateKey: string, newNote: string) {
+export async function addPatientNote(
+  ownerAddress: string,
+  privateKey: string,
+  newNote: string
+) {
   try {
     const hasPermission = await hasAccess(ownerAddress);
     if (!hasPermission) {
@@ -98,28 +101,27 @@ export async function addPatientNote(ownerAddress: string, privateKey: string, n
 
     const data = await fetchIPFSData(oldIpfsHash);
 
-
     if (oldIpfsHash) {
-        console.log(`Removing old IPFS file: ${oldIpfsHash}`);
-        await unpinFromIPFS(oldIpfsHash);
-        console.log("Old IPFS file removed successfully.");
-      }
+      console.log(`Removing old IPFS file: ${oldIpfsHash}`);
+      await unpinFromIPFS(oldIpfsHash);
+      console.log('Old IPFS file removed successfully.');
+    }
 
     if (!data.notes) {
       data.notes = [];
     }
     data.notes.push(newNote);
 
-    console.log("Uploading updated patient data to IPFS...");
+    console.log('Uploading updated patient data to IPFS...');
     const filename = `${data.name.replace(/\s+/g, '')}.json`;
     const newIpfsHash = await uploadToIPFS(data, filename);
 
-    console.log("Updating smart contract with new IPFS hash...");
+    console.log('Updating smart contract with new IPFS hash...');
     await updateHealthRecord(ownerAddress, privateKey, newIpfsHash);
 
-    console.log("Note successfully added!");
+    console.log('Note successfully added!');
   } catch (error) {
-    console.error("Error adding note to patient data:", error);
+    console.error('Error adding note to patient data:', error);
     throw error;
   }
 }

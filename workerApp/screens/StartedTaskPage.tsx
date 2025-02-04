@@ -80,12 +80,12 @@ const StartedTasksPage: React.FC = () => {
   const finishTasks = async () => {
     if (currentPatient) {
       if (note != '') {
-        dispatch(addPatientTasksNote({patientId: currentPatient.id, note}));
-      };
+        dispatch(addPatientTasksNote({ patientId: currentPatient.id, note }));
+      }
       dispatch(updatePatientStatus({ status: 'Ferdig' }));
       moveToNextPatient();
+    }
   };
-};
 
   const openTaskDescription = (description: string) => {
     setSelectedTaskDescription(description);
