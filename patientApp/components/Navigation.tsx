@@ -18,10 +18,10 @@ const Navigation = () => {
         {[
           { name: "calendar", label: "Timeavtaler", screen: "Innsyn" },
           { name: "chemistry", label: "Prøvesvar", screen: "Innsyn" },
-          { name: "bell", label: "Legemidler", screen: "Innsyn" },
-          { name: "envelope", label: "Meldinger", screen: "Innsyn" },
+          { name: "bell", label: "Endringslogg", screen: "Oppdateringer" },
+          { name: "envelope", label: "Meldinger", screen: "" },
           { name: "user", label: "Tilganger", screen: "Tilganger" },
-          { name: "docs", label: "Dokumenter", screen: "Innsyn" },
+          { name: "docs", label: "Notater", screen: "Notater" },
         ].map((icon, index) => (
           <TouchableOpacity
             key={index}

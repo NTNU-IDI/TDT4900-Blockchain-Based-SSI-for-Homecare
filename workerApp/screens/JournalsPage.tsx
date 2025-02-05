@@ -11,7 +11,7 @@ const JournalsPage: React.FC = () => {
   const [selectedJournalPatient, setSelectedJournalPatient] =
     useState<any>(null);
   const [viewType, setViewType] = useState<'journal' | 'request' | null>(null);
-
+  
   const handlePatientPress = (patient: any) => {
     setSelectedJournalPatient(patient);
     if (patient.access === 'Tilgang') {
