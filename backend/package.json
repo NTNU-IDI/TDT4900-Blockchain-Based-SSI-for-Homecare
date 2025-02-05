@@ -11,8 +11,9 @@
   "dependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@pinata/sdk": "^2.1.0",
+    "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "fs": "^0.0.1-security",
-    "ipfs-http-client": "^60.0.1"
+    "path": "^0.12.7"
   }
 }

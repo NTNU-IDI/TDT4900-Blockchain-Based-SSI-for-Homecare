@@ -12,8 +12,16 @@ npx hardhat run scripts/deploy.ts --network localhost
 ```
 Update .env in all modules with the contract address
 
+To set up normally:
+
 ```shell
 npx hardhat run scripts/setUp.ts --network localhost
+```
+
+To reset ipfs files:
+
+```shell
+npx hardhat run scripts/deployAndResetIPFS.ts --network localhost
 ```
 
 ## Sample Hardhat Project

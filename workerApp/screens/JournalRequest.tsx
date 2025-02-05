@@ -17,7 +17,7 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
   const [note, setNote] = useState('');
 
   const handleRequestAccess = () => {
-    dispatch(requestPatientAccess({patientId: patient.id, note}));
+    dispatch(requestPatientAccess({ patientId: patient.id, note }));
     setRequestSent(true);
     setTimeout(() => onBack(), 2000);
   };

@@ -7,7 +7,7 @@
       {
         "id": 1,
         "name": "Tilberedning av lunsj",
-        "description": "Lag en enkel lunsj sammen med pasienten.",
+        "description": "Lag en enkel lunsj til pasienten.",
         "duration": 10
       },
       {
@@ -17,6 +17,7 @@
         "duration": 5
       }
     ],
+    "notes": [],
     "journal": {
       "diagnoses": [
         "Alzheimers, diagnostisert 2020"
@@ -25,7 +26,7 @@
         "Donepezil - daglig"
       ],
       "previousTreatments": [
-        "Kognitiv terapi for hukommelsestap"
+        "Kognitiv terapi for hukommelsestap september 2022"
       ]
     }
   }
