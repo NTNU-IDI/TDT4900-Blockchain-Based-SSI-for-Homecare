@@ -58,8 +58,13 @@ async function deployContract(): Promise<string> {
 
 async function main() {
     const contractAddress = await deployContract();
-    const ACCOUNTS = process.env.ACCOUNTS?.split(",") || [];
-    if (ACCOUNTS.length === 0) throw new Error("No accounts provided in .env file.");
+    const signers = await ethers.getSigners();
+    const ACCOUNTS = signers.slice(0, 5).map(signer => signer.address);
+    if (ACCOUNTS.length < 5) {
+        throw new Error("Not enough accounts available in Hardhat. Ensure at least 5 accounts are configured.");
+    }
+    console.log("Using accounts:", ACCOUNTS);
+    
 
     const jsonFolderPath = path.join(__dirname, "../jsons");
     if (!fs.existsSync(jsonFolderPath)) {
