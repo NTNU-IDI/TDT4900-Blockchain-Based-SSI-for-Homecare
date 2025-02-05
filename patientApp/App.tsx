@@ -11,7 +11,8 @@ import Tilganger from './screens/Tilganger';
 import Innsyn from './screens/Innsyn';
 import Foresporsel from './screens/Foresporsel';
 import DetailedForesporsel from './screens/DetailedForesporsel';
-import NotatLogg from './screens/NotatLogg';
+import Notater from './screens/Notater';
+import Oppdateringer from './screens/Oppdateringer';
 
 // Create the stack navigator
 const Stack = createStackNavigator();
@@ -23,8 +24,8 @@ export default function App() {
         <Stack.Screen name="Home" component={Homepage} />
         <Stack.Screen name="Tilganger" component={Tilganger} />
         <Stack.Screen name="Innsyn" component={Innsyn} />
-        <Stack.Screen name="Endringslogg" component={Endringslogg} />
-        <Stack.Screen name="NotatLogg" component={NotatLogg} />
+        <Stack.Screen name="Oppdateringer" component={Oppdateringer} />
+        <Stack.Screen name="Notater" component={Notater} />
         <Stack.Screen name="Foresporsel" component={Foresporsel} />
         <Stack.Screen name="DetailedForesporsel" component={DetailedForesporsel} />
 

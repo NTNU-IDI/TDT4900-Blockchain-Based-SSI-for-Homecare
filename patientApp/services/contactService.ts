@@ -1,12 +1,11 @@
 require('dotenv').config();
 
 import { Contract, ethers } from 'ethers';
+import HealthInfoABI from '../abi/HealthInfoABI.json';
 
 const {
-    CONTRACT_ADDRESS, RPC_URL
-  } = process.env;
-
-import HealthInfoABI from '../abi/HealthInfoABI.json';
+  CONTRACT_ADDRESS, RPC_URL
+} = process.env;
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {

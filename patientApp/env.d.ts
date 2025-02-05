@@ -1,6 +1,7 @@
 declare module '@env' {
     export const CONTRACT_ADDRESS: string;
     export const OWNER_ADDRESS: string;
+    export const IPFS_HASH: string;
     export const RPC_URL: string;
     export const OWNER_PRIVATE_KEY: string;
     export const OTHER_PRIVATE_KEY: string;

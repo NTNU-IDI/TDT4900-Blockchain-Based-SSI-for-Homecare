@@ -34,8 +34,8 @@ async function main() {
       console.log('Data:', data);
   
       // 2. Update Health Record without access (should fail)
-      //console.log("Updating health record...");
-      //await updateHealthRecord(fetchedIpfsHash, otherPrivateKey);
+      // console.log("Updating health record...");
+      // await updateHealthRecord(fetchedIpfsHash, OTHER_PRIVATE_KEY);
   
       // 3. Get Access List
       console.log('Fetching access list...');
@@ -52,49 +52,49 @@ async function main() {
       console.log('Access Requests:', accessRequests1);
   
       // 7. Deny Access Request
-    //   console.log(`Denying access request from ${OTHER_ADDRESS}...`);
-    //   await denyAccessRequest(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
+      console.log(`Denying access request from ${OTHER_ADDRESS}...`);
+      await denyAccessRequest(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
   
       // 6. Get requested access
-    //   console.log('Fetching access requests...');
-    //   const accessRequests2 = await getAccessRequests();
-    //   console.log('Access Requests:', accessRequests2);
+      console.log('Fetching access requests...');
+      const accessRequests2 = await getAccessRequests();
+      console.log('Access Requests:', accessRequests2);
   
       // 3. Get Access List
-    //   console.log('Fetching access list...');
-    //   const accessList2 = await getAccessList();
-    //   console.log('Access List:', accessList2);
+      console.log('Fetching access list...');
+      const accessList2 = await getAccessList();
+      console.log('Access List:', accessList2);
   
       // 6. Request Access
-    //   console.log(`Requesting access to ${OWNER_ADDRESS}...`);
-    //   await requestAccess(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
+      console.log(`Requesting access to ${OWNER_ADDRESS}...`);
+      await requestAccess(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
   
       // 4. Grant Access
       console.log(`Granting access to ${OTHER_ADDRESS}...`);
       await grantAccess(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
   
     //   // 6. Get requested access
-    //   console.log('Fetching access requests...');
-    //   const accessRequests3 = await getAccessRequests();
-    //   console.log('Access Requests:', accessRequests3);
+      console.log('Fetching access requests...');
+      const accessRequests3 = await getAccessRequests();
+      console.log('Access Requests:', accessRequests3);
   
     //   // 3. Get Access List
-    //   console.log('Fetching access list...');
-    //   const accessList3 = await getAccessList();
-    //   console.log('Access List:', accessList3);
+      console.log('Fetching access list...');
+      const accessList3 = await getAccessList();
+      console.log('Access List:', accessList3);
   
     //   // 2. Update Health Record with access
-    //   console.log('Updating health record...');
-    //   await updateHealthRecord(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
+      console.log('Updating health record...');
+      await updateHealthRecord(OWNER_ADDRESS, OTHER_PRIVATE_KEY);
   
     //   // 5. Revoke Access
-    //   console.log(`Revoking access from ${OTHER_ADDRESS}...`);
-    //   await revokeAccess(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
+      console.log(`Revoking access from ${OTHER_ADDRESS}...`);
+      await revokeAccess(OTHER_ADDRESS, OWNER_PRIVATE_KEY);
   
     //   // 3. Get Access List
-    //   console.log('Fetching access list...');
-    //   const accessList4 = await getAccessList();
-    //   console.log('Access List:', accessList4);
+      console.log('Fetching access list...');
+      const accessList4 = await getAccessList();
+      console.log('Access List:', accessList4);
   
       // 6. Get Updates
       console.log('Fetching updates...');
