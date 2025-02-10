@@ -27,12 +27,15 @@ const Innsyn = () => {
             description="Fastlege"
             workPlace="Moholt legesenter"
           ></Card>
-        </TouchableOpacity>
+        </TouchableOpacity >
+        <TouchableOpacity onPress={() => handlePress("NotatLogg")}>
         <Card
             title="Isabelle Olsen"
             description="Sykepleier"
             workPlace="Byåsen hjemmetjeneste"
           ></Card>
+        </TouchableOpacity>
+
       </View>
     </View>
   );

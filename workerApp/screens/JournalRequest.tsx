@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import BackButton from '../components/BackButton';
 import GreenButton from '../components/GreenButton';
 import SharedStyles from '../styles/SharedStyles';
-import data from '../assets/homecare_workers.json';
 import { requestPatientAccess } from '../redux/patientSlicer';
 
 const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
@@ -18,7 +17,7 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
   const [note, setNote] = useState('');
 
   const handleRequestAccess = () => {
-    dispatch(requestPatientAccess(patient.id));
+    dispatch(requestPatientAccess({ patientId: patient.id, note }));
     setRequestSent(true);
     setTimeout(() => onBack(), 2000);
   };

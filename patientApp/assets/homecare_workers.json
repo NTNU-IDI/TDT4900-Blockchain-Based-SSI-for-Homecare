@@ -1,0 +1,27 @@
+{
+    "0xcd3B766CCDd6AE721141F452C550Ca635964ce71": {
+      "navn": "Mona Hansen",
+      "arbeidsplass": "Byåsen Hjemmetjeneste",
+      "yrke": "Sykepleier"
+    },
+    "0x2546BcD3c84621e976D8185a91A922aE77ECEc30": {
+      "navn": "Ola Pedersen",
+      "arbeidsplass": "Byåsen Hjemmetjeneste",
+      "yrke": "Vernepleier"
+    },
+    "0xbDA5747bFD65F08deb54cb465eB87D40e51B197E": {
+      "navn": "Kari Olsen",
+      "arbeidsplass": "Trondheim Kommune",
+      "yrke": "Hjemmetjeneste Administrator"
+    },
+    "0xdD2FD4581271e230360230F9337D5c0430Bf44C0": {
+      "navn": "Per Johansen",
+      "arbeidsplass": "Byåsen Hjemmetjeneste",
+      "yrke": "Sykepleier"
+    },
+    "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199": {
+      "navn": "Lise Sørensen",
+      "arbeidsplass": "Byåsen Hjemmetjeneste",
+      "yrke": "Hjemmepleier"
+    }
+  }

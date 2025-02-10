@@ -1,5 +1,5 @@
 export interface Worker {
-    navn: string; 
-    arbeidsplass: string;
-    yrke: string;
+  navn: string;
+  arbeidsplass: string;
+  yrke: string;
 }

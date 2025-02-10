@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-    
+
   },
   circleContainer: {
     width: "100%",

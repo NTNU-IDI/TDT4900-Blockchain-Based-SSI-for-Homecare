@@ -18,11 +18,12 @@ contract HealthInfo {
     mapping(address => mapping(address => bool)) private requestedAccess;
     mapping(address => address[]) private accessList;
     mapping(address => address[]) private accessRequests;
+    mapping(address => mapping(address => string)) public accessRequestNotes;
 
 
     event HealthRecordUpdated(address indexed owner, string ipfsHash);
     event AccessRevoked(address indexed owner, address indexed permissionedUser);
-    event AccessRequested(address indexed owner, address indexed requester);
+    event AccessRequested(address indexed owner, address indexed requester, string note);
     event AccessRequestAccepted(address indexed owner, address indexed requester);
     event AccessRequestRejected(address indexed owner, address indexed requester);
 
@@ -49,18 +50,20 @@ contract HealthInfo {
      * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
      * 
      */
-    function updateHealthRecord(address owner) public {
+    function updateHealthRecord(address owner, string memory newIpfsHash) public {
         require(msg.sender == owner || access[owner][msg.sender],
         "Not authorized to update this record"
     );
         HealthRecord storage record = healthRecords[owner];
+
+        record.ipfsHash = newIpfsHash;
         
         record.updates.push(Update({
             updater: msg.sender,
             timestamp: block.timestamp,
-            description: "Record updated"
+            description: "Added note to record"
         }));
-        emit HealthRecordUpdated(owner, " ");
+        emit HealthRecordUpdated(owner, newIpfsHash);
     }
 
     /**
@@ -108,7 +111,7 @@ contract HealthInfo {
      * @dev Requests access to another user's health record.
      * @param recordOwner The address of the health record owner.
      */
-    function requestAccess(address recordOwner) public {
+    function requestAccess(address recordOwner, string memory note) public {
         require(recordOwner != address(0), "Invalid record owner");
         require(recordOwner != msg.sender, "Cannot request access to your own record");
         require(!access[recordOwner][msg.sender], "Access already granted");
@@ -119,7 +122,9 @@ contract HealthInfo {
 
         accessRequests[recordOwner].push(msg.sender);
         requestedAccess[recordOwner][msg.sender] = true;
-        emit AccessRequested(msg.sender, recordOwner);
+
+        accessRequestNotes[recordOwner][msg.sender] = note;
+        emit AccessRequested(msg.sender, recordOwner, note);
     }
 
     /**
@@ -146,18 +151,18 @@ contract HealthInfo {
  * @param owner The address of the health record owner.
  * @return A boolean indicating if the requester has access.
  */
-function hasRequestedAccess(address owner) public view returns (bool) {
-    return requestedAccess[owner][msg.sender];
-}
+    function hasRequestedAccess(address owner) public view returns (bool) {
+        return requestedAccess[owner][msg.sender];
+    }
 
-/**
- * @dev Checks if a specific requester has access to the owner's health record.
- * @param owner The address of the health record owner.
- * @return A boolean indicating if the requester has access.
- */
-function hasAccess(address owner) public view returns (bool) {
-    return access[owner][msg.sender];
-}
+    /**
+     * @dev Checks if a specific requester has access to the owner's health record.
+     * @param owner The address of the health record owner.
+     * @return A boolean indicating if the requester has access.
+     */
+    function hasAccess(address owner) public view returns (bool) {
+        return access[owner][msg.sender];
+    }
 
     /**
      * @dev Retrieves the health record of a specified owner if the caller has access.

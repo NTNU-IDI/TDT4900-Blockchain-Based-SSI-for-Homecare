@@ -1,7 +1,11 @@
-import { CONTRACT_ADDRESS, RPC_URL } from '@env';
-import { Contract, ethers } from 'ethers';
+require('dotenv').config();
 
-import HealthInfoABI from './HealthInfoABI.json';
+import { Contract, ethers } from 'ethers';
+import HealthInfoABI from '../abi/HealthInfoABI.json';
+
+const {
+  CONTRACT_ADDRESS, RPC_URL
+} = process.env;
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {
@@ -30,14 +34,12 @@ const contract = new ethers.Contract(
  */
 export async function updateHealthRecord(
   owner: string,
-  privateKey: string,
-  newIpfsHash: string
+  privateKey: string
 ): Promise<void> {
   const signer = new ethers.Wallet(privateKey, provider);
 
   const tx = await (contract!.connect(signer!) as Contract).updateHealthRecord(
-    owner,
-    newIpfsHash
+    owner
   );
   await tx.wait();
   console.log('Health record updated successfully.');
@@ -149,14 +151,12 @@ export async function revokeAccess(
  */
 export async function requestAccess(
   recordOwner: string,
-  privateKey: string,
-  note: string
+  privateKey: string
 ): Promise<void> {
   const signer = new ethers.Wallet(privateKey, provider);
 
   const tx = await (contract!.connect(signer!) as Contract).requestAccess(
-    recordOwner,
-    note
+    recordOwner
   );
   await tx.wait();
   console.log(`Access requested from ${signer.address} to ${recordOwner}`);

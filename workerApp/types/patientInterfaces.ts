@@ -20,6 +20,7 @@ interface Patient {
   nøkkelnummer: string;
   status: string; // 'Ikke startet', 'Påbegynt', 'Ferdig'
   tasks: Task[];
+  notes: string[];
   access: boolean; // 'Tilgang' or 'Ikke tilgang'
   accessRequest: boolean; // Tracks if access has been requested
   journal: Journal; // Patient-specific journal data
