@@ -177,6 +177,14 @@ contract HealthInfo {
         return healthRecords[recordOwner].ipfsHash;
     }
 
+    /**
+     * @dev Retrieves the health record of a specified owner if the caller has access.
+     * @return The IPFS hash of the complete health record JSON.
+     */
+    function getOwnHealthRecord() public view returns (string memory) {
+        return healthRecords[msg.sender].ipfsHash;
+    }
+
     function getUpdates() public view returns (address[] memory, uint256[] memory, string[] memory) {
         HealthRecord storage record = healthRecords[msg.sender];
         uint256 length = record.updates.length;

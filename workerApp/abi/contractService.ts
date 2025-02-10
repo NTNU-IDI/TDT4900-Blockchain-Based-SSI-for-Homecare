@@ -107,6 +107,14 @@ export async function getHealthRecordHash(
   return await contract.getHealthRecord(ownerAddress);
 }
 
+export async function getOwnHealthRecordHash(
+  ): Promise<string> {
+    if (!contract || !signer) {
+      throw new Error("Contract not initialized. Make sure to call connectWallet() first.");
+    }
+    return await contract.getOwnHealthRecord();
+  }
+
 /**
  * Fetch the list of addresses with access to the owner's health record.
  * @param ownerAddress - The Ethereum address of the owner.

@@ -186,6 +186,19 @@
     },
     {
       "inputs": [],
+      "name": "getOwnHealthRecord",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "getUpdates",
       "outputs": [
         {
