@@ -161,18 +161,23 @@ export async function revokeAccess(
  * Request access to another user's health record.
  * @param recordOwner - The address of the health record owner.
  */
-export async function requestAccess(
-  recordOwner: string,
-  note: string
-): Promise<void> {
-
-  const tx = await (contract!.connect(signer!) as Contract).requestAccess(
-    recordOwner,
-    note
-  );
-  await tx.wait();
-  console.log(`Access requested from ${signer!.address} to ${recordOwner}`);
-}
+export async function requestAccess(recordOwner: string, note: string): Promise<void> {
+    if (!contract || !signer) {
+      throw new Error("🚨 Contract or signer not initialized. Call `connectWallet()` first.");
+    }
+  
+    console.log("🔄 Sending requestAccess transaction...");
+    
+    try {
+      const tx = await contract.requestAccess(recordOwner, note);
+      await tx.wait(); // Wait for confirmation
+      console.log(`✅ Access requested from ${await signer.address} to ${recordOwner}`);
+    } catch (error) {
+      console.error("🚨 Error in requestAccess transaction:", error);
+      throw error;
+    }
+  }
+  
 
 /**
  * Approve an access request from a user.

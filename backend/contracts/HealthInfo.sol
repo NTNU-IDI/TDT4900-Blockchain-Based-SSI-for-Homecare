@@ -112,7 +112,6 @@ contract HealthInfo {
      * @param recordOwner The address of the health record owner.
      */
     function requestAccess(address recordOwner, string memory note) public {
-        require(recordOwner != address(0), "Invalid record owner");
         require(recordOwner != msg.sender, "Cannot request access to your own record");
         require(!access[recordOwner][msg.sender], "Access already granted");
 
@@ -124,7 +123,7 @@ contract HealthInfo {
         requestedAccess[recordOwner][msg.sender] = true;
 
         accessRequestNotes[recordOwner][msg.sender] = note;
-        emit AccessRequested(msg.sender, recordOwner, note);
+        emit AccessRequested(recordOwner, msg.sender, note);
     }
 
     /**
@@ -204,8 +203,17 @@ contract HealthInfo {
         return accessList[msg.sender];
     }
 
-    function getAccessRequests() public view returns (address[] memory) {
-        return accessRequests[msg.sender];
+    function getAccessRequests() public view returns (address[] memory, string[] memory) {
+        uint256 length = accessRequests[msg.sender].length;
+        address[] memory requesters = new address[](length); 
+        string[] memory notes = new string[](length);  
+
+        for (uint256 i = 0; i < length; i++) {
+            requesters[i] = accessRequests[msg.sender][i];  
+            notes[i] = accessRequestNotes[msg.sender][requesters[i]]; 
+        }
+
+        return (requesters, notes);
     }
 
 

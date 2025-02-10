@@ -17,6 +17,10 @@ To set up normally:
 ```shell
 npx hardhat run scripts/setUp.ts --network localhost
 ```
+Without resetting ipfs files:
+```shell
+npx hardhat run scripts/deployAndSetUp.ts --network localhost
+```
 
 To reset ipfs files:
 
