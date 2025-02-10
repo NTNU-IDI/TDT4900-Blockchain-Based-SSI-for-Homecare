@@ -1,14 +1,15 @@
 import { OWNER_PRIVATE_KEY, PATIENT_ADDRESSES } from '@env';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { addPatientNote, fetchAllPatients } from '../abi/patientService';
+import { connectWallet, requestAccess } from '../abi/contractService';
 
 import { Patient } from '../types/patientInterfaces';
-import { requestAccess } from '../abi/contractService';
 
 export const fetchAndSetPatients = createAsyncThunk(
   'patients/fetchAndSetPatients',
   async (_: void, thunkAPI) => {
     try {
+      await connectWallet();
       return await fetchAllPatients(PATIENT_ADDRESSES.split(','));
     } catch (error) {
       if (error instanceof Error) {

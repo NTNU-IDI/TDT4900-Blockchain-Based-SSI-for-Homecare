@@ -7,11 +7,26 @@ const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.28",
+  solidity: {
+    version: "0.8.28",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
   networks: {
-    sepolia: {
-      url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: PRIVATE_KEY ? [`0x${PRIVATE_KEY}`] : [],
+    hardhat: {
+      chainId: 31337,
+    },
+    remote: {
+      url: "http://10.22.97.206:8545",
+      chainId: 31337,
+      accounts: {
+        mnemonic:
+          "test test test test test test test test test test test junk", // Default Hardhat mnemonic
+      },
     },
   },
 };
