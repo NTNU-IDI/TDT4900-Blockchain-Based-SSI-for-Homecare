@@ -24,6 +24,15 @@ To reset ipfs files:
 npx hardhat run scripts/deployAndResetIPFS.ts --network localhost
 ```
 
+For several users:
+
+Log into correct MetaMask account and network, one person runs
+```shell
+npx hardhat node --hostname 10.22.X.X
+npx hardhat run scripts/deployAndResetIPFS.ts --network remote
+
+```
+
 ## Sample Hardhat Project
 This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
 

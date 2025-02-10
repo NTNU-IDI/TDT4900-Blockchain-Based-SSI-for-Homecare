@@ -3,8 +3,7 @@ import "dotenv/config";
 
 import { HardhatUserConfig } from "hardhat/config";
 
-const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
+const URL = process.env.URL || "";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -21,7 +20,7 @@ const config: HardhatUserConfig = {
       chainId: 31337,
     },
     remote: {
-      url: "http://10.22.97.206:8545",
+      url: URL,
       chainId: 31337,
       accounts: {
         mnemonic:
