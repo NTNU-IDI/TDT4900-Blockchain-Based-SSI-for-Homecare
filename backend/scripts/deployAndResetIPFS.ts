@@ -52,8 +52,28 @@ async function deployContract(): Promise<string> {
     const contractAddress = await healthInfo.getAddress();
     console.log("Contract deployed to:", contractAddress);
 
-    fs.writeFileSync(".env", `CONTRACT_ADDRESS=${contractAddress}\n`);
+    changeEnvContractAddress(contractAddress);
     return contractAddress;
+}
+
+async function changeEnvContractAddress(address: string){
+    let envContent = '';
+    if (fs.existsSync('.env')) {
+        envContent = fs.readFileSync('.env', 'utf8');
+    }
+
+    // Append new contract address
+    const newEntry = `CONTRACT_ADDRESS=${address}\n`;
+
+    // Check if CONTRACT_ADDRESS already exists, replace it instead of appending
+    if (envContent.includes('CONTRACT_ADDRESS=')) {
+        envContent = envContent.replace(/CONTRACT_ADDRESS=.*/g, newEntry.trim());
+    } else {
+        envContent += newEntry;
+    }
+
+    // Write back the modified content
+    fs.writeFileSync('.env', envContent);
 }
 
 async function main() {
