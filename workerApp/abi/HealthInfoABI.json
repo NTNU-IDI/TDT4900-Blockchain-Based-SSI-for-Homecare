@@ -93,10 +93,10 @@
           "type": "address"
         },
         {
-          "indexed": false,
-          "internalType": "string",
-          "name": "ipfsHash",
-          "type": "string"
+          "indexed": true,
+          "internalType": "address",
+          "name": "updater",
+          "type": "address"
         }
       ],
       "name": "HealthRecordUpdated",
