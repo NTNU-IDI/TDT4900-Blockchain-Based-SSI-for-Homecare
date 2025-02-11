@@ -10,7 +10,8 @@ export const fetchAndSetPatients = createAsyncThunk(
   async (_: void, thunkAPI) => {
     try {
       await connectWallet();
-      return await fetchAllPatients(PATIENT_ADDRESSES.split(','));
+      const patientAddresses = PATIENT_ADDRESSES.split(',');
+      return await fetchAllPatients(patientAddresses);
     } catch (error) {
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(error.message);
