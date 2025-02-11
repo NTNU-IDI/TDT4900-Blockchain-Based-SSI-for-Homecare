@@ -21,7 +21,7 @@ contract HealthInfo {
     mapping(address => mapping(address => string)) public accessRequestNotes;
 
 
-    event HealthRecordUpdated(address indexed owner, string ipfsHash);
+    event HealthRecordUpdated(address indexed owner, address indexed updater);
     event AccessRevoked(address indexed owner, address indexed permissionedUser);
     event AccessRequested(address indexed owner, address indexed requester, string note);
     event AccessRequestAccepted(address indexed owner, address indexed requester);
@@ -63,7 +63,7 @@ contract HealthInfo {
             timestamp: block.timestamp,
             description: "Added note to record"
         }));
-        emit HealthRecordUpdated(owner, newIpfsHash);
+        emit HealthRecordUpdated(owner, msg.sender);
     }
 
     /**
@@ -112,7 +112,6 @@ contract HealthInfo {
      * @param recordOwner The address of the health record owner.
      */
     function requestAccess(address recordOwner, string memory note) public {
-        require(recordOwner != address(0), "Invalid record owner");
         require(recordOwner != msg.sender, "Cannot request access to your own record");
         require(!access[recordOwner][msg.sender], "Access already granted");
 
@@ -124,7 +123,7 @@ contract HealthInfo {
         requestedAccess[recordOwner][msg.sender] = true;
 
         accessRequestNotes[recordOwner][msg.sender] = note;
-        emit AccessRequested(msg.sender, recordOwner, note);
+        emit AccessRequested(recordOwner, msg.sender, note);
     }
 
     /**
@@ -177,6 +176,14 @@ contract HealthInfo {
         return healthRecords[recordOwner].ipfsHash;
     }
 
+    /**
+     * @dev Retrieves the health record of a specified owner if the caller has access.
+     * @return The IPFS hash of the complete health record JSON.
+     */
+    function getOwnHealthRecord() public view returns (string memory) {
+        return healthRecords[msg.sender].ipfsHash;
+    }
+
     function getUpdates() public view returns (address[] memory, uint256[] memory, string[] memory) {
         HealthRecord storage record = healthRecords[msg.sender];
         uint256 length = record.updates.length;
@@ -196,8 +203,17 @@ contract HealthInfo {
         return accessList[msg.sender];
     }
 
-    function getAccessRequests() public view returns (address[] memory) {
-        return accessRequests[msg.sender];
+    function getAccessRequests() public view returns (address[] memory, string[] memory) {
+        uint256 length = accessRequests[msg.sender].length;
+        address[] memory requesters = new address[](length); 
+        string[] memory notes = new string[](length);  
+
+        for (uint256 i = 0; i < length; i++) {
+            requesters[i] = accessRequests[msg.sender][i];  
+            notes[i] = accessRequestNotes[msg.sender][requesters[i]]; 
+        }
+
+        return (requesters, notes);
     }
 
 

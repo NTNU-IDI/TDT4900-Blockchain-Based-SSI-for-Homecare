@@ -88,7 +88,6 @@ export async function fetchAllPatients(
 
 export async function addPatientNote(
   ownerAddress: string,
-  privateKey: string,
   newNote: string,
   workerName: string
 ) {
@@ -127,7 +126,7 @@ export async function addPatientNote(
     const newIpfsHash = await uploadToIPFS(data, filename);
 
     console.log('Updating smart contract with new IPFS hash...');
-    await updateHealthRecord(ownerAddress, privateKey, newIpfsHash);
+    await updateHealthRecord(ownerAddress, newIpfsHash);
 
     console.log('Note successfully added!');
   } catch (error) {

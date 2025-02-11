@@ -1,15 +1,17 @@
-import { OWNER_PRIVATE_KEY, PATIENT_ADDRESSES } from '@env';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { addPatientNote, fetchAllPatients } from '../abi/patientService';
+import { connectWallet, requestAccess } from '../abi/contractService';
 
+import { PATIENT_ADDRESSES } from '@env';
 import { Patient } from '../types/patientInterfaces';
-import { requestAccess } from '../abi/contractService';
 
 export const fetchAndSetPatients = createAsyncThunk(
   'patients/fetchAndSetPatients',
   async (_: void, thunkAPI) => {
     try {
-      return await fetchAllPatients(PATIENT_ADDRESSES.split(','));
+      await connectWallet();
+      const patientAddresses = PATIENT_ADDRESSES.split(',');
+      return await fetchAllPatients(patientAddresses);
     } catch (error) {
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(error.message);
@@ -26,7 +28,7 @@ export const requestPatientAccess = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      await requestAccess(patientId, OWNER_PRIVATE_KEY, note);
+      await requestAccess(patientId, note);
       return { patientId, note };
     } catch (error) {
       console.error('Error requesting access:', error);
@@ -46,7 +48,7 @@ export const addPatientTasksNote = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      await addPatientNote(patientId, OWNER_PRIVATE_KEY, note, workerName);
+      await addPatientNote(patientId, note, workerName);
       return { patientId, note };
     } catch (error) {
       console.error('Error requesting access:', error);

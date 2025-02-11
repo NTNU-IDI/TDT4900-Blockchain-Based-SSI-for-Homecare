@@ -17,11 +17,24 @@ To set up normally:
 ```shell
 npx hardhat run scripts/setUp.ts --network localhost
 ```
+Without resetting ipfs files:
+```shell
+npx hardhat run scripts/deployAndSetUp.ts --network localhost
+```
 
 To reset ipfs files:
 
 ```shell
 npx hardhat run scripts/deployAndResetIPFS.ts --network localhost
+```
+
+For several users:
+
+Log into correct MetaMask account and network, one person runs
+```shell
+npx hardhat node --hostname 10.22.X.X
+npx hardhat run scripts/deployAndResetIPFS.ts --network remote
+
 ```
 
 ## Sample Hardhat Project

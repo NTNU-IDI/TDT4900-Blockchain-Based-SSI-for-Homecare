@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import Header from "../components/Header";
 import fetchIPFSData from "../services/PinataService";
-import { IPFS_HASH } from "@env";
+import { IPFS_HASH, OWNER_ADDRESS } from "@env";
+import { connectWallet, getHealthRecordHash, getOwnHealthRecordHash, getAccessRequests } from "../components/BlockchainService";
 
 const Notater = () => {
   const [notesData, setNotesData] = useState<string[][]>([]);
@@ -18,8 +19,13 @@ const Notater = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await fetchIPFSData(IPFS_HASH);
+        await connectWallet();
+        console.log("yo")
+        const hash = await getOwnHealthRecordHash();
+        console.log("Fetched IPFS hash:", hash);
+        const data = await fetchIPFSData(hash);
         console.log("Fetched Data:", data);
+        console.log(getAccessRequests());
         setNotesData(data.notes || []);
       } catch (err) {
         setError("Failed to fetch data from IPFS.");

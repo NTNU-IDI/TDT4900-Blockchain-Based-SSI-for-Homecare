@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ActivityIndicator, ScrollView } from "react-native";
 import Header from "../components/Header";
-import { getUpdates } from "../components/BlockchainService"; // Ensure this path is correct
+import { getUpdates, connectWallet } from "../components/BlockchainService"; // Ensure this path is correct
 
 const UpdatesLog = () => {
   const [updates, setUpdates] = useState<{
@@ -16,6 +16,7 @@ const UpdatesLog = () => {
   useEffect(() => {
     const fetchUpdates = async () => {
       try {
+        await connectWallet();
         const data = await getUpdates();
         setUpdates(data);
       } catch (err) {
