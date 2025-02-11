@@ -180,13 +180,15 @@ export async function requestAccess(
  * Approve an access request from a user.
  * @param requester - The address of the user requesting access.
  */
-export async function approveAccessRequest(requester: string): Promise<void> {
-  const tx = await (
-    contract!.connect(signer!) as Contract
-  ).approveAccessRequest(requester);
-  await tx.wait();
-  console.log(`Access request from ${requester} approved.`);
-}
+// export async function approveAccessRequest(requester: string): Promise<void> {
+//   const tx = await (
+//     contract!.connect(signer!) as Contract
+//   ).approveAccessRequest(requester);
+//   await tx.wait();
+//   console.log(`Access request from ${requester} approved.`);
+// }
+
+
 
 /**
  * Deny an access request from a user.

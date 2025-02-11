@@ -3,52 +3,70 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { useNavigation } from "@react-navigation/native";
-import { getAccessList, getAccessRequests, hasAccess, hasRequestedAccess } from "../components/BlockchainService"
-import {HOMECARE_WORKER_ADDRESS, OTHER_ADDRESS} from '@env';
+import {  connectWallet, getAccessRequests } from "../components/BlockchainService"
+import { RootStackParamList } from "../types/screens";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+
+type ForesporselScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'DetailedForesporsel'>;
 
 const Foresporsel = () => {
-  const navigation = useNavigation();
-  const [requests, setRequests] = useState<any[]>([]);
+  const navigation = useNavigation<ForesporselScreenNavigationProp>();
+  const [requests, setRequests] = useState<{ addresses: string[]; notes: string[] }>({
+    addresses: [],
+    notes: []
+  });
 
   useEffect(() => {
     const fetchRequests = async () => {
-      const accessRequests = await getAccessRequests();
-      const a = await hasRequestedAccess(HOMECARE_WORKER_ADDRESS);
-      setRequests(accessRequests)
-      
-      console.log(accessRequests)
-      console.log(a)
+      try {
+        await connectWallet();
+        const fetchedRequests = await getAccessRequests();
+        console.log("Fetched requests:", fetchedRequests);
+
+        setRequests({
+          addresses: fetchedRequests.addresses,
+          notes: fetchedRequests.notes
+        });
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+      }
     };
 
     fetchRequests();
-  }, [HOMECARE_WORKER_ADDRESS]);
+  }, []);
 
-  const handlePress = (screen: string) => {
-    navigation.navigate(screen as never);
+
+  // Count unique addresses
+  const uniqueAddressCount = new Set(requests.addresses).size;
+
+
+  const handlePress = (address: string, note: string) => {
+    navigation.navigate('DetailedForesporsel', { address, note });
   };
-
-
+  
   return (
     <View style={styles.screen}>
       <Header header="Forespørsler" />
-
-      <Text style={styles.text}>Antall forespørsler: {requests.length}</Text>
-
+  
+      <Text style={styles.text}>Antall forespørsler: {uniqueAddressCount}</Text>
+  
       <View style={styles.cardContainer}>
-        {requests.map((request, index) => (
+        {requests.addresses.map((address, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => handlePress("DetailedForesporsel")}
+            onPress={() => handlePress(address, requests.notes[index] || "Ingen merknad")}
           >
             <Card
-              title={request.navn}
-              description={`${request.yrke} - ${request.arbeidsplass}`}
+              title={`Adresse: ${address}`}
+              description={`Note: ${requests.notes[index] || "Ingen merknad"}`}
             />
           </TouchableOpacity>
         ))}
       </View>
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
