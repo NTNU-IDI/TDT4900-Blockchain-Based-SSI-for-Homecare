@@ -21,7 +21,7 @@ contract HealthInfo {
     mapping(address => mapping(address => string)) public accessRequestNotes;
 
 
-    event HealthRecordUpdated(address indexed owner, string ipfsHash);
+    event HealthRecordUpdated(address indexed owner, address indexed updater);
     event AccessRevoked(address indexed owner, address indexed permissionedUser);
     event AccessRequested(address indexed owner, address indexed requester, string note);
     event AccessRequestAccepted(address indexed owner, address indexed requester);
@@ -63,7 +63,7 @@ contract HealthInfo {
             timestamp: block.timestamp,
             description: "Added note to record"
         }));
-        emit HealthRecordUpdated(owner, newIpfsHash);
+        emit HealthRecordUpdated(owner, msg.sender);
     }
 
     /**
