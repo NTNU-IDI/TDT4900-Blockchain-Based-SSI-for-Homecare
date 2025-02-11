@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import JournalRequest from './JournalRequest';
 import PatientJournal from './PatientJournal';
 import SharedStyles from '../styles/SharedStyles';
-import { useAppSelector } from '../redux/hooks';
+import { fetchAccessStatus } from '../redux/patientSlicer';
 
 const JournalsPage: React.FC = () => {
   const { patients } = useAppSelector((state) => state.patient);
   const [selectedJournalPatient, setSelectedJournalPatient] =
     useState<any>(null);
   const [viewType, setViewType] = useState<'journal' | 'request' | null>(null);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    patients.forEach((patient) => {
+      dispatch(fetchAccessStatus(patient.id));  // Call blockchain function for each patient
+    });
+  }, [dispatch, patients]);
   
   const handlePatientPress = (patient: any) => {
+    if (patient.accessRequest) {
+      console.log("Access already requested for", patient.name);
+      return;
+    }
     setSelectedJournalPatient(patient);
-    if (patient.access === 'Tilgang') {
+    if (patient.access) {
       setViewType('journal');
     } else {
       setViewType('request');
