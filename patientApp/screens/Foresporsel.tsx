@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import {  connectWallet, getAccessRequests } from "../components/BlockchainService"
 import { RootStackParamList } from "../types/screens";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import workers from '../assets/homecare_workers.json';
 
 
 type ForesporselScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'DetailedForesporsel'>;
@@ -37,12 +38,15 @@ const Foresporsel = () => {
   }, []);
 
 
+
   // Count unique addresses
   const uniqueAddressCount = new Set(requests.addresses).size;
 
 
   const handlePress = (address: string, note: string) => {
-    navigation.navigate('DetailedForesporsel', { address, note });
+    const worker = workers[address] || null;
+
+    navigation.navigate('DetailedForesporsel', { address, note, worker });
   };
   
   return (

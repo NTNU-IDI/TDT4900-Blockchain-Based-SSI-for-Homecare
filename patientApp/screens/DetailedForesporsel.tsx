@@ -8,6 +8,7 @@ import {
   denyAccessRequest,
   grantAccess,
 } from "../components/BlockchainService";
+import { Worker } from "../types/Worker";
 
 type DetailedForesporselRouteProp = RouteProp<
   RootStackParamList,
@@ -16,7 +17,11 @@ type DetailedForesporselRouteProp = RouteProp<
 
 const DetailedForesporsel = () => {
   const route = useRoute<DetailedForesporselRouteProp>();
-  const { address, note } = route.params as { address: string; note: string };
+  const { address, note, worker } = route.params as {
+    address: string;
+    note: string;
+    worker: Worker;
+  };
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,7 +57,13 @@ const DetailedForesporsel = () => {
 
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
-          <Text style={styles.label}>Adresse:</Text> {address}
+          <Text style={styles.label}>Adresse:</Text> {worker.navn}
+        </Text>
+        <Text style={styles.infoText}>
+          <Text style={styles.label}>Arbeidsplass:</Text> {worker.arbeidsplass}
+        </Text>
+        <Text style={styles.infoText}>
+          <Text style={styles.label}>Yrke:</Text> {worker.yrke}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Notat:</Text> {note}
