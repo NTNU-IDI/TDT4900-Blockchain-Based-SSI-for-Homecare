@@ -86,11 +86,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333'
+    color: '#333',
+    textAlign: 'center'
   },
   patientTime: {
     fontSize: 16,
     color: '#666',
-    marginBottom: 20
+    marginBottom: 20,
+    textAlign: 'center'
   }
 });
