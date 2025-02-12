@@ -8,7 +8,7 @@ import {
 
 import { updateHealthRecord } from './contractService';
 
-async function fetchPatientData(ownerAddress: string): Promise<Patient> {
+export async function fetchPatientData(ownerAddress: string): Promise<Patient> {
   try {
     // Get IPFS hash from the contract
     console.log(`Fetching health record for owner: ${ownerAddress}`);
@@ -43,45 +43,33 @@ async function fetchPatientData(ownerAddress: string): Promise<Patient> {
     return patient;
   } catch (error) {
     console.error('Error fetching patient data:', error);
-    throw error;
+    const requestedAccess = await hasRequestedAccess(ownerAddress);
+
+    return {
+      id: ownerAddress,
+      time: '',
+      name: 'Ukjent',
+      address: 'null',
+      nøkkelnummer: '',
+      status: '',
+      tasks: [],
+      notes: [],
+      access: false,
+      accessRequest: requestedAccess,
+      journal: {
+        diagnoses: [],
+        medications: [],
+        previousTreatments: []
+      }
+    };
   }
 }
 
 export async function fetchAllPatients(
   ownerAddresses: string[]
 ): Promise<Patient[]> {
-  const patients: Patient[] = [];
-  for (const ownerAddress of ownerAddresses) {
-    try {
-      const patient = await fetchPatientData(ownerAddress);
-      patients.push(patient);
-    } catch (error) {
-      console.error(
-        `Error fetching patient for address ${ownerAddress}:`,
-        error
-      );
-
-      const requestedAccess = await hasRequestedAccess(ownerAddress);
-
-      patients.push({
-        id: ownerAddress, // Use ownerAddress as the ID
-        time: '', // Default empty values
-        name: 'Ukjent', // Placeholder name
-        address: 'null', // Default empty address
-        nøkkelnummer: '',
-        status: '', // Indicate failure
-        tasks: [],
-        notes: [],
-        access: false, // No access by default
-        accessRequest: requestedAccess, // No request made by default
-        journal: {
-          diagnoses: [],
-          medications: [],
-          previousTreatments: []
-        } // Empty journal
-      });
-    }
-  }
+  const patientPromises = ownerAddresses.map(fetchPatientData);
+  const patients = await Promise.all(patientPromises);
   console.log(patients);
   return patients;
 }
