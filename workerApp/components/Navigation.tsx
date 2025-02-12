@@ -31,7 +31,7 @@ const Navigation: React.FC = () => {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
+          tabBarIcon: ({ color }) => {
             let iconName: string;
 
             switch (route.name) {

@@ -1,6 +1,15 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addPatientNote, fetchAllPatients } from '../abi/patientService';
-import { connectWallet, hasAccess, requestAccess } from '../abi/contractService';
+import {
+  addPatientNote,
+  fetchAllPatients,
+  fetchPatientData
+} from '../abi/patientService';
+import {
+  connectWallet,
+  hasAccess,
+  hasRequestedAccess,
+  requestAccess
+} from '../abi/contractService';
 
 import { PATIENT_ADDRESSES } from '@env';
 import { Patient } from '../types/patientInterfaces';
@@ -37,12 +46,41 @@ export const requestPatientAccess = createAsyncThunk(
   }
 );
 
+const fetchAndSetPatient = createAsyncThunk(
+  'patients/fetchAndSetPatient',
+  async (patientID: string, thunkAPI) => {
+    try {
+      const updatedPatient = await fetchPatientData(patientID);
+      return { patientID, updatedPatient };
+    } catch (error) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue('An unknown error occurred');
+    }
+  }
+);
+
 export const fetchAccessStatus = createAsyncThunk(
   'patients/checkAccess',
-  async (patientId: string, thunkAPI) => {
+  async (
+    {
+      patientId,
+      currentAccessStatus
+    }: { patientId: string; currentAccessStatus: boolean },
+    thunkAPI
+  ) => {
     try {
       const hasWorkerAccess = await hasAccess(patientId);
-      return { patientId, access: hasWorkerAccess };
+      if (currentAccessStatus != hasWorkerAccess) {
+        await thunkAPI.dispatch(fetchAndSetPatient(patientId));
+      }
+      const hasRequested = await hasRequestedAccess(patientId);
+      return {
+        patientId,
+        access: hasWorkerAccess,
+        requestedAccess: hasRequested
+      };
     } catch (error) {
       console.error('Error checking access:', error);
       return thunkAPI.rejectWithValue('Failed to check access');
@@ -146,10 +184,38 @@ const patientSlice = createSlice({
     );
     builder.addCase(
       fetchAccessStatus.fulfilled,
-      (state, action: PayloadAction<{ patientId: string; access: boolean }>) => {
-        const patient = state.patients.find((p) => p.id === action.payload.patientId);
+      (
+        state,
+        action: PayloadAction<{
+          patientId: string;
+          access: boolean;
+          requestedAccess: boolean;
+        }>
+      ) => {
+        const patient = state.patients.find(
+          (p) => p.id === action.payload.patientId
+        );
         if (patient) {
           patient.access = action.payload.access;
+          patient.accessRequest = action.payload.requestedAccess;
+        }
+      }
+    );
+    builder.addCase(
+      fetchAndSetPatient.fulfilled,
+      (
+        state,
+        action: PayloadAction<{ patientID: string; updatedPatient: Patient }>
+      ) => {
+        const { patientID, updatedPatient } = action.payload;
+        const patientIndex = state.patients.findIndex(
+          (p) => p.id === patientID
+        );
+        if (patientIndex !== -1) {
+          state.patients[patientIndex] = {
+            ...state.patients[patientIndex],
+            ...updatedPatient
+          };
         }
       }
     );
