@@ -3,53 +3,46 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { getAccessList, revokeAccess } from "../components/BlockchainService";
 import Card from "../components/Card";
 import Header from "../components/Header";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { RootStackParamList } from "../types/screens";
+import { Worker } from "../types/Worker";
+
+type DetailedInnsynRouteProp = RouteProp<RootStackParamList, "DetailedInnsyn">;
 
 const DetailedInnsyn = () => {
-  const patientAddress: string = process.env.OWNER_ADDRESS || "";
-  const patientPrivateKey: string = process.env.OWNER_PRIVATE_KEY || "";
-  const workerPrivateKey: string = process.env.OTHER_PRIVATE_KEY || "";
-  const workerAddress: string = process.env.OTHER_ADDRESS || "";
-  const [accessList, setAccessList] = useState<string[]>([]);
+  const route = useRoute<DetailedInnsynRouteProp>();
+  const { address, worker } = route.params as {
+    address: string;
+    worker: Worker;
+  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [isButtonPressed, setIsButtonPressed] = useState(false);
 
-  useEffect(() => {
-    fetchAccessList();
-  }, []);
-
-  const fetchAccessList = async () => {
+  const handleRemove = async () => {
+    setIsLoading(true);
     try {
-      const list = await getAccessList();
-      setAccessList(list);
-      console.log(list);
+      await revokeAccess(address);
+      console.log("Success", "Access revoked successfully.");
+      console.log("List:", getAccessList());
+      setIsButtonPressed(true); 
     } catch (error) {
-      console.error("Error fetching access list:", error);
+      console.error("Error revoking access:", error);
+      console.log("Error", "Failed to revoke access.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // const handleRemoveAccess = async () => {
-  //   if (!accessList.includes(workerAddress)) {
-  //     console.log("Error", "User does not have access.");
-  //     return;
-  //   }
-
-  //   try {
-  //     await revokeAccess(workerAddress, patientPrivateKey);
-  //     console.log("Success", "Access revoked successfully.");
-  //     fetchAccessList(); // Refresh access list
-  //   } catch (error) {
-  //     console.error("Error revoking access:", error);
-  //     console.log("Error", "Failed to revoke access.");
-  //   }
-  // };
   return (
     <View style={styles.screen}>
-      <Header header="Eva Pedersen" />
-      <View style={styles.cardContainer}>
-        <Card
-          title="Endringslogg"
-          description="Her finner du endringer vedrørende har gjort i din journal"
-        />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={fetchAccessList}>
+      <Header header={worker.navn} />
+      <TouchableOpacity
+        style={[
+          styles.button,
+          (isLoading || isButtonPressed) && styles.disabledButton,
+        ]}
+        onPress={handleRemove}
+      >
         <Text style={styles.buttonText}>Fjern innsynsrettigheter</Text>
       </TouchableOpacity>
     </View>
@@ -73,6 +66,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center", // Centers text horizontally
     justifyContent: "center", // Centers text vertically
+  },
+  disabledButton: {
+    backgroundColor: "#A9A9A9",
   },
   buttonText: {
     fontFamily: '"Times New Roman", Times, serif',

@@ -24,12 +24,14 @@ const DetailedForesporsel = () => {
   };
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isButtonPressed, setIsButtonPressed] = useState(false);
 
   const handleApprove = async () => {
     setIsLoading(true);
     try {
       await grantAccess(address);
       console.log("Success", "Access request approved successfully.");
+      setIsButtonPressed(true); // Disable buttons only on success
     } catch (error) {
       console.error("Error approving access request:", error);
       console.log("Error", "Failed to approve access request.");
@@ -43,6 +45,7 @@ const DetailedForesporsel = () => {
     try {
       await denyAccessRequest(address);
       console.log("Success", "Access request denied successfully.");
+      setIsButtonPressed(true); // Disable buttons only on success
     } catch (error) {
       console.error("Error denying access request:", error);
       console.log("Error", "Failed to deny access request.");
@@ -72,18 +75,26 @@ const DetailedForesporsel = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.button, styles.approveButton]}
+          style={[
+            styles.button,
+            styles.approveButton,
+            (isLoading || isButtonPressed) && styles.disabledButton,
+          ]}
           onPress={handleApprove}
-          disabled={isLoading}
+          disabled={isLoading || isButtonPressed}
         >
           <Text style={styles.buttonText}>
             {isLoading ? "Processing..." : "Godkjenn"}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, styles.denyButton]}
+          style={[
+            styles.button,
+            styles.denyButton,
+            (isLoading || isButtonPressed) && styles.disabledButton,
+          ]}
           onPress={handleDeny}
-          disabled={isLoading}
+          disabled={isLoading || isButtonPressed}
         >
           <Text style={styles.buttonText}>
             {isLoading ? "Processing..." : "Ikke godkjenn"}
@@ -132,6 +143,9 @@ const styles = StyleSheet.create({
   },
   denyButton: {
     backgroundColor: "#FF6347",
+  },
+  disabledButton: {
+    backgroundColor: "#A9A9A9",
   },
   buttonText: {
     fontSize: 16,

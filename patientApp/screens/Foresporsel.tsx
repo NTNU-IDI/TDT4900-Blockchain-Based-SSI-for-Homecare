@@ -3,19 +3,27 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { useNavigation } from "@react-navigation/native";
-import {  connectWallet, getAccessRequests } from "../components/BlockchainService"
+import {
+  connectWallet,
+  getAccessRequests,
+} from "../components/BlockchainService";
 import { RootStackParamList } from "../types/screens";
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import workers from '../assets/homecare_workers.json';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import workers from "../assets/homecare_workers.json";
 
-
-type ForesporselScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'DetailedForesporsel'>;
+type ForesporselScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "DetailedForesporsel"
+>;
 
 const Foresporsel = () => {
   const navigation = useNavigation<ForesporselScreenNavigationProp>();
-  const [requests, setRequests] = useState<{ addresses: string[]; notes: string[] }>({
+  const [requests, setRequests] = useState<{
+    addresses: string[];
+    notes: string[];
+  }>({
     addresses: [],
-    notes: []
+    notes: [],
   });
 
   useEffect(() => {
@@ -27,7 +35,7 @@ const Foresporsel = () => {
 
         setRequests({
           addresses: fetchedRequests.addresses,
-          notes: fetchedRequests.notes
+          notes: fetchedRequests.notes,
         });
       } catch (error) {
         console.error("Error fetching requests:", error);
@@ -37,29 +45,28 @@ const Foresporsel = () => {
     fetchRequests();
   }, []);
 
-
-
   // Count unique addresses
   const uniqueAddressCount = new Set(requests.addresses).size;
-
 
   const handlePress = (address: string, note: string) => {
     const worker = workers[address] || null;
 
-    navigation.navigate('DetailedForesporsel', { address, note, worker });
+    navigation.navigate("DetailedForesporsel", { address, note, worker });
   };
-  
+
   return (
     <View style={styles.screen}>
       <Header header="Forespørsler" />
-  
+
       <Text style={styles.text}>Antall forespørsler: {uniqueAddressCount}</Text>
-  
+
       <View style={styles.cardContainer}>
         {requests.addresses.map((address, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => handlePress(address, requests.notes[index] || "Ingen merknad")}
+            onPress={() =>
+              handlePress(address, requests.notes[index] || "Ingen merknad")
+            }
           >
             <Card
               title={`Adresse: ${address}`}
@@ -70,7 +77,6 @@ const Foresporsel = () => {
       </View>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
