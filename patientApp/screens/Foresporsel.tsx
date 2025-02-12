@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
   connectWallet,
   getAccessRequests,
@@ -26,24 +26,32 @@ const Foresporsel = () => {
     notes: [],
   });
 
+  const fetchRequests = async () => {
+    try {
+      await connectWallet();
+      const fetchedRequests = await getAccessRequests();
+      console.log("Fetched requests:", fetchedRequests);
+
+      setRequests({
+        addresses: fetchedRequests.addresses,
+        notes: fetchedRequests.notes,
+      });
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+    }
+  };
+
+  // Fetch data on initial load
   useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        await connectWallet();
-        const fetchedRequests = await getAccessRequests();
-        console.log("Fetched requests:", fetchedRequests);
-
-        setRequests({
-          addresses: fetchedRequests.addresses,
-          notes: fetchedRequests.notes,
-        });
-      } catch (error) {
-        console.error("Error fetching requests:", error);
-      }
-    };
-
     fetchRequests();
   }, []);
+
+  // Fetch data when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchRequests();
+    }, [])
+  );
 
   // Count unique addresses
   const uniqueAddressCount = new Set(requests.addresses).size;
