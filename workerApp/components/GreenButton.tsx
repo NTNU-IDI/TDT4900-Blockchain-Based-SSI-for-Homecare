@@ -7,14 +7,11 @@ interface GreenButtonProps {
   title?: string;
 }
 
-const GreenButton: React.FC<GreenButtonProps> = ({ onPress, title = '' }) => {
-  return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
-  );
-};
-
+const GreenButton: React.FC<GreenButtonProps> = ({ onPress, title = '' }) => (
+  <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.6}>
+    <Text style={styles.buttonText}>{title}</Text>
+  </TouchableOpacity>
+);
 export default GreenButton;
 
 const styles = StyleSheet.create({

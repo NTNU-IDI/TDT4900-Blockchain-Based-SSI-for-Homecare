@@ -20,18 +20,6 @@ export const SharedStyles = StyleSheet.create({
     color: '#333',
     textAlign: 'center'
   },
-  button: {
-    backgroundColor: '#0D9276',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 15
-  },
-  buttonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
   card: {
     backgroundColor: '#BBE2EC',
     borderRadius: 10,
