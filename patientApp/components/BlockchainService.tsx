@@ -1,7 +1,10 @@
-import { BrowserProvider, Contract, JsonRpcSigner, ethers } from "ethers";
+import { BrowserProvider, Contract, JsonRpcProvider, JsonRpcSigner, ethers } from "ethers";
 
-import { CONTRACT_ADDRESS } from "@env";
+import { CONTRACT_ADDRESS, INFURA_API_KEY, WALLETCONNECT_API_KEY } from "@env";
 import HealthInfoABI from "../abi/HealthInfoABI.json";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
+
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {
@@ -9,8 +12,14 @@ if (!CONTRACT_ADDRESS) {
     "CONTRACT_ADDRESS is not defined in the environment variables."
   );
 }
+if (!INFURA_API_KEY) throw new Error("INFURA_API_KEY is missing.");
 
-let provider: BrowserProvider | null = null;
+
+// let provider: BrowserProvider | null = null;
+// let signer: JsonRpcSigner | null = null;
+// let contract: Contract | null = null;
+
+let provider: BrowserProvider | JsonRpcProvider| null = null;
 let signer: JsonRpcSigner | null = null;
 let contract: Contract | null = null;
 
@@ -20,17 +29,67 @@ declare global {
   }
 }
 
+// export async function connectWallet(): Promise<void> {
+//   if (provider && contract) return; 
+
+//   const walletConnectProvider = await WalletConnectProvider.init({
+//   projectId: WALLETCONNECT_API_KEY,
+//   chains: [1], 
+//   showQrModal: true,
+//   });
+
+//   await walletConnectProvider.enable();
+
+//   provider = new BrowserProvider(walletConnectProvider);
+//   signer = await provider.getSigner();
+
+//   contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI.abi, signer);
+// }
+
 export async function connectWallet(): Promise<void> {
-  if (!window.ethereum) throw new Error("MetaMask not installed.");
+  if (provider && contract) return;
 
-  if (provider && contract) return; // ✅ Prevents re-initialization
+  try {
+    // If we're on a web platform and MetaMask is installed
+    
+    
+      // Otherwise, use WalletConnect with Infura
+      const walletConnectProvider = new WalletConnectProvider({
+        rpc: { 1: `https://mainnet.infura.io/v3/${INFURA_API_KEY}` }, // Infura RPC URL
+        qrcode: true,
+      });
 
-  provider = new BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []); // Request access to MetaMask
-  signer = await provider.getSigner();
+      // Enable the provider (this opens the QR code modal)
+      await walletConnectProvider.enable();
+      
+      // Use JsonRpcProvider to connect with Infura via WalletConnect
+      provider = new JsonRpcProvider(walletConnectProvider as any);
+    
 
-  contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI.abi, signer);
+    // Get the signer
+    signer = await provider.getSigner();
+
+    // Initialize the contract
+    contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI.abi, signer);
+
+    console.log("✅ Wallet connected:", await signer.getAddress());
+  } catch (error) {
+    console.error("❌ Wallet connection error:", error);
+    alert("Failed to connect wallet. Check console for details.");
+  }
 }
+
+// export async function connectWallet(): Promise<void> {
+//   if (!window.ethereum) throw new Error("MetaMask not installed.");
+
+//   if (provider && contract) return; // ✅ Prevents re-initialization
+
+//   provider = new BrowserProvider(window.ethereum);
+//   await provider.send("eth_requestAccounts", []); // Request access to MetaMask
+//   signer = await provider.getSigner();
+
+//   contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI.abi, signer);
+// }
 
 /**
  * Add or update a health record with an IPFS hash.
