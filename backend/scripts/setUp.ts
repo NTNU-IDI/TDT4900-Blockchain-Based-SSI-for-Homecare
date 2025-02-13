@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 
-import { Contract, parseUnits } from "ethers";
+import { Contract, JsonRpcProvider, parseUnits } from "ethers";
 
 import { ethers } from "hardhat";
 
@@ -10,20 +10,25 @@ async function main() {
     const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
     const IPFS_HASHES = process.env.IPFS_HASHES ? process.env.IPFS_HASHES.split(",") : [];
     const ACCOUNTS = process.env.ACCOUNTS ? process.env.ACCOUNTS.split(",") : [];
+    const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY
+    const INFURA_API_KEY = process.env.INFURA_API_KEY
 
     if (!CONTRACT_ADDRESS) throw new Error("CONTRACT_ADDRESS is not defined");
+    if (!METAMASK_PRIVATE_KEY) throw new Error("METAMASK_PRIVATE_KEY is not defined");
     if (ACCOUNTS.length === 0) throw new Error("ACCOUNTS are not defined");
     if (IPFS_HASHES.length === 0) throw new Error("IPFS_HASHES are not defined");
     if (ACCOUNTS.length !== IPFS_HASHES.length) throw new Error("Each account must have a matching IPFS hash");
 
-    // Get signer
-    const [signer] = await ethers.getSigners();
-    console.log("Using signer:", await signer.getAddress());
+  
+    const provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
+      
+    const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
+    
+    console.log('✅ Connected as:', signer.address);
 
     const HealthInfoFactory = await ethers.getContractFactory("HealthInfo");
     const contract = HealthInfoFactory.attach(CONTRACT_ADDRESS).connect(signer);
 
-    const provider = ethers.provider;
     const nonce = await provider.getTransactionCount(signer.address, "pending");
     console.log("Pending nonce:", nonce);
     
