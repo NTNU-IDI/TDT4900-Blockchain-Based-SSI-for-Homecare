@@ -1,8 +1,7 @@
-import { BrowserProvider, Contract, JsonRpcSigner, ethers } from 'ethers';
-import { CONTRACT_ADDRESS, WALLETCONNECT_PROJECT_KEY } from '@env';
+import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from '@env';
+import { Contract, JsonRpcProvider, ethers } from 'ethers';
 
 import HealthInfoABI from '../abi/HealthInfoABI.json';
-import WalletConnectProvider from "@walletconnect/ethereum-provider";
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {
@@ -10,32 +9,27 @@ if (!CONTRACT_ADDRESS) {
     'CONTRACT_ADDRESS is not defined in the environment variables.'
   );
 }
+let provider:JsonRpcProvider;
+let signer: ethers.Wallet;
+let contract: Contract;
 
-let provider: BrowserProvider | null = null;
-let signer: JsonRpcSigner | null = null;
-let contract: Contract | null = null;
-
+/**
+ * Connect to Ethereum using a hardcoded MetaMask account
+ */
 export async function connectWallet(): Promise<void> {
-  if (provider && contract) return; 
+  if (!METAMASK_PRIVATE_KEY) {
+    throw new Error('❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env.');
+  }
 
-  const projectId = WALLETCONNECT_PROJECT_KEY
-
-  console.log(`Connecting to project ${projectId}`)
-  console.log(`Connecting to contract ${CONTRACT_ADDRESS}`)
-
-  const walletConnectProvider = await WalletConnectProvider.init({
-  projectId: WALLETCONNECT_PROJECT_KEY,
-  chains: [1], 
-  showQrModal: true,
-  });
-
-  await walletConnectProvider.enable();
-
-  provider = new BrowserProvider(walletConnectProvider);
-  signer = await provider.getSigner();
-
+  provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
+  
+  signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
   contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
+
+  console.log('✅ Connected as:', signer.address);
 }
+
+
 
 
 /**
