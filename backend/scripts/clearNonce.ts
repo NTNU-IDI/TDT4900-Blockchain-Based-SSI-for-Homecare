@@ -1,17 +1,13 @@
-import * as dotenv from "dotenv";
-
-import { Contract, parseUnits } from "ethers";
-
+import dotenv from "dotenv";
 import { ethers } from "hardhat";
 
-dotenv.config(); // Load environment variables from .env
+dotenv.config();
 
 async function main() {
     const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 
     if (!CONTRACT_ADDRESS) throw new Error("CONTRACT_ADDRESS is not defined");
 
-    // Get signer
     const [signer] = await ethers.getSigners();
     console.log("Using signer:", await signer.getAddress());
 
@@ -33,19 +29,19 @@ async function main() {
     for (let i = firstPendingNonce; i < latestNonce; i++) {
         try {
             const tx = await signer.sendTransaction({
-                to: signer.address,  // Sending to self to replace stuck transactions
-                nonce: i,  // Start from nonce 1, go up
-                gasLimit: 21000,  // Minimum gas for transaction
-                gasPrice: ethers.parseUnits("150", "gwei"),  // High gas to ensure confirmation
-                value: ethers.parseEther("0"),  // No ETH, just replacing
+                to: signer.address, 
+                nonce: i,
+                gasLimit: 21000,
+                gasPrice: ethers.parseUnits("150", "gwei"),
+                value: ethers.parseEther("0"),
             });
         
             console.log(`Replacement transaction sent for nonce ${i}:`, tx.hash);
             await tx.wait();
             console.log(`Nonce ${i} cleared.`);
         } catch (error) {
-            console.error(`❌ Failed to replace nonce ${i}:`, error);
-            return;  // Exit to prevent multiple failures
+            console.error(`Failed to replace nonce ${i}:`, error);
+            return;
         }
     }
 }

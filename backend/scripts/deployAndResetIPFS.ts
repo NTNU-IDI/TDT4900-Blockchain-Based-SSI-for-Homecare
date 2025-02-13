@@ -62,17 +62,13 @@ async function changeEnvContractAddress(address: string){
         envContent = fs.readFileSync('.env', 'utf8');
     }
 
-    // Append new contract address
     const newEntry = `CONTRACT_ADDRESS=${address}\n`;
 
-    // Check if CONTRACT_ADDRESS already exists, replace it instead of appending
     if (envContent.includes('CONTRACT_ADDRESS=')) {
         envContent = envContent.replace(/CONTRACT_ADDRESS=.*/g, newEntry.trim());
     } else {
         envContent += newEntry;
     }
-
-    // Write back the modified content
     fs.writeFileSync('.env', envContent);
 }
 
@@ -108,11 +104,7 @@ async function main() {
         ipfsHashes.push(hash);
     }
 
-     // Get signer
      const [signer] = await ethers.getSigners();
-     //console.log("Using signer:", await signer.getAddress());
- 
-     // Attach to deployed contract
      const HealthInfoFactory = await ethers.getContractFactory("HealthInfo");
      const contract = HealthInfoFactory.attach(contractAddress).connect(signer);
 
