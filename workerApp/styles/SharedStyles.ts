@@ -25,8 +25,8 @@ export const SharedStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
-    elevation: 5, // For Android shadows
-    shadowColor: '#000', // For iOS shadows
+    elevation: 5,
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5

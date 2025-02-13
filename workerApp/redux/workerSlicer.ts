@@ -21,6 +21,7 @@ export const fetchWorker = createAsyncThunk(
 
       return worker;
     } catch (error) {
+      console.error('Error fetching worker data:', error);
       return thunkAPI.rejectWithValue('Failed to fetch worker data');
     }
   }

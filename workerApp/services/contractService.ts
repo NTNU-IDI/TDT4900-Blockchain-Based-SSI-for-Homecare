@@ -9,7 +9,7 @@ if (!CONTRACT_ADDRESS) {
     'CONTRACT_ADDRESS is not defined in the environment variables.'
   );
 }
-let provider:JsonRpcProvider;
+let provider: JsonRpcProvider;
 let signer: ethers.Wallet;
 let contract: Contract;
 
@@ -18,10 +18,14 @@ let contract: Contract;
  */
 export async function connectWallet(): Promise<void> {
   if (!METAMASK_PRIVATE_KEY) {
-    throw new Error('❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env.');
+    throw new Error(
+      '❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env.'
+    );
   }
-  provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
-  
+  provider = new JsonRpcProvider(
+    `https://sepolia.infura.io/v3/${INFURA_API_KEY}`
+  );
+
   signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
   contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
 
@@ -107,18 +111,18 @@ export async function getHealthRecordHash(
     );
   }
   try {
-    console.log("🔍 Fetching health record for:", ownerAddress);
+    console.log('🔍 Fetching health record for:', ownerAddress);
     const result = await contract.getHealthRecord(ownerAddress);
-    console.log("✅ Raw contract response:", result);
+    console.log('✅ Raw contract response:', result);
 
-    if (!result || result === "0x") {
+    if (!result || result === '0x') {
       console.warn(`⚠️ No health record found for: ${ownerAddress}`);
-      return "No data available";
+      return 'No data available';
     }
 
     return result;
   } catch (error) {
-    console.error("❌ Error fetching health record from contract:", error);
+    console.error('❌ Error fetching health record from contract:', error);
     throw error;
   }
 }
@@ -196,7 +200,6 @@ export async function requestAccess(
     console.error('🚨 Error in requestAccess transaction:', error);
     throw error;
   }
-
 }
 
 /**

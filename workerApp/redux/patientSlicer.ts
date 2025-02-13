@@ -62,7 +62,7 @@ const fetchAndSetPatient = createAsyncThunk(
 );
 
 export const fetchAccessStatus = createAsyncThunk(
-  'patients/checkAccess',
+  'patients/fetchAccessStatus',
   async (
     {
       patientId,
@@ -102,8 +102,8 @@ export const addPatientTasksNote = createAsyncThunk(
       await addPatientNote(patientId, note, workerName);
       return { patientId, note };
     } catch (error) {
-      console.error('Error requesting access:', error);
-      return thunkAPI.rejectWithValue('Failed to send request');
+      console.error('Error adding patient note:', error);
+      return thunkAPI.rejectWithValue('Failed to add patient note');
     }
   }
 );
@@ -146,87 +146,70 @@ const patientSlice = createSlice({
           task.status = action.payload.status;
         }
       }
-    },
-    updatePatientAccess: (
-      state,
-      action: PayloadAction<{ id: string; access: boolean }>
-    ) => {
-      const patient = state.patients.find((p) => p.id === action.payload.id);
-      if (patient) {
-        patient.access = action.payload.access;
-      }
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      fetchAndSetPatients.fulfilled,
-      (state, action: PayloadAction<Patient[]>) => {
-        state.patients = action.payload;
-        state.currentPatientId =
-          action.payload.length > 0 ? action.payload[0].id : null;
-      }
-    );
-
-    builder.addCase(fetchAndSetPatients.rejected, (state, action) => {
-      console.error('Error fetching patients:', action.payload);
-    });
-    builder.addCase(
-      requestPatientAccess.fulfilled,
-      (state, action: PayloadAction<{ patientId: string; note: string }>) => {
-        const patient = state.patients.find(
-          (p) => p.id === action.payload.patientId
-        );
-        if (patient) {
-          patient.accessRequest = true;
-          console.log('Access requested for patient:', patient.name);
+    builder
+      .addCase(
+        fetchAndSetPatients.fulfilled,
+        (state, action: PayloadAction<Patient[]>) => {
+          state.patients = action.payload;
+          state.currentPatientId =
+            action.payload.length > 0 ? action.payload[0].id : null;
         }
-      }
-    );
-    builder.addCase(
-      fetchAccessStatus.fulfilled,
-      (
-        state,
-        action: PayloadAction<{
-          patientId: string;
-          access: boolean;
-          requestedAccess: boolean;
-        }>
-      ) => {
-        const patient = state.patients.find(
-          (p) => p.id === action.payload.patientId
-        );
-        if (patient) {
-          patient.access = action.payload.access;
-          patient.accessRequest = action.payload.requestedAccess;
+      )
+      .addCase(fetchAndSetPatients.rejected, (_, action) => {
+        console.error('Error fetching patients:', action.payload);
+      })
+      .addCase(
+        requestPatientAccess.fulfilled,
+        (state, action: PayloadAction<{ patientId: string; note: string }>) => {
+          const patient = state.patients.find(
+            (p) => p.id === action.payload.patientId
+          );
+          if (patient) {
+            patient.accessRequest = true;
+            console.log('Access requested for patient:', patient.name);
+          }
         }
-      }
-    );
-    builder.addCase(
-      fetchAndSetPatient.fulfilled,
-      (
-        state,
-        action: PayloadAction<{ patientID: string; updatedPatient: Patient }>
-      ) => {
-        const { patientID, updatedPatient } = action.payload;
-        const patientIndex = state.patients.findIndex(
-          (p) => p.id === patientID
-        );
-        if (patientIndex !== -1) {
-          state.patients[patientIndex] = {
-            ...state.patients[patientIndex],
-            ...updatedPatient
-          };
+      )
+      .addCase(
+        fetchAccessStatus.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            patientId: string;
+            access: boolean;
+            requestedAccess: boolean;
+          }>
+        ) => {
+          const patient = state.patients.find(
+            (p) => p.id === action.payload.patientId
+          );
+          if (patient) {
+            patient.access = action.payload.access;
+            patient.accessRequest = action.payload.requestedAccess;
+          }
         }
-      }
-    );
+      )
+      .addCase(
+        fetchAndSetPatient.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ patientID: string; updatedPatient: Patient }>
+        ) => {
+          const patient = state.patients.find(
+            (p) => p.id === action.payload.patientID
+          );
+          if (patient) {
+            Object.assign(patient, action.payload.updatedPatient);
+          }
+        }
+      );
   }
 });
 
-export const {
-  setCurrentPatient,
-  updatePatientStatus,
-  updateTaskStatus,
-  updatePatientAccess
-} = patientSlice.actions;
+export const { setCurrentPatient, updatePatientStatus, updateTaskStatus } =
+  patientSlice.actions;
 
 export default patientSlice.reducer;
