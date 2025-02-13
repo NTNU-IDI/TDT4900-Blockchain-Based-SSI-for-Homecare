@@ -11,4 +11,6 @@ declare module '@env' {
     export const PINATA_API_KEY: string;
     export const PINATA_SECRET_API_KEY: string;
     export const PINATA_JWT: string;
+    export const METAMASK_PRIVATE_KEY: string;
+    export const INFURA_API_KEY: string;
   }

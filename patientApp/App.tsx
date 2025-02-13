@@ -1,6 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import 'react-native-get-random-values';
 
 import Homepage from "./screens/Homepage";
 import Tilganger from "./screens/Tilganger";

@@ -3,6 +3,8 @@ import "dotenv/config";
 
 import { HardhatUserConfig } from "hardhat/config";
 
+// For local setup
+/*
 const URL = process.env.URL || "";
 
 const config: HardhatUserConfig = {
@@ -24,16 +26,14 @@ const config: HardhatUserConfig = {
       chainId: 31337,
       accounts: {
         mnemonic:
-          "test test test test test test test test test test test junk", // Default Hardhat mnemonic
+          "test test test test test test test test test test test junk",
       },
     },
   },
 };
-
-export default config;
+*/
 
 // For infura setup
-/*
 const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 
@@ -42,8 +42,14 @@ const config: HardhatUserConfig = {
   networks: {
     sepolia: {
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: PRIVATE_KEY ? [`0x${PRIVATE_KEY}`] : [],
+      accounts: PRIVATE_KEY ? [`0x${PRIVATE_KEY}`] : []
     },
   },
+  etherscan: {
+    apiKey: {
+      sepolia: "PE1WR8AWU1JFQUQ4JNX8GAIMYXFGSRQDFD"
+    }
+  }
 };
-*/
+
+export default config;

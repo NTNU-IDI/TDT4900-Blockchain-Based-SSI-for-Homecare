@@ -1,6 +1,6 @@
-import { BrowserProvider, Contract, JsonRpcSigner, ethers } from 'ethers';
+import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from '@env';
+import { Contract, JsonRpcProvider, ethers } from 'ethers';
 
-import { CONTRACT_ADDRESS } from '@env';
 import HealthInfoABI from './HealthInfoABI.json';
 
 // Validate environment variables
@@ -9,27 +9,23 @@ if (!CONTRACT_ADDRESS) {
     'CONTRACT_ADDRESS is not defined in the environment variables.'
   );
 }
+let provider:JsonRpcProvider;
+let signer: ethers.Wallet;
+let contract: Contract;
 
-let provider: BrowserProvider | null = null;
-let signer: JsonRpcSigner | null = null;
-let contract: Contract | null = null;
-
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
+/**
+ * Connect to Ethereum using a hardcoded MetaMask account
+ */
 export async function connectWallet(): Promise<void> {
-  if (!window.ethereum) throw new Error('MetaMask not installed.');
+  if (!METAMASK_PRIVATE_KEY) {
+    throw new Error('❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env.');
+  }
+  provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
+  
+  signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
+  contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
 
-  if (provider && contract) return; // ✅ Prevents re-initialization
-
-  provider = new BrowserProvider(window.ethereum);
-  await provider.send('eth_requestAccounts', []); // Request access to MetaMask
-  signer = await provider.getSigner();
-
-  contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI.abi, signer);
+  console.log('✅ Connected as:', signer.address);
 }
 
 /**
@@ -110,7 +106,21 @@ export async function getHealthRecordHash(
       'Contract not initialized. Make sure to call connectWallet() first.'
     );
   }
-  return await contract.getHealthRecord(ownerAddress);
+  try {
+    console.log("🔍 Fetching health record for:", ownerAddress);
+    const result = await contract.getHealthRecord(ownerAddress);
+    console.log("✅ Raw contract response:", result);
+
+    if (!result || result === "0x") {
+      console.warn(`⚠️ No health record found for: ${ownerAddress}`);
+      return "No data available";
+    }
+
+    return result;
+  } catch (error) {
+    console.error("❌ Error fetching health record from contract:", error);
+    throw error;
+  }
 }
 
 export async function getOwnHealthRecordHash(): Promise<string> {
@@ -186,6 +196,7 @@ export async function requestAccess(
     console.error('🚨 Error in requestAccess transaction:', error);
     throw error;
   }
+
 }
 
 /**

@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 
-import { Contract } from "ethers";
+import { Contract, parseUnits } from "ethers";
+
 import { ethers } from "hardhat";
 
 dotenv.config(); // Load environment variables from .env
@@ -17,19 +18,27 @@ async function main() {
 
     // Get signer
     const [signer] = await ethers.getSigners();
-    //console.log("Using signer:", await signer.getAddress());
+    console.log("Using signer:", await signer.getAddress());
 
-    // Attach to deployed contract
     const HealthInfoFactory = await ethers.getContractFactory("HealthInfo");
     const contract = HealthInfoFactory.attach(CONTRACT_ADDRESS).connect(signer);
 
+    const provider = ethers.provider;
+    const nonce = await provider.getTransactionCount(signer.address, "pending");
+    console.log("Pending nonce:", nonce);
+    
+    
     for (let i = 0; i < ACCOUNTS.length; i++) {
         const account = ACCOUNTS[i];
         const ipfsHash = IPFS_HASHES[i];
 
         console.log(`Setting owner for IPFS hash: ${ipfsHash} to account: ${account}`);
         try {
-            const tx = await (contract!.connect(signer!) as Contract).setOwner(ipfsHash, account);
+            const tx = await (contract!.connect(signer!) as Contract).setOwner(ipfsHash, account, {
+                gasLimit: 500000,  // Increase this if needed
+                gasPrice: parseUnits("10", "gwei"), 
+            });
+            console.log("Transaction sent! Hash:", tx.hash);
             console.log("Waiting for transaction confirmation...");
             await tx.wait();
             console.log(`Owner set for account: ${account}`);
