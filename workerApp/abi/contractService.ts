@@ -20,7 +20,6 @@ export async function connectWallet(): Promise<void> {
   if (!METAMASK_PRIVATE_KEY) {
     throw new Error('❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env.');
   }
-
   provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
   
   signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
@@ -28,9 +27,6 @@ export async function connectWallet(): Promise<void> {
 
   console.log('✅ Connected as:', signer.address);
 }
-
-
-
 
 /**
  * Add or update a health record with an IPFS hash.
@@ -200,6 +196,7 @@ export async function requestAccess(
     console.error('🚨 Error in requestAccess transaction:', error);
     throw error;
   }
+
 }
 
 /**
