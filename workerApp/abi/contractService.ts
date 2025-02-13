@@ -1,7 +1,8 @@
 import { BrowserProvider, Contract, JsonRpcSigner, ethers } from 'ethers';
+import { CONTRACT_ADDRESS, WALLETCONNECT_PROJECT_KEY } from '@env';
 
-import { CONTRACT_ADDRESS } from '@env';
 import HealthInfoABI from './HealthInfoABI.json';
+import WalletConnectProvider from "@walletconnect/ethereum-provider";
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {
@@ -14,22 +15,26 @@ let provider: BrowserProvider | null = null;
 let signer: JsonRpcSigner | null = null;
 let contract: Contract | null = null;
 
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
 export async function connectWallet(): Promise<void> {
-  if (!window.ethereum) throw new Error('MetaMask not installed.');
+  if (provider && contract) return; 
 
-  if (provider && contract) return; // ✅ Prevents re-initialization
+  const projectId = WALLETCONNECT_PROJECT_KEY
 
-  provider = new BrowserProvider(window.ethereum);
-  await provider.send('eth_requestAccounts', []); // Request access to MetaMask
+  console.log(`Connecting to project ${projectId}`)
+  console.log(`Connecting to contract ${CONTRACT_ADDRESS}`)
+
+  const walletConnectProvider = await WalletConnectProvider.init({
+  projectId: projectId,
+  chains: [1], 
+  showQrModal: true,
+  });
+
+  await walletConnectProvider.enable();
+
+  provider = new BrowserProvider(walletConnectProvider);
   signer = await provider.getSigner();
 
-  contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI.abi, signer);
+  contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
 }
 
 /**
@@ -110,7 +115,21 @@ export async function getHealthRecordHash(
       'Contract not initialized. Make sure to call connectWallet() first.'
     );
   }
-  return await contract.getHealthRecord(ownerAddress);
+  try {
+    console.log("🔍 Fetching health record for:", ownerAddress);
+    const result = await contract.getHealthRecord(ownerAddress);
+    console.log("✅ Raw contract response:", result);
+
+    if (!result || result === "0x") {
+      console.warn(`⚠️ No health record found for: ${ownerAddress}`);
+      return "No data available";
+    }
+
+    return result;
+  } catch (error) {
+    console.error("❌ Error fetching health record from contract:", error);
+    throw error;
+  }
 }
 
 export async function getOwnHealthRecordHash(): Promise<string> {
