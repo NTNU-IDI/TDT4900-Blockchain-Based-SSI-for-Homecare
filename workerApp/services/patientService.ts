@@ -3,10 +3,9 @@ import { fetchIPFSData, unpinFromIPFS, uploadToIPFS } from './pinataService';
 import {
   getHealthRecordHash,
   hasAccess,
-  hasRequestedAccess
+  hasRequestedAccess,
+  updateHealthRecord
 } from './contractService';
-
-import { updateHealthRecord } from './contractService';
 
 export async function fetchPatientData(ownerAddress: string): Promise<Patient> {
   try {

@@ -3,13 +3,13 @@ import {
   addPatientNote,
   fetchAllPatients,
   fetchPatientData
-} from '../abi/patientService';
+} from '../services/patientService';
 import {
   connectWallet,
   hasAccess,
   hasRequestedAccess,
   requestAccess
-} from '../abi/contractService';
+} from '../services/contractService';
 
 import { PATIENT_ADDRESSES } from '@env';
 import { Patient } from '../types/patientInterfaces';

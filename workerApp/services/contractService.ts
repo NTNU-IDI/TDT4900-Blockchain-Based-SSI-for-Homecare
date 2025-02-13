@@ -1,7 +1,7 @@
 import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from '@env';
 import { Contract, JsonRpcProvider, ethers } from 'ethers';
 
-import HealthInfoABI from './HealthInfoABI.json';
+import HealthInfoABI from '../abi/HealthInfoABI.json';
 
 // Validate environment variables
 if (!CONTRACT_ADDRESS) {
