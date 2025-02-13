@@ -41,6 +41,24 @@ const Foresporsel = () => {
     }
   };
 
+  // const fetchRequests = async () => {
+  //   try {
+  //     await connectWallet();
+  //     const fetchedAddresses = await getAccessRequests(); // Returns string[]
+  
+  //     console.log("Fetched requests:", fetchedAddresses);
+  
+  //     // Update state accordingly
+  //     setRequests({
+  //       addresses: fetchedAddresses, // Assign directly since it's an array of strings
+  //       notes: new Array(fetchedAddresses.length).fill("Ingen merknad"), // Default notes
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching requests:", error);
+  //   }
+  // };
+  
+
   // Fetch data on initial load
   useEffect(() => {
     fetchRequests();
@@ -58,6 +76,10 @@ const Foresporsel = () => {
 
   const handlePress = (address: string, note: string) => {
     const worker = workers[address] || null;
+    
+    console.log("Address:", address);
+    console.log("Note:", note);
+    console.log("Worker:", worker);
 
     navigation.navigate("DetailedForesporsel", { address, note, worker });
   };

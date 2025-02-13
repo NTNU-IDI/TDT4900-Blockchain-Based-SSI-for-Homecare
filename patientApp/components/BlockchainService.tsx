@@ -223,14 +223,20 @@ export async function denyAccessRequest(requester: string): Promise<void> {
  * @param ownerAddress - The Ethereum address of the owner.
  * @returns - An array of addresses.
  */
-export async function getAccessRequests(): Promise<string[]> {
+
+export async function getAccessRequests(): Promise<{
+  addresses: string[];
+  notes: string[];
+}> {
   if (!contract || !signer) {
     throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
+      "Contract not initialized. Make sure to call connectWallet() first."
     );
   }
-  return await contract.getAccessRequests();
+  const [addresses, notes] = await contract.getAccessRequests();
+  return { addresses, notes };
 }
+
 /**
  * Get updates for a health record, including the addresses and timestamps.
  * @param recordOwner - The address of the record owner.
