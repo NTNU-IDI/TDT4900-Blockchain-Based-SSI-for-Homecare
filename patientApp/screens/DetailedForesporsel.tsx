@@ -7,7 +7,7 @@ import { RootStackParamList } from "../types/screens";
 import {
   denyAccessRequest,
   grantAccess,
-} from "../components/BlockchainService";
+} from "../abi/BlockchainService";
 import { Worker } from "../types/Worker";
 
 type DetailedForesporselRouteProp = RouteProp<

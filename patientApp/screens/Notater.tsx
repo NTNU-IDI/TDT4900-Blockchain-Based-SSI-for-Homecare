@@ -9,7 +9,7 @@ import {
 import Header from "../components/Header";
 import fetchIPFSData from "../services/PinataService";
 import { IPFS_HASH, OWNER_ADDRESS } from "@env";
-import { connectWallet, getHealthRecordHash, getOwnHealthRecordHash, getAccessRequests } from "../components/BlockchainService";
+import { connectWallet, getHealthRecordHash, getOwnHealthRecordHash, getAccessRequests } from "../abi/BlockchainService";
 
 const Notater = () => {
   const [notesData, setNotesData] = useState<string[][]>([]);

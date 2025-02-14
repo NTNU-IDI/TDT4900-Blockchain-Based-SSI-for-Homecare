@@ -6,7 +6,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
   connectWallet,
   getAccessRequests,
-} from "../components/BlockchainService";
+} from "../abi/BlockchainService";
 import { RootStackParamList } from "../types/screens";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import workers from "../assets/homecare_workers.json";

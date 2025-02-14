@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ActivityIndicator, ScrollView } from "react-native";
 import Header from "../components/Header";
-import { getUpdates, connectWallet } from "../components/BlockchainService"; // Ensure this path is correct
+import { getUpdates, connectWallet } from "../abi/BlockchainService"; // Ensure this path is correct
+import workers from "../assets/homecare_workers.json"
 
-const UpdatesLog = () => {
+const Oppdateringer = () => {
   const [updates, setUpdates] = useState<{
     addresses: string[];
     timestamps: (number | bigint)[];
@@ -51,26 +52,29 @@ const UpdatesLog = () => {
       <Header header="Endringer" />
       <ScrollView contentContainerStyle={styles.table}>
         <View style={[styles.tableRow, styles.headerRow]}>
-          <View style={styles.tableCell}><Text style={styles.headerText}>Timestamp</Text></View>
-          <View style={styles.tableCell}><Text style={styles.headerText}>Address (Worker)</Text></View>
-          <View style={styles.tableCell}><Text style={styles.headerText}>Description</Text></View>
+          <View style={styles.tableCell}><Text style={styles.headerText}>Tid</Text></View>
+          <View style={styles.tableCell}><Text style={styles.headerText}>Worker</Text></View>
+          <View style={styles.tableCell}><Text style={styles.headerText}>Notat</Text></View>
         </View>
 
-        {updates.timestamps.map((timestamp, index) => (
-          <View key={index} style={styles.tableRow}>
-            <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{
-                new Date(Number(timestamp) * 1000).toLocaleString()
-              }</Text>
+        {updates.timestamps.map((timestamp, index) => {
+          const address = updates.addresses[index];
+          const workerName = workers[address]?.navn || "Ukjent Arbeider"; // Map address to name
+
+          return (
+            <View key={index} style={styles.tableRow}>
+              <View style={styles.tableCell}>
+                <Text style={styles.cellText}>{new Date(Number(timestamp) * 1000).toLocaleDateString()}</Text>
+              </View>
+              <View style={styles.tableCell}>
+                <Text style={styles.cellText}>{workerName}</Text>
+              </View>
+              <View style={styles.tableCell}>
+                <Text style={styles.cellText}>{updates.descriptions[index]}</Text>
+              </View>
             </View>
-            <View style={styles.tableCell}>
-              {/* <Text style={styles.cellText}>{updates.addresses[index]}</Text> */}
-            </View>
-            <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{updates.descriptions[index]}</Text>
-            </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -120,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UpdatesLog;
+export default Oppdateringer;
