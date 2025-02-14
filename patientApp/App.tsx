@@ -25,7 +25,7 @@ export default function App() {
         }}
         initialRouteName="Home"
       >
-        <Stack.Screen name="Home" component={Homepage} />
+        <Stack.Screen name="Home" component={Homepage}  />
         <Stack.Screen name="Tilganger" component={Tilganger} />
         <Stack.Screen name="Innsyn" component={Innsyn} />
         <Stack.Screen name="Oppdateringer" component={Oppdateringer} />

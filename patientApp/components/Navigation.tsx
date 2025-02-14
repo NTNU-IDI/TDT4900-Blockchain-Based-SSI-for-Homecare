@@ -2,17 +2,21 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../types/Screens";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/Screens";
 
 type NavigationScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-const Navigation = () => {
+const Navigation = ({ data }: { data: { name: string; notes: string[] } }) => {
   const navigation = useNavigation<NavigationScreenNavigationProp>();
 
   const handlePress = (screen: keyof RootStackParamList) => {
-    navigation.navigate(screen);
+    if (screen === "Notater") {
+      navigation.navigate(screen, { notes: data.notes });
+    } else {
+      navigation.navigate(screen);
+    }
   };
 
   const icons: {
@@ -23,7 +27,7 @@ const Navigation = () => {
     { name: "calendar", label: "Timeavtaler" },
     { name: "chemistry", label: "Prøvesvar" },
     { name: "note", label: "Endringslogg", screen: "Oppdateringer" },
-    { name: "envelope", label: "Meldinger" }, // No screen, won't navigate
+    { name: "envelope", label: "Meldinger" },
     { name: "user", label: "Tilganger", screen: "Tilganger" },
     { name: "docs", label: "Notater", screen: "Notater" },
   ];
