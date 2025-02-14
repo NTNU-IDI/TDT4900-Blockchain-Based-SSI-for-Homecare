@@ -3,11 +3,8 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import {
-  connectWallet,
-  getAccessRequests,
-} from "../abi/BlockchainService";
-import { RootStackParamList } from "../types/screens";
+import { connectWallet, getAccessRequests } from "../abi/BlockchainService";
+import { RootStackParamList } from "../types/Screens";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import workers from "../assets/homecare_workers.json";
 
@@ -41,24 +38,6 @@ const Foresporsel = () => {
     }
   };
 
-  // const fetchRequests = async () => {
-  //   try {
-  //     await connectWallet();
-  //     const fetchedAddresses = await getAccessRequests(); // Returns string[]
-  
-  //     console.log("Fetched requests:", fetchedAddresses);
-  
-  //     // Update state accordingly
-  //     setRequests({
-  //       addresses: fetchedAddresses, // Assign directly since it's an array of strings
-  //       notes: new Array(fetchedAddresses.length).fill("Ingen merknad"), // Default notes
-  //     });
-  //   } catch (error) {
-  //     console.error("Error fetching requests:", error);
-  //   }
-  // };
-  
-
   // Fetch data on initial load
   useEffect(() => {
     fetchRequests();
@@ -71,12 +50,11 @@ const Foresporsel = () => {
     }, [])
   );
 
-  // Count unique addresses
   const uniqueAddressCount = new Set(requests.addresses).size;
 
   const handlePress = (address: string, note: string) => {
     const worker = workers[address] || null;
-    
+
     console.log("Address:", address);
     console.log("Note:", note);
     console.log("Worker:", worker);

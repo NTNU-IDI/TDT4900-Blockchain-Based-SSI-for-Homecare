@@ -2,33 +2,42 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../types/screens";
+import { RootStackParamList } from "../types/Screens";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type NavigationScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const Navigation = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationScreenNavigationProp>();
 
-  const handlePress = (screen: string) => {
-    navigation.navigate(screen as never);
+  const handlePress = (screen: keyof RootStackParamList) => {
+    navigation.navigate(screen);
   };
+
+  const icons: {
+    name: string;
+    label: string;
+    screen?: keyof RootStackParamList;
+  }[] = [
+    { name: "calendar", label: "Timeavtaler" },
+    { name: "chemistry", label: "Prøvesvar" },
+    { name: "note", label: "Endringslogg", screen: "Oppdateringer" },
+    { name: "envelope", label: "Meldinger" }, // No screen, won't navigate
+    { name: "user", label: "Tilganger", screen: "Tilganger" },
+    { name: "docs", label: "Notater", screen: "Notater" },
+  ];
 
   return (
     <View style={styles.div}>
       <View style={styles.container}>
-        {[
-          { name: "calendar", label: "Timeavtaler", screen: "Innsyn" },
-          { name: "chemistry", label: "Prøvesvar", screen: "Innsyn" },
-          { name: "bell", label: "Endringslogg", screen: "Oppdateringer" },
-          { name: "envelope", label: "Meldinger", screen: "" },
-          { name: "user", label: "Tilganger", screen: "Tilganger" },
-          { name: "docs", label: "Notater", screen: "Notater" },
-        ].map((icon, index) => (
+        {icons.map((icon, index) => (
           <TouchableOpacity
             key={index}
             style={styles.card}
             onPress={() => handlePress(icon.screen)}
           >
-            <Icon name={icon.name} size={60} color="#000" />
+            <Icon name={icon.name} size={60} color={"#000"} />
             <Text style={styles.cardText}>{icon.label}</Text>
           </TouchableOpacity>
         ))}

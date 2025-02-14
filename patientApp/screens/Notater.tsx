@@ -9,7 +9,7 @@ import {
 import Header from "../components/Header";
 import fetchIPFSData from "../services/PinataService";
 import { IPFS_HASH, OWNER_ADDRESS } from "@env";
-import { connectWallet, getHealthRecordHash, getOwnHealthRecordHash, getAccessRequests } from "../abi/BlockchainService";
+import { connectWallet, getOwnHealthRecordHash } from "../abi/BlockchainService";
 
 const Notater = () => {
   const [notesData, setNotesData] = useState<string[][]>([]);
@@ -20,12 +20,9 @@ const Notater = () => {
     const getData = async () => {
       try {
         await connectWallet();
-        console.log("yo")
         const hash = await getOwnHealthRecordHash();
         console.log("Fetched IPFS hash:", hash);
         const data = await fetchIPFSData(hash);
-        console.log("Fetched Data:", data);
-        console.log(getAccessRequests());
         setNotesData(data.notes || []);
       } catch (err) {
         setError("Failed to fetch data from IPFS.");
@@ -72,13 +69,13 @@ const Notater = () => {
         {notesData.map((note, index) => (
           <View key={index} style={styles.tableRow}>
             <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{note[1]}</Text> {/* Date */}
+              <Text style={styles.cellText}>{note[1]}</Text> 
             </View>
             <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{note[2]}</Text> {/* Note Text */}
+              <Text style={styles.cellText}>{note[2]}</Text> 
             </View>
             <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{note[0]}</Text> {/* Author */}
+              <Text style={styles.cellText}>{note[0]}</Text> 
             </View>
           </View>
         ))}

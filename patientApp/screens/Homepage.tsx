@@ -11,7 +11,7 @@ const Homepage = () => {
         <View style={[styles.secondCircle]} />
       </View>
 
-      <Text style={styles.circleText}>Velkommen Frida!</Text>
+      <Text style={styles.circleText}>Velkommen Anne!</Text>
       <Text style={styles.italicText}>Hva kan vi hjelpe deg med?</Text>
 
       <Navigation />
