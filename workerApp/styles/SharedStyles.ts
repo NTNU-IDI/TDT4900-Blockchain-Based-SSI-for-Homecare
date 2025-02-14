@@ -31,11 +31,6 @@ export const SharedStyles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5
   },
-  cardText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333'
-  },
   noteInput: {
     height: 100,
     borderColor: '#CCC',
@@ -60,17 +55,38 @@ export const SharedStyles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5
   },
-  patientName: {
+  boldCardTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333'
+    fontWeight: 'bold'
+  },
+  cardTitle: {
+    fontSize: 16
+  },
+  cardText: {
+    fontSize: 14
+  },
+  greyCardText: {
+    fontSize: 14,
+    color: '#555'
   },
   message: {
     fontSize: 18,
     color: '#666',
     marginBottom: 20,
     textAlign: 'center'
-  }
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    flex:1
+  },
 });
 
 export default SharedStyles;

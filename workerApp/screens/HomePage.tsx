@@ -1,5 +1,4 @@
 import {
-  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -7,7 +6,6 @@ import {
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
-import { Patient } from '../types/patientInterfaces';
 import React from 'react';
 import SharedStyles from '../styles/SharedStyles';
 import { setCurrentPatient } from '../redux/patientSlicer';
@@ -24,76 +22,73 @@ const HomePage: React.FC = () => {
     day: 'numeric'
   });
 
-  const renderPatientCard = ({ item: patient }: { item: Patient }) => {
-    const isCurrentPatient = currentPatientId === patient.id;
-
-    return (
-      <TouchableOpacity
-        style={[
-          SharedStyles.patientCard,
-          isCurrentPatient && styles.currentPatientCard
-        ]}
-        onPress={() => dispatch(setCurrentPatient(patient.id))}
-      >
-        <View>
-          <Text
-            style={[
-              SharedStyles.patientName,
-              isCurrentPatient && styles.currentPatientName
-            ]}
-          >
-            {patient.name}
-          </Text>
-          {!patient.access && (
-            <>
-              <Text style={styles.noAccessMessage}>
-                "Ingen tilgang. Be om tilgang på journalsiden."
-              </Text>
-            </>
-          )}
-
-          {patient.access && (
-            <>
-              <Text
-                style={[
-                  styles.patientInfo,
-                  isCurrentPatient && styles.currentPatientInfo
-                ]}
-              >
-                {patient.time} - {patient.address}
-              </Text>
-              <Text
-                style={[
-                  styles.patientKey,
-                  isCurrentPatient && styles.currentPatientKey
-                ]}
-              >
-                Nøkkelnummer: {patient.nøkkelnummer}
-              </Text>
-            </>
-          )}
-        </View>
-
-        <Text
-          style={[
-            styles.patientStatus,
-            isCurrentPatient && styles.currentPatientStatus
-          ]}
-        >
-          {patient.status}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+  const currentDateFormatted = currentDate.charAt(0).toUpperCase() + currentDate.slice(1);
 
   return (
     <View style={SharedStyles.container}>
-      <Text style={SharedStyles.title}>{currentDate}</Text>
-      <FlatList
-        data={patients}
-        keyExtractor={(patient) => patient.id}
-        renderItem={renderPatientCard}
-      />
+      <Text style={SharedStyles.title}>{currentDateFormatted}</Text>
+      {patients.map((patient) => {
+        const isCurrentPatient = currentPatientId === patient.id;
+
+        return (
+          <TouchableOpacity
+            style={[
+              SharedStyles.patientCard,
+              isCurrentPatient && styles.currentPatientCard
+            ]}
+            onPress={() => dispatch(setCurrentPatient(patient.id))}
+          >
+            <View>
+              <Text
+                style={[
+                  SharedStyles.boldCardTitle,
+                  isCurrentPatient && styles.currentPatientName
+                ]}
+              >
+                {patient.name}
+              </Text>
+              {!patient.access && (
+                <>
+                  <Text style={styles.noAccessMessage}>
+                    "Ingen tilgang. Be om tilgang på journalsiden."
+                  </Text>
+                </>
+              )}
+    
+              {patient.access && (
+                <>
+                  <Text
+                    style={[
+                      styles.patientInfo,
+                      isCurrentPatient && styles.currentPatientInfo
+                    ]}
+                  >
+                    {patient.time} - {patient.address}
+                  </Text>
+                  <Text
+                    style={[
+                      SharedStyles.greyCardText,
+                      isCurrentPatient && styles.currentPatientKey
+                    ]}
+                  >
+                    Nøkkelnummer: {patient.nøkkelnummer}
+                  </Text>
+                </>
+              )}
+            </View>
+    
+            <Text
+              style={[
+                styles.patientStatus,
+                isCurrentPatient && styles.currentPatientStatus
+              ]}
+            >
+              {patient.status}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+
     </View>
   );
 };
@@ -120,10 +115,6 @@ const styles = StyleSheet.create({
   },
   currentPatientInfo: {
     color: '#E0FFFF'
-  },
-  patientKey: {
-    fontSize: 14,
-    color: '#555'
   },
   currentPatientKey: {
     color: '#E0FFFF'

@@ -19,7 +19,7 @@ let contract: Contract;
 export async function connectWallet(): Promise<void> {
   if (!METAMASK_PRIVATE_KEY) {
     throw new Error(
-      '❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env.'
+      'METAMASK_PRIVATE_KEY is missing in .env.'
     );
   }
   provider = new JsonRpcProvider(
@@ -28,8 +28,6 @@ export async function connectWallet(): Promise<void> {
 
   signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
   contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
-
-  console.log('✅ Connected as:', signer.address);
 }
 
 /**

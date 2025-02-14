@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import BackButton from '../components/BackButton';
 import GreenButton from '../components/GreenButton';
+import InfoText from '../components/InfoText';
+import { Patient } from '../types/patientInterfaces';
 import SharedStyles from '../styles/SharedStyles';
 import { requestPatientAccess } from '../redux/patientSlicer';
 
-const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
+const JournalRequest: React.FC<{ patient: Patient; onBack: () => void }> = ({
   patient,
   onBack
 }) => {
@@ -19,26 +21,19 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
   const handleRequestAccess = () => {
     dispatch(requestPatientAccess({ patientId: patient.id, note }));
     setRequestSent(true);
-    setTimeout(() => onBack(), 2000);
+    setTimeout(onBack, 2000);
   };
 
   return (
     <View style={SharedStyles.container}>
+      <View style={SharedStyles.headerContainer}>
       <BackButton onPress={onBack} />
-      <Text style={SharedStyles.title}>Be om tilgang til journal</Text>
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>
-          <Text style={styles.label}>Navn: </Text>
-          {workerData?.navn || 'Ukjent'}
-        </Text>
-        <Text style={styles.infoText}>
-          <Text style={styles.label}>Arbeidsplass: </Text>
-          {workerData?.arbeidsplass || 'Ukjent'}
-        </Text>
-        <Text style={styles.infoText}>
-          <Text style={styles.label}>Yrke: </Text>
-          {workerData?.yrke || 'Ukjent'}
-        </Text>
+      <Text style={SharedStyles.headerTitle}>Be om tilgang til journal</Text>
+      </View>
+      <View style={{ marginBottom: 20 }}>
+      <InfoText label="Ditt navn" value={workerData?.navn} />
+      <InfoText label="Din arbeidsplass" value={workerData?.arbeidsplass} />
+      <InfoText label="Ditt yrke" value={workerData?.yrke} />
       </View>
 
       {!requestSent ? (
@@ -53,8 +48,8 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
           <GreenButton onPress={handleRequestAccess} title="Send forespørsel" />
         </>
       ) : (
-        <View style={styles.requestSentContainer}>
-          <Text style={styles.requestSentText}>Forespørsel sendt</Text>
+        <View style={SharedStyles.card}>
+          <Text style={SharedStyles.boldCardTitle}>Forespørsel sendt</Text>
         </View>
       )}
     </View>
@@ -62,28 +57,3 @@ const JournalRequest: React.FC<{ patient: any; onBack: () => void }> = ({
 };
 
 export default JournalRequest;
-
-const styles = StyleSheet.create({
-  infoContainer: {
-    marginBottom: 20
-  },
-  infoText: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 10
-  },
-  label: {
-    fontWeight: 'bold'
-  },
-  requestSentContainer: {
-    backgroundColor: '#BBE2EC',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center'
-  },
-  requestSentText: {
-    fontSize: 18,
-    color: '#333',
-    fontWeight: 'bold'
-  }
-});

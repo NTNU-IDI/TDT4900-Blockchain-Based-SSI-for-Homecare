@@ -19,7 +19,8 @@ const ReduxWrapper: React.FC = () => {
 
   const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView style={[styles.safeArea, { paddingTop: Math.max(insets.top-10, 10) }]}>
+    <SafeAreaView style={[styles.safeArea, { paddingTop: Math.max(insets.top-50, 5
+    ) }]}>
       <StatusBar barStyle="dark-content" />
       <Navigation />
     </SafeAreaView>
