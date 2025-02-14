@@ -3,11 +3,8 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import Header from "../components/Header";
 import { RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "../types/screens";
-import {
-  denyAccessRequest,
-  grantAccess,
-} from "../components/BlockchainService";
+import { RootStackParamList } from "../types/Screens";
+import { denyAccessRequest, grantAccess } from "../abi/BlockchainService";
 import { Worker } from "../types/Worker";
 
 type DetailedForesporselRouteProp = RouteProp<
@@ -34,7 +31,6 @@ const DetailedForesporsel = () => {
       setIsButtonPressed(true); // Disable buttons only on success
     } catch (error) {
       console.error("Error approving access request:", error);
-      console.log("Error", "Failed to approve access request.");
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +44,6 @@ const DetailedForesporsel = () => {
       setIsButtonPressed(true); // Disable buttons only on success
     } catch (error) {
       console.error("Error denying access request:", error);
-      console.log("Error", "Failed to deny access request.");
     } finally {
       setIsLoading(false);
     }

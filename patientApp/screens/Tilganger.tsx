@@ -3,35 +3,41 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../types/Screens";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type TilgangerScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Tilganger"
+>;
 
 const Tilganger = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<TilgangerScreenNavigationProp>();
 
-  const handlePress = (screen: string) => {
-    navigation.navigate(screen as never);
+  const handlePress = (screen: keyof RootStackParamList) => {
+    navigation.navigate(screen);
   };
+
+  const handleInnsynPress = () => handlePress("Innsyn");
+  const handleForesporselPress = () => handlePress("Foresporsel");
+
   return (
     <View style={styles.screen}>
       <Header header="Tilganger" />
       <View style={styles.cardContainer}>
-      <TouchableOpacity
-          onPress={() => handlePress('Innsyn')}
-        >
-        <Card
-          title="Innsyn i journal"
-          description="Her ser du hvem som har tilgang til din journal"
-        />
+        <TouchableOpacity onPress={handleInnsynPress}>
+          <Card
+            title="Innsyn i journal"
+            description="Her ser du hvem som har tilgang til din journal"
+          />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handlePress('Foresporsel')}
-        >
-        <Card
-          title="Forespørsler om innsyn"
-          description="Her finner du forespørsler om tilgang til din journal"
-        />
+        <TouchableOpacity onPress={handleForesporselPress}>
+          <Card
+            title="Forespørsler om innsyn"
+            description="Her finner du forespørsler om tilgang til din journal"
+          />
         </TouchableOpacity>
       </View>
-      
     </View>
   );
 };

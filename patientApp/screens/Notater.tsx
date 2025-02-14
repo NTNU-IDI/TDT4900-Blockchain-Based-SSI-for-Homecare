@@ -1,57 +1,15 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-  ScrollView,
-} from "react-native";
+import React from "react";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import Header from "../components/Header";
-import fetchIPFSData from "../services/PinataService";
-import { IPFS_HASH, OWNER_ADDRESS } from "@env";
-import { connectWallet, getHealthRecordHash, getOwnHealthRecordHash, getAccessRequests } from "../components/BlockchainService";
+import { RootStackParamList } from "../types/Screens";
+import { RouteProp, useRoute } from "@react-navigation/native";
+
+type DetailedForesporselRouteProp = RouteProp<RootStackParamList, "Notater">;
 
 const Notater = () => {
-  const [notesData, setNotesData] = useState<string[][]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const route = useRoute<DetailedForesporselRouteProp>();
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        await connectWallet();
-        console.log("yo")
-        const hash = await getOwnHealthRecordHash();
-        console.log("Fetched IPFS hash:", hash);
-        const data = await fetchIPFSData(hash);
-        console.log("Fetched Data:", data);
-        console.log(getAccessRequests());
-        setNotesData(data.notes || []);
-      } catch (err) {
-        setError("Failed to fetch data from IPFS.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getData();
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#007BFF" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
-    );
-  }
+  const { notes } = route.params as { notes: string[] };
 
   return (
     <View style={styles.screen}>
@@ -62,23 +20,23 @@ const Notater = () => {
             <Text style={styles.headerText}>Dato</Text>
           </View>
           <View style={styles.tableCell}>
-            <Text style={styles.headerText}>Forfatter</Text>
+            <Text style={styles.headerText}>Arbeider</Text>
           </View>
           <View style={styles.tableCell}>
             <Text style={styles.headerText}>Notat</Text>
           </View>
         </View>
 
-        {notesData.map((note, index) => (
+        {notes.map((note, index) => (
           <View key={index} style={styles.tableRow}>
             <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{note[1]}</Text> {/* Date */}
+              <Text style={styles.cellText}>{note[1]}</Text>
             </View>
             <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{note[2]}</Text> {/* Note Text */}
+              <Text style={styles.cellText}>{note[2]}</Text>
             </View>
             <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{note[0]}</Text> {/* Author */}
+              <Text style={styles.cellText}>{note[0]}</Text>
             </View>
           </View>
         ))}
