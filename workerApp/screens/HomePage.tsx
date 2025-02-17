@@ -6,27 +6,25 @@ import SharedStyles from '../styles/SharedStyles';
 import { setCurrentPatient } from '../redux/patientSlicer';
 
 const HomePage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { currentPatientId, patients } = useAppSelector(
+    (state) => state.patient
+  );
+
   const currentDate = new Date().toLocaleDateString('no-NO', {
     weekday: 'long',
     month: 'long',
     day: 'numeric'
   });
 
-  const { currentPatientId, patients } = useAppSelector(
-    (state) => state.patient
-  );
-  const dispatch = useAppDispatch();
+  const currentDateFormatted =
+    currentDate.charAt(0).toUpperCase() + currentDate.slice(1);
 
   return (
     <View style={SharedStyles.container}>
-      <Text style={SharedStyles.title}>
-        {currentDate[0].toUpperCase() + currentDate.slice(1)}
-      </Text>
+      <Text style={SharedStyles.title}>{currentDateFormatted}</Text>
       {patients.map((patient) => {
         const isCurrentPatient = currentPatientId === patient.id;
-        const noAccessMessage = !patient.access
-          ? 'Ingen tilgang. Be om tilgang på journalsiden.'
-          : null;
 
         return (
           <TouchableOpacity
@@ -40,36 +38,42 @@ const HomePage: React.FC = () => {
             <View>
               <Text
                 style={[
-                  SharedStyles.patientName,
+                  SharedStyles.boldCardTitle,
                   isCurrentPatient && styles.currentPatientName
                 ]}
               >
                 {patient.name}
               </Text>
-              {patient.access && patient.time && (
-                <Text
-                  style={[
-                    styles.patientInfo,
-                    isCurrentPatient && styles.currentPatientInfo
-                  ]}
-                >
-                  {patient.time} - {patient.address}
-                </Text>
+              {!patient.access && (
+                <>
+                  <Text style={styles.noAccessMessage}>
+                    Ikke tilgang. Be om tilgang på journalsiden.
+                  </Text>
+                </>
               )}
-              {patient.nøkkelnummer && patient.access && (
-                <Text
-                  style={[
-                    styles.patientKey,
-                    isCurrentPatient && styles.currentPatientKey
-                  ]}
-                >
-                  Nøkkelnummer: {patient.nøkkelnummer}
-                </Text>
-              )}
-              {noAccessMessage && (
-                <Text style={styles.noAccessMessage}>{noAccessMessage}</Text>
+
+              {patient.access && (
+                <>
+                  <Text
+                    style={[
+                      styles.patientInfo,
+                      isCurrentPatient && styles.currentPatientInfo
+                    ]}
+                  >
+                    {patient.time} - {patient.address}
+                  </Text>
+                  <Text
+                    style={[
+                      SharedStyles.greyCardText,
+                      isCurrentPatient && styles.currentPatientKey
+                    ]}
+                  >
+                    Nøkkelnummer: {patient.nøkkelnummer}
+                  </Text>
+                </>
               )}
             </View>
+
             <Text
               style={[
                 styles.patientStatus,
@@ -108,10 +112,6 @@ const styles = StyleSheet.create({
   currentPatientInfo: {
     color: '#E0FFFF'
   },
-  patientKey: {
-    fontSize: 14,
-    color: '#555'
-  },
   currentPatientKey: {
     color: '#E0FFFF'
   },
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
   noAccessMessage: {
     fontSize: 14,
     color: '#D44F3A',
-    fontStyle: 'italic',
     marginTop: 5
   }
 });

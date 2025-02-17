@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   addPatientTasksNote,
   setCurrentPatient,
@@ -36,8 +36,21 @@ const StartedTasksPage: React.FC = () => {
   const currentPatient = patients.find((p) => p.id === currentPatientId);
   const isOvertime = timeElapsed > totalDuration;
 
+  const startVisitTimer = useCallback(() => {
+    visitTimer = setInterval(() => {
+      setTimeElapsed((prev) => prev + 1);
+    }, 1000);
+  }, []);
+
+  const clearVisitTimer = useCallback(() => {
+    if (visitTimer) {
+      clearInterval(visitTimer);
+      visitTimer = null;
+    }
+  }, []);
+
   useEffect(() => {
-    if (currentPatient && currentPatient.tasks.length > 0) {
+    if (currentPatient?.tasks.length) {
       const totalVisitTime = currentPatient.tasks.reduce(
         (sum, task) => sum + task.duration,
         0
@@ -47,20 +60,7 @@ const StartedTasksPage: React.FC = () => {
     }
 
     return () => clearVisitTimer();
-  }, [currentPatient]);
-
-  const startVisitTimer = () => {
-    visitTimer = setInterval(() => {
-      setTimeElapsed((prev) => prev + 1);
-    }, 1000);
-  };
-
-  const clearVisitTimer = () => {
-    if (visitTimer) {
-      clearInterval(visitTimer);
-      visitTimer = null;
-    }
-  };
+  }, [currentPatient, startVisitTimer, clearVisitTimer]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -70,19 +70,16 @@ const StartedTasksPage: React.FC = () => {
 
   const moveToNextPatient = () => {
     const currentIndex = patients.findIndex((p) => p.id === currentPatientId);
-    if (currentIndex < patients.length - 1) {
-      const nextPatient = patients[currentIndex + 1];
-      dispatch(setCurrentPatient(nextPatient.id));
-    } else {
-      dispatch(setCurrentPatient(''));
-    }
+    const nextPatient =
+      currentIndex < patients.length - 1 ? patients[currentIndex + 1] : null;
+    dispatch(setCurrentPatient(nextPatient ? nextPatient.id : ''));
   };
 
   const finishTasks = async () => {
     if (currentPatient) {
-      if (note != '') {
+      if (note.trim() != '') {
         const state = store.getState();
-        const workerName = state.worker.worker?.navn;
+        const workerName = state.worker.worker?.name;
 
         if (!workerName) {
           throw new Error('No worker name found in state.');
@@ -130,8 +127,8 @@ const StartedTasksPage: React.FC = () => {
             style={styles.taskWrapper}
             onPress={() => openTaskDescription(task.description)}
           >
-            <Text style={styles.taskName}>{task.name}</Text>
-            <Text style={styles.taskStatus}>
+            <Text style={SharedStyles.boldCardTitle}>{task.name}</Text>
+            <Text style={SharedStyles.greyCardText}>
               Beregnet tid: {task.duration} min
             </Text>
           </TouchableOpacity>
@@ -164,12 +161,7 @@ const StartedTasksPage: React.FC = () => {
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalText}>{selectedTaskDescription}</Text>
-            <TouchableOpacity
-              style={styles.modalCloseButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.modalCloseButtonText}>Lukk</Text>
-            </TouchableOpacity>
+            <GreenButton onPress={() => setModalVisible(false)} title="Lukk" />
           </View>
         </View>
       </Modal>
@@ -188,18 +180,8 @@ const StartedTasksPage: React.FC = () => {
 export default StartedTasksPage;
 
 const styles = StyleSheet.create({
-  patientText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-    textAlign: 'center'
-  },
   timerContainer: {
-    marginBottom: 20,
-    padding: 15,
-    borderRadius: 10,
-    backgroundColor: '#BBE2EC',
+    ...SharedStyles.card,
     alignItems: 'center'
   },
   timerText: {
@@ -224,10 +206,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#BBE2EC',
     borderRadius: 10,
     marginRight: 10
-  },
-  taskName: {
-    fontSize: 16,
-    fontWeight: 'bold'
   },
   taskStatus: {
     fontSize: 14,
@@ -268,14 +246,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
     textAlign: 'center'
-  },
-  modalCloseButton: {
-    backgroundColor: '#0D9276',
-    padding: 10,
-    borderRadius: 5
-  },
-  modalCloseButtonText: {
-    color: '#FFF',
-    fontSize: 14
   }
 });
