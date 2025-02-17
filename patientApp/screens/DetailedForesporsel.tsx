@@ -4,7 +4,7 @@ import { useRoute } from "@react-navigation/native";
 import Header from "../components/Header";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../types/Screens";
-import { denyAccessRequest, grantAccess } from "../abi/BlockchainService";
+import { denyAccessRequest, grantAccess } from "../services/BlockchainService";
 import { Worker } from "../types/Worker";
 
 type DetailedForesporselRouteProp = RouteProp<
@@ -55,7 +55,7 @@ const DetailedForesporsel = () => {
 
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
-          <Text style={styles.label}>Adresse:</Text> {worker.navn}
+          <Text style={styles.label}>Navn:</Text> {worker.navn}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Arbeidsplass:</Text> {worker.arbeidsplass}

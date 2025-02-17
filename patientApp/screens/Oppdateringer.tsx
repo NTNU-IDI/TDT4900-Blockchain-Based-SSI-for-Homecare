@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, ActivityIndicator, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 import Header from "../components/Header";
-import { getUpdates, connectWallet } from "../abi/BlockchainService"; // Ensure this path is correct
-import workers from "../assets/homecare_workers.json"
+import { getUpdates } from "../services/BlockchainService"; // Ensure this path is correct
+import workers from "../assets/homecare_workers.json";
 
 const Oppdateringer = () => {
   const [updates, setUpdates] = useState<{
@@ -17,7 +23,6 @@ const Oppdateringer = () => {
   useEffect(() => {
     const fetchUpdates = async () => {
       try {
-        await connectWallet();
         const data = await getUpdates();
         setUpdates(data);
       } catch (err) {
@@ -52,9 +57,15 @@ const Oppdateringer = () => {
       <Header header="Endringer" />
       <ScrollView contentContainerStyle={styles.table}>
         <View style={[styles.tableRow, styles.headerRow]}>
-          <View style={styles.tableCell}><Text style={styles.headerText}>Tid</Text></View>
-          <View style={styles.tableCell}><Text style={styles.headerText}>Worker</Text></View>
-          <View style={styles.tableCell}><Text style={styles.headerText}>Notat</Text></View>
+          <View style={styles.tableCell}>
+            <Text style={styles.headerText}>Tid</Text>
+          </View>
+          <View style={styles.tableCell}>
+            <Text style={styles.headerText}>Worker</Text>
+          </View>
+          <View style={styles.tableCell}>
+            <Text style={styles.headerText}>Notat</Text>
+          </View>
         </View>
 
         {updates.timestamps.map((timestamp, index) => {
@@ -64,13 +75,17 @@ const Oppdateringer = () => {
           return (
             <View key={index} style={styles.tableRow}>
               <View style={styles.tableCell}>
-                <Text style={styles.cellText}>{new Date(Number(timestamp) * 1000).toLocaleDateString()}</Text>
+                <Text style={styles.cellText}>
+                  {new Date(Number(timestamp) * 1000).toLocaleDateString()}
+                </Text>
               </View>
               <View style={styles.tableCell}>
                 <Text style={styles.cellText}>{workerName}</Text>
               </View>
               <View style={styles.tableCell}>
-                <Text style={styles.cellText}>{updates.descriptions[index]}</Text>
+                <Text style={styles.cellText}>
+                  {updates.descriptions[index]}
+                </Text>
               </View>
             </View>
           );

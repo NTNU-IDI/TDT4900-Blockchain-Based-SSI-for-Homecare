@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
 import Header from "../components/Header";
 import Card from "../components/Card";
-import {
-  connectWallet,
-  getAccessList,
-  revokeAccess,
-} from "../abi/BlockchainService";
+import { getAccessList, revokeAccess } from "../services/BlockchainService";
 import workers from "../assets/homecare_workers.json";
 import { Worker } from "../types/Worker";
 
@@ -21,7 +17,6 @@ const Innsyn = () => {
   // Fetch access list function
   const fetchAccessList = async () => {
     try {
-      await connectWallet();
       const list = await getAccessList();
       setAccessList(list);
       console.log("Access list:", list);

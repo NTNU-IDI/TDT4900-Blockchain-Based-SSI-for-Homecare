@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { connectWallet, getAccessRequests } from "../abi/BlockchainService";
+import { getAccessRequests } from "../services/BlockchainService";
 import { RootStackParamList } from "../types/Screens";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import workers from "../assets/homecare_workers.json";
@@ -25,7 +25,6 @@ const Foresporsel = () => {
 
   const fetchRequests = async () => {
     try {
-      await connectWallet();
       const fetchedRequests = await getAccessRequests();
       console.log("Fetched requests:", fetchedRequests);
 
@@ -50,14 +49,12 @@ const Foresporsel = () => {
     }, [])
   );
 
+  const findWorker = (address: string) => workers[address] || null;
+
   const uniqueAddressCount = new Set(requests.addresses).size;
 
   const handlePress = (address: string, note: string) => {
-    const worker = workers[address] || null;
-
-    console.log("Address:", address);
-    console.log("Note:", note);
-    console.log("Worker:", worker);
+    const worker = findWorker(address);
 
     navigation.navigate("DetailedForesporsel", { address, note, worker });
   };
@@ -77,7 +74,7 @@ const Foresporsel = () => {
             }
           >
             <Card
-              title={`Adresse: ${address}`}
+              title={findWorker(address)?.navn || "Ukjent"}
               description={`Note: ${requests.notes[index] || "Ingen merknad"}`}
             />
           </TouchableOpacity>
