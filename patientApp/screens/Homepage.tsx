@@ -1,45 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import Navigation from "../components/Navigation";
-import {
-  connectWallet,
-  getOwnHealthRecordHash,
-} from "../abi/BlockchainService";
-import fetchIPFSData from "../services/PinataService";
+import { RootState, AppDispatch } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchHomepageData } from "../redux/homepageSlice";
 
 const Homepage = () => {
-  const [data, setData] = useState<{
-    name: string;
-    notes: string[];
-  }>({
-    name: "",
-    notes: [],
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.homepage
+  );
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        await connectWallet();
-        const hash = await getOwnHealthRecordHash();
-        console.log("Fetched IPFS hash:", hash);
-
-        const personalData = await fetchIPFSData(hash);
-        console.log("Fetched data:", personalData);
-
-        setData({
-          name: personalData.name,
-          notes: personalData.notes || [],
-        });
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getData();
-  }, []);
+    if (!data.name) {
+      dispatch(fetchHomepageData());
+    }
+  }, [dispatch, data.name]);
 
   if (loading) {
     return (

@@ -30,7 +30,7 @@ const Notater = () => {
         {notes.map((note, index) => (
           <View key={index} style={styles.tableRow}>
             <View style={styles.tableCell}>
-              <Text style={styles.cellText}>{note[1]}</Text>
+              <Text style={styles.cellText}>{note[1].split(",")[0]}</Text>
             </View>
             <View style={styles.tableCell}>
               <Text style={styles.cellText}>{note[2]}</Text>
