@@ -25,16 +25,11 @@ export const SharedStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
-    elevation: 5, // For Android shadows
-    shadowColor: '#000', // For iOS shadows
+    elevation: 5,
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5
-  },
-  cardText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333'
   },
   noteInput: {
     height: 100,
@@ -54,22 +49,43 @@ export const SharedStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    elevation: 3, // For Android
-    shadowColor: '#000', // For iOS
+    elevation: 3,
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5
   },
-  patientName: {
+  boldCardTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333'
+    fontWeight: 'bold'
+  },
+  cardTitle: {
+    fontSize: 16
+  },
+  cardText: {
+    fontSize: 14
+  },
+  greyCardText: {
+    fontSize: 14,
+    color: '#555'
   },
   message: {
     fontSize: 18,
     color: '#666',
     marginBottom: 20,
     textAlign: 'center'
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    flex: 1
   }
 });
 

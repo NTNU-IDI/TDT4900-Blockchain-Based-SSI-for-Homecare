@@ -22,8 +22,8 @@ interface Patient {
   tasks: Task[];
   notes: string[];
   access: boolean; // 'Tilgang' or 'Ikke tilgang'
-  accessRequest: boolean; // Tracks if access has been requested
-  journal: Journal; // Patient-specific journal data
+  accessRequest: boolean;
+  journal: Journal;
 }
 
 export { Patient, Task, Journal };
