@@ -6,7 +6,7 @@ import {
   connectWallet,
   getAccessList,
   revokeAccess,
-} from "../components/BlockchainService";
+} from "../abi/BlockchainService";
 import workers from "../assets/homecare_workers.json";
 import { Worker } from "../types/Worker";
 
@@ -54,31 +54,13 @@ const Innsyn = () => {
     setIsPopupVisible(true);
   };
 
-  // Handle approve button press
-  // const handleRemove = async () => {
-  //   if (!selectedAddress) {
-  //     console.error("No worker address selected.");
-  //     return;
-  //   }
-
-  //   try {
-  //     await revokeAccess(selectedAddress); // Use stored address
-  //     console.log("Success", "Access revoked successfully.");
-  //     await fetchAccessList(); // Refresh the access list
-  //   } catch (error) {
-  //     console.error("Error revoking access:", error);
-  //     console.log("Error", "Failed to revoke access.");
-  //   } finally {
-  //     setIsLoading(false);
-  //     setIsPopupVisible(false);
-  //   }
-  // };
-
   const handleRemove = async () => {
     if (!selectedAddress) {
       console.error("No worker address selected.");
       return;
     }
+    setIsLoading(true);
+
     try {
       await revokeAccess(selectedAddress);
       console.log("Success", "Access revoked successfully.");
@@ -141,13 +123,23 @@ const Innsyn = () => {
             </Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={[styles.button, styles.approveButton]}
+                style={[
+                  styles.button,
+                  styles.approveButton,
+                  isLoading && styles.disabledButton,
+                ]}
                 onPress={handleRemove}
               >
-                <Text style={styles.buttonText}>Ja</Text>
+                <Text style={styles.buttonText}>
+                  {isLoading ? "Processing..." : "Ja"}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.button, styles.discardButton]}
+                style={[
+                  styles.button,
+                  styles.discardButton,
+                  isLoading && styles.disabledButton,
+                ]}
                 onPress={handleDiscard}
               >
                 <Text style={styles.buttonText}>Nei</Text>
@@ -204,6 +196,9 @@ const styles = StyleSheet.create({
   },
   discardButton: {
     backgroundColor: "#FF5733",
+  },
+  disabledButton: {
+    backgroundColor: "#A9A9A9",
   },
   buttonText: {
     color: "white",

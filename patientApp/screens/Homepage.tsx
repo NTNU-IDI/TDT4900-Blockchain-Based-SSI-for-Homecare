@@ -1,20 +1,78 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import Navigation from "../components/Navigation";
+import {
+  connectWallet,
+  getOwnHealthRecordHash,
+} from "../abi/BlockchainService";
+import fetchIPFSData from "../services/PinataService";
 
 const Homepage = () => {
+  const [data, setData] = useState<{
+    name: string;
+    notes: string[];
+  }>({
+    name: "",
+    notes: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        await connectWallet();
+        const hash = await getOwnHealthRecordHash();
+        console.log("Fetched IPFS hash:", hash);
+
+        const personalData = await fetchIPFSData(hash);
+        console.log("Fetched data:", personalData);
+
+        setData({
+          name: personalData.name,
+          notes: personalData.notes || [],
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screen}>
-
       <View style={styles.circleContainer}>
         <View style={[styles.firstCircle]} />
         <View style={[styles.secondCircle]} />
       </View>
 
-      <Text style={styles.circleText}>Velkommen Frida!</Text>
+      <Text style={styles.circleText}>Hei {data.name.split(" ")[0]}!</Text>
       <Text style={styles.italicText}>Hva kan vi hjelpe deg med?</Text>
 
-      <Navigation />
+      <Navigation
+        data={{
+          name: data.name,
+          notes: data.notes,
+        }}
+      />
     </View>
   );
 };
@@ -23,7 +81,15 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
   },
   circleContainer: {
     width: "100%",

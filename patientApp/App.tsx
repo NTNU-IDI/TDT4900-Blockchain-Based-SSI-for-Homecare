@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import 'react-native-get-random-values';
+import "react-native-get-random-values";
 
 import Homepage from "./screens/Homepage";
 import Tilganger from "./screens/Tilganger";
@@ -10,7 +10,7 @@ import Foresporsel from "./screens/Foresporsel";
 import DetailedForesporsel from "./screens/DetailedForesporsel";
 import Notater from "./screens/Notater";
 import Oppdateringer from "./screens/Oppdateringer";
-import { RootStackParamList } from "./types/screens";
+import { RootStackParamList } from "./types/Screens";
 
 // Create the stack navigator
 const Stack = createStackNavigator<RootStackParamList>();
@@ -25,7 +25,7 @@ export default function App() {
         }}
         initialRouteName="Home"
       >
-        <Stack.Screen name="Home" component={Homepage} />
+        <Stack.Screen name="Home" component={Homepage}  />
         <Stack.Screen name="Tilganger" component={Tilganger} />
         <Stack.Screen name="Innsyn" component={Innsyn} />
         <Stack.Screen name="Oppdateringer" component={Oppdateringer} />

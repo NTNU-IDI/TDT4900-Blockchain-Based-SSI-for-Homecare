@@ -1,15 +1,14 @@
-import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from '@env';
-import { Contract, JsonRpcProvider, ethers } from 'ethers';
+import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from "@env";
+import { Contract, JsonRpcProvider, ethers } from "ethers";
 
-import HealthInfoABI from '../abi/HealthInfoABI.json';
+import HealthInfoABI from "../abi/HealthInfoABI.json";
 
-// Validate environment variables
 if (!CONTRACT_ADDRESS) {
   throw new Error(
-    'CONTRACT_ADDRESS is not defined in the environment variables.'
+    "CONTRACT_ADDRESS is not defined in the environment variables."
   );
 }
-let provider:JsonRpcProvider;
+let provider: JsonRpcProvider;
 let signer: ethers.Wallet;
 let contract: Contract;
 
@@ -18,19 +17,20 @@ let contract: Contract;
  */
 export async function connectWallet(): Promise<void> {
   if (!METAMASK_PRIVATE_KEY) {
-    throw new Error('❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env.');
+    throw new Error(
+      "❌ Private key is missing. Set METAMASK_PRIVATE_KEY in .env."
+    );
   }
 
-  provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
-  
+  provider = new JsonRpcProvider(
+    `https://sepolia.infura.io/v3/${INFURA_API_KEY}`
+  );
+
   signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
   contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
 
-  console.log('✅ Connected as:', signer.address);
+  console.log("✅ Connected as:", signer.address);
 }
-
-
-
 
 /**
  * Add or update a health record with an IPFS hash.
@@ -45,7 +45,7 @@ export async function updateHealthRecord(
     newIpfsHash
   );
   await tx.wait();
-  console.log('Health record updated successfully.');
+  console.log("Health record updated successfully.");
 }
 
 /**
@@ -59,7 +59,7 @@ export async function hasRequestedAccess(owner: string): Promise<boolean> {
   }
   if (!contract || !signer) {
     throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
+      "Contract not initialized. Make sure to call connectWallet() first."
     );
   }
   try {
@@ -82,7 +82,7 @@ export async function hasAccess(owner: string): Promise<boolean> {
   }
   if (!contract)
     throw new Error(
-      'Contract not initialized. Make sure to connectWallet() first.'
+      "Contract not initialized. Make sure to connectWallet() first."
     );
 
   try {
@@ -107,7 +107,7 @@ export async function getHealthRecordHash(
   }
   if (!contract || !signer) {
     throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
+      "Contract not initialized. Make sure to call connectWallet() first."
     );
   }
   try {
@@ -130,7 +130,7 @@ export async function getHealthRecordHash(
 export async function getOwnHealthRecordHash(): Promise<string> {
   if (!contract || !signer) {
     throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
+      "Contract not initialized. Make sure to call connectWallet() first."
     );
   }
   return await contract.getOwnHealthRecord();
@@ -144,7 +144,7 @@ export async function getOwnHealthRecordHash(): Promise<string> {
 export async function getAccessList(): Promise<string[]> {
   if (!contract || !signer) {
     throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
+      "Contract not initialized. Make sure to call connectWallet() first."
     );
   }
   return await contract.getAccessList();
@@ -184,11 +184,11 @@ export async function requestAccess(
 ): Promise<void> {
   if (!contract || !signer) {
     throw new Error(
-      '🚨 Contract or signer not initialized. Call `connectWallet()` first.'
+      "🚨 Contract or signer not initialized. Call `connectWallet()` first."
     );
   }
 
-  console.log('🔄 Sending requestAccess transaction...');
+  console.log("🔄 Sending requestAccess transaction...");
 
   try {
     const tx = await contract.requestAccess(recordOwner, note);
@@ -197,7 +197,7 @@ export async function requestAccess(
       `✅ Access requested from ${await signer.address} to ${recordOwner}`
     );
   } catch (error) {
-    console.error('🚨 Error in requestAccess transaction:', error);
+    console.error("🚨 Error in requestAccess transaction:", error);
     throw error;
   }
 }
@@ -249,7 +249,7 @@ export async function getUpdates(): Promise<{
 }> {
   if (!contract || !signer) {
     throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
+      "Contract not initialized. Make sure to call connectWallet() first."
     );
   }
   const [addresses, timestamps, descriptions] = await contract.getUpdates();
