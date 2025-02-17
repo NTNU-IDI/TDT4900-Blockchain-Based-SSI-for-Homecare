@@ -11,8 +11,13 @@ interface SectionProps {
   children: string[];
 }
 
-const ToggleSection: React.FC<SectionProps> = ({ title, isOpen, onToggle, children }) => (
-  <View style={{marginBottom: 10}}>
+const ToggleSection: React.FC<SectionProps> = ({
+  title,
+  isOpen,
+  onToggle,
+  children
+}) => (
+  <View style={{ marginBottom: 10 }}>
     <TouchableOpacity style={styles.sectionHeader} onPress={onToggle}>
       <Text style={SharedStyles.boldCardTitle}>{title}</Text>
       <Text style={SharedStyles.boldCardTitle}>{isOpen ? '▲' : '▼'}</Text>
@@ -38,12 +43,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#BBE2EC',
+    backgroundColor: '#BBE2EC'
   },
   sectionContent: {
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: '#FFF',
-    borderRadius: 10,
-  },
+    borderRadius: 10
+  }
 });

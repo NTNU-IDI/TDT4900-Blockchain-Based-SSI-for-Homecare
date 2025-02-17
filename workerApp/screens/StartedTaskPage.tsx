@@ -70,7 +70,8 @@ const StartedTasksPage: React.FC = () => {
 
   const moveToNextPatient = () => {
     const currentIndex = patients.findIndex((p) => p.id === currentPatientId);
-    const nextPatient = currentIndex < patients.length - 1 ? patients[currentIndex + 1] : null;
+    const nextPatient =
+      currentIndex < patients.length - 1 ? patients[currentIndex + 1] : null;
     dispatch(setCurrentPatient(nextPatient ? nextPatient.id : ''));
   };
 
@@ -78,7 +79,7 @@ const StartedTasksPage: React.FC = () => {
     if (currentPatient) {
       if (note.trim() != '') {
         const state = store.getState();
-        const workerName = state.worker.worker?.navn;
+        const workerName = state.worker.worker?.name;
 
         if (!workerName) {
           throw new Error('No worker name found in state.');
@@ -245,5 +246,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
     textAlign: 'center'
-  },
+  }
 });

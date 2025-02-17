@@ -16,7 +16,7 @@ const BackButton: React.FC<BackButtonProps> = ({
   size = 20,
   style
 }) => (
-  <TouchableOpacity onPress={onPress} activeOpacity={0.6} style = {style}>
+  <TouchableOpacity onPress={onPress} activeOpacity={0.6} style={style}>
     <Icon name="arrow-left" size={size} color={color} />
   </TouchableOpacity>
 );

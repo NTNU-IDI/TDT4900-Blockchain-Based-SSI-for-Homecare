@@ -18,12 +18,14 @@ const JournalsPage: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      patients.forEach((patient) => 
+      patients.forEach((patient) =>
         dispatch(
           fetchAccessStatus({
             patientId: patient.id,
-            currentAccessStatus: patient.access}))
-        );
+            currentAccessStatus: patient.access
+          })
+        )
+      );
     }, [dispatch, patients])
   );
 
@@ -51,9 +53,9 @@ const JournalsPage: React.FC = () => {
   const ACCESS_COLORS = {
     granted: '#0D9276',
     denied: '#D44F3A',
-    requested: '#D98A00',
+    requested: '#D98A00'
   };
-  
+
   const getAccessText = (patient: Patient) => {
     if (patient.access) return 'Tilgang';
     if (patient.accessRequest) return 'Bedt om tilgang';
@@ -65,24 +67,25 @@ const JournalsPage: React.FC = () => {
     color: patient.access
       ? ACCESS_COLORS.granted
       : patient.accessRequest
-      ? ACCESS_COLORS.requested
-      : ACCESS_COLORS.denied,
+        ? ACCESS_COLORS.requested
+        : ACCESS_COLORS.denied
   });
 
   return (
     <View style={SharedStyles.container}>
       <Text style={SharedStyles.title}>Pasientjournaler</Text>
       {patients.map((patient) => (
-          <TouchableOpacity
-            key={patient.id}
-            style={SharedStyles.patientCard}
-            onPress={() => handlePatientPress(patient)}
-          >
-            <View>
-              <Text style={SharedStyles.boldCardTitle}>{patient.name}</Text>
-            </View>
-            <Text style={getAccessStyle(patient)}>{getAccessText(patient)}</Text>
-          </TouchableOpacity>))}
+        <TouchableOpacity
+          key={patient.id}
+          style={SharedStyles.patientCard}
+          onPress={() => handlePatientPress(patient)}
+        >
+          <View>
+            <Text style={SharedStyles.boldCardTitle}>{patient.name}</Text>
+          </View>
+          <Text style={getAccessStyle(patient)}>{getAccessText(patient)}</Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };

@@ -3,201 +3,142 @@ import { Contract, JsonRpcProvider, ethers } from 'ethers';
 
 import HealthInfoABI from '../abi/HealthInfoABI.json';
 
-// Validate environment variables
 if (!CONTRACT_ADDRESS) {
-  throw new Error(
-    'CONTRACT_ADDRESS is not defined in the environment variables.'
-  );
+  throw new Error('CONTRACT_ADDRESS is missing in .env.');
 }
-let provider: JsonRpcProvider;
-let signer: ethers.Wallet;
-let contract: Contract;
+
+if (!METAMASK_PRIVATE_KEY) {
+  throw new Error('METAMASK_PRIVATE_KEY is missing in .env.');
+}
+
+if (!INFURA_API_KEY) {
+  throw new Error('INFURA_API_KEY is missing in .env.');
+}
 
 /**
- * Connect to Ethereum using a hardcoded MetaMask account
+ * Connect to contract through Metamask.
  */
-export async function connectWallet(): Promise<void> {
-  if (!METAMASK_PRIVATE_KEY) {
-    throw new Error(
-      'METAMASK_PRIVATE_KEY is missing in .env.'
-    );
-  }
-  provider = new JsonRpcProvider(
-    `https://sepolia.infura.io/v3/${INFURA_API_KEY}`
-  );
+const provider = new JsonRpcProvider(
+  `https://sepolia.infura.io/v3/${INFURA_API_KEY}`
+);
+const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
 
-  signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
-  contract = new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
-}
+const getContract = (): Contract => {
+  return new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
+};
 
 /**
- * Add or update a health record with an IPFS hash.
- * @param ipfsHash - The IPFS hash of the health record.
+ * Update a health record on the blockchain with new ipfshash
+ * @param owner - Owner of the health record.
+ * @param newIpfsHash - The new IPFS hash of the health record.
  */
 export async function updateHealthRecord(
   owner: string,
   newIpfsHash: string
 ): Promise<void> {
-  const tx = await (contract!.connect(signer!) as Contract).updateHealthRecord(
-    owner,
-    newIpfsHash
-  );
+  if (!ethers.isAddress(owner)) {
+    throw new Error(`Invalid Ethereum address: ${owner}`);
+  }
+  const tx = await getContract().updateHealthRecord(owner, newIpfsHash);
   await tx.wait();
   console.log('Health record updated successfully.');
 }
 
 /**
- * Check if access is requested for a specific owner by a requester.
- * @param owner - The Ethereum address of the health record owner.
+ * Check if access is requested for a specific owner.
+ * @param owner - The address of the health record owner.
  * @returns - A boolean indicating whether access is requested.
  */
 export async function hasRequestedAccess(owner: string): Promise<boolean> {
   if (!ethers.isAddress(owner)) {
     throw new Error(`Invalid Ethereum address: ${owner}`);
   }
-  if (!contract || !signer) {
-    throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
-    );
-  }
-  try {
-    const result = await contract.hasRequestedAccess(owner);
-    return result;
-  } catch (error) {
-    console.error(`Error checking access request: ${error}`);
-    throw error;
-  }
+  return await getContract().hasRequestedAccess(owner);
 }
 
 /**
- * Check if access is requested for a specific owner by a requester.
+ * Check if access is granted from a specific owner.
  * @param owner - The Ethereum address of the health record owner.
- * @returns - A boolean indicating whether access is requested.
+ * @returns - A boolean indicating whether access is given.
  */
 export async function hasAccess(owner: string): Promise<boolean> {
   if (!ethers.isAddress(owner)) {
     throw new Error(`Invalid Ethereum address: ${owner}`);
   }
-  if (!contract)
-    throw new Error(
-      'Contract not initialized. Make sure to connectWallet() first.'
-    );
-
-  try {
-    const result = await contract.hasAccess(owner);
-    return result;
-  } catch (error) {
-    console.error(`Error checking access request: ${error}`);
-    throw error;
-  }
+  return await getContract().hasAccess(owner);
 }
 
 /**
  * Fetch the health record IPFS hash for a given owner address.
- * @param ownerAddress - The Ethereum address of the owner.
- * @returns - The IPFS hash as a string.
+ * @param owner - The Ethereum address of the owner.
+ * @returns - The IPFS hash of the health record.
  */
-export async function getHealthRecordHash(
-  ownerAddress: string
-): Promise<string> {
-  if (!ethers.isAddress(ownerAddress)) {
-    throw new Error(`Invalid Ethereum address: ${ownerAddress}`);
+export async function getHealthRecordHash(owner: string): Promise<string> {
+  if (!ethers.isAddress(owner)) {
+    throw new Error(`Invalid Ethereum address: ${owner}`);
   }
-  if (!contract || !signer) {
-    throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
-    );
-  }
-  try {
-    console.log('🔍 Fetching health record for:', ownerAddress);
-    const result = await contract.getHealthRecord(ownerAddress);
-    console.log('✅ Raw contract response:', result);
-
-    if (!result || result === '0x') {
-      console.warn(`⚠️ No health record found for: ${ownerAddress}`);
-      return 'No data available';
-    }
-
-    return result;
-  } catch (error) {
-    console.error('❌ Error fetching health record from contract:', error);
-    throw error;
-  }
-}
-
-export async function getOwnHealthRecordHash(): Promise<string> {
-  if (!contract || !signer) {
-    throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
-    );
-  }
-  return await contract.getOwnHealthRecord();
+  return await getContract().getHealthRecord(owner);
 }
 
 /**
- * Fetch the list of addresses with access to the owner's health record.
- * @param ownerAddress - The Ethereum address of the owner.
+ * Fetch the health record IPFS hash for the requester.
+ * @returns - The IPFS hash of the health record.
+ */
+export async function getOwnHealthRecordHash(): Promise<string> {
+  return await getContract().getOwnHealthRecord();
+}
+
+/**
+ * Fetch the list of addresses with access to the requester's health record.
  * @returns - An array of addresses.
  */
 export async function getAccessList(): Promise<string[]> {
-  if (!contract || !signer) {
-    throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
-    );
-  }
-  return await contract.getAccessList();
+  return await getContract().getAccessList();
 }
 
 /**
  * Grant access to another user.
- * @param permissionedUser - The address of the user to grant access to.
+ * @param requester - The address of the user to grant access to.
  */
-export async function grantAccess(permissionedUser: string): Promise<void> {
-  const tx = await (contract!.connect(signer!) as Contract).grantAccess(
-    permissionedUser
-  );
+export async function grantAccess(requester: string): Promise<void> {
+  if (!ethers.isAddress(requester)) {
+    throw new Error(`Invalid Ethereum address: ${requester}`);
+  }
+  const tx = await getContract().grantAccess(requester);
   await tx.wait();
-  console.log(`Access granted to ${permissionedUser}`);
+  console.log(`Access granted to ${requester}`);
 }
 
 /**
  * Revoke access from another user.
- * @param permissionedUser - The address of the user to revoke access from.
+ * @param requester - The address of the user to revoke access from.
  */
-export async function revokeAccess(permissionedUser: string): Promise<void> {
-  const tx = await (contract!.connect(signer!) as Contract).revokeAccess(
-    permissionedUser
-  );
+export async function revokeAccess(requester: string): Promise<void> {
+  if (!ethers.isAddress(requester)) {
+    throw new Error(`Invalid Ethereum address: ${requester}`);
+  }
+  const tx = await getContract().revokeAccess(requester);
   await tx.wait();
-  console.log(`Access revoked from ${permissionedUser}`);
+  console.log(`Access revoked from ${requester}`);
 }
 
 /**
  * Request access to another user's health record.
- * @param recordOwner - The address of the health record owner.
+ * @param owner - The address of the health record owner.
+ * @param note - The note to send with the request.
  */
 export async function requestAccess(
-  recordOwner: string,
+  owner: string,
   note: string
 ): Promise<void> {
-  if (!contract || !signer) {
-    throw new Error(
-      '🚨 Contract or signer not initialized. Call `connectWallet()` first.'
-    );
+  if (!ethers.isAddress(owner)) {
+    throw new Error(`Invalid Ethereum address: ${owner}`);
   }
 
-  console.log('🔄 Sending requestAccess transaction...');
-
-  try {
-    const tx = await contract.requestAccess(recordOwner, note);
-    await tx.wait(); // Wait for confirmation
-    console.log(
-      `✅ Access requested from ${await signer.address} to ${recordOwner}`
-    );
-  } catch (error) {
-    console.error('🚨 Error in requestAccess transaction:', error);
-    throw error;
-  }
+  console.log('Sending requestAccess transaction...');
+  const tx = await getContract().requestAccess(owner, note);
+  await tx.wait();
+  console.log(`Access requested from ${await signer.address} to ${owner}`);
 }
 
 /**
@@ -205,9 +146,10 @@ export async function requestAccess(
  * @param requester - The address of the user requesting access.
  */
 export async function approveAccessRequest(requester: string): Promise<void> {
-  const tx = await (
-    contract!.connect(signer!) as Contract
-  ).approveAccessRequest(requester);
+  if (!ethers.isAddress(requester)) {
+    throw new Error(`Invalid Ethereum address: ${requester}`);
+  }
+  const tx = await getContract().approveAccessRequest(requester);
   await tx.wait();
   console.log(`Access request from ${requester} approved.`);
 }
@@ -221,41 +163,28 @@ export async function denyAccessRequest(requester: string): Promise<void> {
     throw new Error(`Invalid Ethereum address: ${requester}`);
   }
 
-  const tx = await (contract!.connect(signer!) as Contract).denyAccessRequest(
-    requester
-  );
+  const tx = await getContract().denyAccessRequest(requester);
   await tx.wait();
   console.log(`Access request from ${requester} denied.`);
 }
 
 /**
- * Fetch the list of addresses with access to the owner's health record.
- * @param ownerAddress - The Ethereum address of the owner.
+ * Fetch the list of addresses with access to the requester's health record.
  * @returns - An array of addresses.
  */
 export async function getAccessRequests(): Promise<string[]> {
-  if (!contract || !signer) {
-    throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
-    );
-  }
-  return await contract.getAccessRequests();
+  return await getContract().getAccessRequests();
 }
 /**
- * Get updates for a health record, including the addresses and timestamps.
- * @param recordOwner - The address of the record owner.
- * @returns - An object containing arrays of addresses and timestamps.
+ * Get the requester's health record updates, including the addresses, timestamps and descriptions.
+ * @returns - An object containing arrays of addresses, timestamps and descriptions of the updates.
  */
 export async function getUpdates(): Promise<{
   addresses: string[];
   timestamps: number[];
   descriptions: string[];
 }> {
-  if (!contract || !signer) {
-    throw new Error(
-      'Contract not initialized. Make sure to call connectWallet() first.'
-    );
-  }
-  const [addresses, timestamps, descriptions] = await contract.getUpdates();
+  const [addresses, timestamps, descriptions] =
+    await getContract().getUpdates();
   return { addresses, timestamps, descriptions };
 }

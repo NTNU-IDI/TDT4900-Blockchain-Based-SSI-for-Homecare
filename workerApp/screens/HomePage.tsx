@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import React from 'react';
@@ -22,7 +17,8 @@ const HomePage: React.FC = () => {
     day: 'numeric'
   });
 
-  const currentDateFormatted = currentDate.charAt(0).toUpperCase() + currentDate.slice(1);
+  const currentDateFormatted =
+    currentDate.charAt(0).toUpperCase() + currentDate.slice(1);
 
   return (
     <View style={SharedStyles.container}>
@@ -32,6 +28,7 @@ const HomePage: React.FC = () => {
 
         return (
           <TouchableOpacity
+            key={patient.id}
             style={[
               SharedStyles.patientCard,
               isCurrentPatient && styles.currentPatientCard
@@ -50,11 +47,11 @@ const HomePage: React.FC = () => {
               {!patient.access && (
                 <>
                   <Text style={styles.noAccessMessage}>
-                    "Ingen tilgang. Be om tilgang på journalsiden."
+                    Ikke tilgang. Be om tilgang på journalsiden.
                   </Text>
                 </>
               )}
-    
+
               {patient.access && (
                 <>
                   <Text
@@ -76,7 +73,7 @@ const HomePage: React.FC = () => {
                 </>
               )}
             </View>
-    
+
             <Text
               style={[
                 styles.patientStatus,
@@ -88,7 +85,6 @@ const HomePage: React.FC = () => {
           </TouchableOpacity>
         );
       })}
-
     </View>
   );
 };

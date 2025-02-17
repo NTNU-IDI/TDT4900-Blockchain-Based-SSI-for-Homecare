@@ -12,7 +12,7 @@ const PatientJournal: React.FC<{ patient: Patient; onBack: () => void }> = ({
 }) => {
   const [openSections, setOpenSections] = useState<string[]>([]);
 
-  const toggleSection = useCallback ((section: string) => {
+  const toggleSection = useCallback((section: string) => {
     setOpenSections((prevSections) =>
       prevSections.includes(section)
         ? prevSections.filter((s) => s !== section)
@@ -32,17 +32,31 @@ const PatientJournal: React.FC<{ patient: Patient; onBack: () => void }> = ({
 
   return (
     <View style={SharedStyles.container}>
-       <View style={SharedStyles.headerContainer}>
-      <BackButton onPress={onBack} />
-      <Text style={SharedStyles.headerTitle}>{formatJournalTitle(patient.name)}</Text>
+      <View style={SharedStyles.headerContainer}>
+        <BackButton onPress={onBack} />
+        <Text style={SharedStyles.headerTitle}>
+          {formatJournalTitle(patient.name)}
+        </Text>
       </View>
-      <ToggleSection title="Diagnoseliste" isOpen={isSectionOpen('diagnoses')} onToggle={() => toggleSection('diagnoses')}>
+      <ToggleSection
+        title="Diagnoseliste"
+        isOpen={isSectionOpen('diagnoses')}
+        onToggle={() => toggleSection('diagnoses')}
+      >
         {patient.journal.diagnoses}
       </ToggleSection>
-      <ToggleSection title="Medikamenter" isOpen={isSectionOpen('medications')} onToggle={() => toggleSection('medications')}>
+      <ToggleSection
+        title="Medikamenter"
+        isOpen={isSectionOpen('medications')}
+        onToggle={() => toggleSection('medications')}
+      >
         {patient.journal.medications}
       </ToggleSection>
-      <ToggleSection title="Tidligere behandlinger" isOpen={isSectionOpen('previousTreatments')} onToggle={() => toggleSection('previousTreatments')}>
+      <ToggleSection
+        title="Tidligere behandlinger"
+        isOpen={isSectionOpen('previousTreatments')}
+        onToggle={() => toggleSection('previousTreatments')}
+      >
         {patient.journal.previousTreatments}
       </ToggleSection>
     </View>

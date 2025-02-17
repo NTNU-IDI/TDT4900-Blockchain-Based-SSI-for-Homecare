@@ -9,33 +9,31 @@ import {
 
 export async function fetchPatientData(ownerAddress: string): Promise<Patient> {
   try {
-    // Get IPFS hash from the contract
     console.log(`Fetching health record for owner: ${ownerAddress}`);
     const ipfsHash = await getHealthRecordHash(ownerAddress);
     console.log(`Fetched IPFS hash: ${ipfsHash}`);
-
-    // Fetch patient data from IPFS
     console.log('Fetching patient data from IPFS...');
     const data = await fetchIPFSData(ipfsHash);
 
-    const access = await hasAccess(ownerAddress);
-    const requestedAccess = await hasRequestedAccess(ownerAddress);
+    const [access, requestedAccess] = await Promise.all([
+      hasAccess(ownerAddress),
+      hasRequestedAccess(ownerAddress)
+    ]);
 
-    // Map the fetched data to the Patient interface
     const patient: Patient = {
-      id: ownerAddress, // Using ownerAddress as the ID
+      id: ownerAddress,
       time: data.time,
       name: data.name,
       address: data.address,
       nøkkelnummer: data.nøkkelnummer || '',
-      status: 'Ikke startet', // Default status
+      status: 'Ikke startet',
       tasks: data.tasks.map((task: Task) => ({
         ...task,
-        status: 'Ikke startet' // Default task status
+        status: 'Ikke startet'
       })),
       notes: data.notes || [],
-      access: access, // Default access
-      accessRequest: requestedAccess, // Default access request state
+      access: access,
+      accessRequest: requestedAccess,
       journal: data.journal
     };
 
@@ -69,7 +67,6 @@ export async function fetchAllPatients(
 ): Promise<Patient[]> {
   const patientPromises = ownerAddresses.map(fetchPatientData);
   const patients = await Promise.all(patientPromises);
-  console.log(patients);
   return patients;
 }
 

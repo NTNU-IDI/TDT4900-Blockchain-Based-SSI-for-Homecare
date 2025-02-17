@@ -27,13 +27,13 @@ const JournalRequest: React.FC<{ patient: Patient; onBack: () => void }> = ({
   return (
     <View style={SharedStyles.container}>
       <View style={SharedStyles.headerContainer}>
-      <BackButton onPress={onBack} />
-      <Text style={SharedStyles.headerTitle}>Be om tilgang til journal</Text>
+        <BackButton onPress={onBack} />
+        <Text style={SharedStyles.headerTitle}>Be om tilgang til journal</Text>
       </View>
       <View style={{ marginBottom: 20 }}>
-      <InfoText label="Ditt navn" value={workerData?.navn} />
-      <InfoText label="Din arbeidsplass" value={workerData?.arbeidsplass} />
-      <InfoText label="Ditt yrke" value={workerData?.yrke} />
+        <InfoText label="Ditt navn" value={workerData?.name} />
+        <InfoText label="Din arbeidsplass" value={workerData?.workplace} />
+        <InfoText label="Ditt yrke" value={workerData?.job} />
       </View>
 
       {!requestSent ? (

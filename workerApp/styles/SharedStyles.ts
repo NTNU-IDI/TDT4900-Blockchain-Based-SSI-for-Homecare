@@ -49,8 +49,8 @@ export const SharedStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    elevation: 3, // For Android
-    shadowColor: '#000', // For iOS
+    elevation: 3,
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5
@@ -78,15 +78,15 @@ export const SharedStyles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 20
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
-    flex:1
-  },
+    flex: 1
+  }
 });
 
 export default SharedStyles;

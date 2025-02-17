@@ -13,10 +13,9 @@ export const fetchWorker = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const worker: Worker = {
-        navn: workerData[HOMECARE_WORKER_ADDRESS]?.navn || 'Ukjent',
-        arbeidsplass:
-          workerData[HOMECARE_WORKER_ADDRESS]?.arbeidsplass || 'Ukjent',
-        yrke: workerData[HOMECARE_WORKER_ADDRESS]?.yrke || 'Ukjent'
+        name: workerData[HOMECARE_WORKER_ADDRESS]?.name || 'Ukjent',
+        workplace: workerData[HOMECARE_WORKER_ADDRESS]?.workplace || 'Ukjent',
+        job: workerData[HOMECARE_WORKER_ADDRESS]?.job || 'Ukjent'
       };
 
       return worker;

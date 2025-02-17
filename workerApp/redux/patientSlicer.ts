@@ -5,7 +5,6 @@ import {
   fetchPatientData
 } from '../services/patientService';
 import {
-  connectWallet,
   hasAccess,
   hasRequestedAccess,
   requestAccess
@@ -18,7 +17,6 @@ export const fetchAndSetPatients = createAsyncThunk(
   'patients/fetchAndSetPatients',
   async (_: void, thunkAPI) => {
     try {
-      await connectWallet();
       const patientAddresses = PATIENT_ADDRESSES.split(',');
       return await fetchAllPatients(patientAddresses);
     } catch (error) {

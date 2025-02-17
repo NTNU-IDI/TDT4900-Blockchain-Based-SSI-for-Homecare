@@ -2,10 +2,12 @@ import { PINATA_API_KEY, PINATA_JWT, PINATA_SECRET_API_KEY } from '@env';
 
 import axios from 'axios';
 
+const PINATA_GET_URL = 'https://gateway.pinata.cloud/ipfs/';
+const PINATA_PIN_URL = 'https://api.pinata.cloud/pinning';
+
 export const fetchIPFSData = async (ipfsHash: string): Promise<any> => {
   try {
-    const url = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
-    const response = await axios.get(url);
+    const response = await axios.get(`${PINATA_GET_URL}${ipfsHash}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching data from IPFS:', error);
@@ -19,18 +21,13 @@ interface PinataResponse {
   Timestamp: string;
 }
 
-/**
- * Uploads data to IPFS using Pinata and returns the new IPFS hash.
- * @param data - The JSON object to store on IPFS.
- * @returns {Promise<string>} - The IPFS hash of the uploaded data.
- */
 export const uploadToIPFS = async (
   data: Record<string, unknown>,
   filename: string
 ): Promise<string> => {
   try {
     const response = await axios.post<PinataResponse>(
-      'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+      `${PINATA_PIN_URL}/pinJSONToIPFS`,
       {
         pinataContent: data,
         pinataMetadata: {
@@ -56,15 +53,12 @@ export const uploadToIPFS = async (
 
 export const unpinFromIPFS = async (ipfsHash: string) => {
   try {
-    const response = await fetch(
-      `https://api.pinata.cloud/pinning/unpin/${ipfsHash}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${PINATA_JWT}`
-        }
+    const response = await fetch(`${PINATA_PIN_URL}/unpin/${ipfsHash}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${PINATA_JWT}`
       }
-    );
+    });
 
     console.log(`Successfully unpinned IPFS file: ${ipfsHash}`);
   } catch (error: any) {
