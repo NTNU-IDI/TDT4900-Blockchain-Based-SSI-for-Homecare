@@ -1,69 +1,78 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract HealthInfo {
+contract HealthRecords {
 
     struct Update {
         address updater;
         uint256 timestamp;
         string description;
     }
-    struct HealthRecord {
-        string ipfsHash; // Single IPFS hash storing all patient data as a JSON object
-        Update[] updates;
+
+    struct AccessRequest {
+        address requester;
+        string note;
     }
 
-    mapping(address => HealthRecord) private healthRecords;
+    mapping(address => string) private ipfsHashes;
+    mapping(string => bool) private usedIpfsHashes;
+    mapping(address => Update[]) private updates;
     mapping(address => mapping(address => bool)) private access;
     mapping(address => mapping(address => bool)) private requestedAccess;
     mapping(address => address[]) private accessList;
-    mapping(address => address[]) private accessRequests;
-    mapping(address => mapping(address => string)) private accessRequestNotes;
+    mapping(address => AccessRequest[]) private accessRequests;
 
 
-    event HealthRecordUpdated(address indexed owner, address indexed updater);
-    event AccessRevoked(address indexed owner, address indexed permissionedUser);
+    event HealthRecordHashUpdated(address indexed owner, address indexed updater);
     event AccessRequested(address indexed owner, address indexed requester);
     event AccessRequestAccepted(address indexed owner, address indexed requester);
     event AccessRequestRejected(address indexed owner, address indexed requester);
+    event AccessRevoked(address indexed owner, address indexed user);
 
-    /**
-     * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
-     * @param _ipfsHash The IPFS hash of the complete health record JSON.
-     */
-    function setOwner(string memory _ipfsHash, address owner) public {
-        require(healthRecords[owner].updates.length == 0, "Record owner already set");
-        HealthRecord storage record = healthRecords[owner];
-        access[owner][owner] = true;
-
-        record.ipfsHash = _ipfsHash;
-        record.updates.push(Update({
-            updater: msg.sender,
-            timestamp: block.timestamp,
-            description: "Initial record creation"
-        }));
-        
-
+    modifier onlyAccess {
+        require(access[msg.sender][msg.sender], "Access denied");
+        _;
     }
 
     /**
-     * @dev Updates the health record the given IPFS hash. If the record has no owner, the sender is set as the owner.
-     * 
+     * @dev Initializes a patient health record.
+     * @param owner The address of the patient.
+     * @param ipfsHash The IPFS hash of the health record.
      */
-    function updateHealthRecord(address owner, string memory newIpfsHash) public {
-        require(msg.sender == owner || access[owner][msg.sender],
-        "Not authorized to update this record"
-    );
-        HealthRecord storage record = healthRecords[owner];
+    function initializePatientRecord(address owner, string memory ipfsHash) public {
+        require(updates[owner].length == 0, "Owner already exists");
+        require(!usedIpfsHashes[ipfsHash], "IPFS hash already used");
 
-        record.ipfsHash = newIpfsHash;
-        
-        record.updates.push(Update({
+        access[owner][owner] = true;
+        ipfsHashes[owner] = ipfsHash;
+        usedIpfsHashes[ipfsHash] = true;
+
+        updates[owner].push(Update({
+            updater: owner,
+            timestamp: block.timestamp,
+            description: "Initialized health record"
+        }));
+    }
+
+    /**
+     * @dev Updates the ipfs hash of the owner.
+     * @param owner The address of the patient.
+     * @param newIpfsHash The IPFS hash of the health record.
+     * @param description The description of the change.
+     */
+    function updatePatientHash(address owner, string memory newIpfsHash, string memory description) onlyAccess public {
+        require(updates[owner].length != 0, "Owner is not initialized");
+        require(!usedIpfsHashes[newIpfsHash], "IPFS hash already used");
+        usedIpfsHashes[ipfsHashes[owner]] = false;
+        ipfsHashes[owner] = newIpfsHash;
+        usedIpfsHashes[newIpfsHash] = true;
+        updates[owner].push(Update({
             updater: msg.sender,
             timestamp: block.timestamp,
-            description: "Added note to record"
+            description: description
         }));
-        emit HealthRecordUpdated(owner, msg.sender);
+
+        emit HealthRecordHashUpdated(owner, msg.sender);
     }
 
     /**
@@ -78,7 +87,7 @@ contract HealthInfo {
         access[msg.sender][requester] = true;
         accessList[msg.sender].push(requester);
         for (uint256 i = 0; i < accessRequests[msg.sender].length; i++) {
-            if (accessRequests[msg.sender][i] == requester) {
+            if (accessRequests[msg.sender][i].requester == requester) {
                 accessRequests[msg.sender][i] = accessRequests[msg.sender][accessRequests[msg.sender].length - 1];
                 accessRequests[msg.sender].pop();
                 break;
@@ -97,7 +106,7 @@ contract HealthInfo {
         require(requestedAccess[msg.sender][requester], "No access request found");
 
         for (uint256 i = 0; i < accessRequests[msg.sender].length; i++) {
-            if (accessRequests[msg.sender][i] == requester) {
+            if (accessRequests[msg.sender][i].requester == requester) {
                 accessRequests[msg.sender][i] = accessRequests[msg.sender][accessRequests[msg.sender].length - 1];
                 accessRequests[msg.sender].pop();
                 break;
@@ -119,10 +128,9 @@ contract HealthInfo {
             require(requestedAccess[recordOwner][msg.sender] != true, "Access already requested");
         }
 
-        accessRequests[recordOwner].push(msg.sender);
+        accessRequests[recordOwner].push(AccessRequest(msg.sender, note));
         requestedAccess[recordOwner][msg.sender] = true;
 
-        accessRequestNotes[recordOwner][msg.sender] = note;
         emit AccessRequested(recordOwner, msg.sender);
     }
 
@@ -165,15 +173,11 @@ contract HealthInfo {
 
     /**
      * @dev Retrieves the health record of a specified owner if the caller has access.
-     * @param recordOwner The address of the health record owner.
+     * @param owner The address of the health record owner.
      * @return The IPFS hash of the complete health record JSON.
      */
-    function getHealthRecord(address recordOwner) public view returns (string memory) {
-        require(
-            recordOwner == msg.sender || access[recordOwner][msg.sender],
-            "Access denied"
-        );
-        return healthRecords[recordOwner].ipfsHash;
+    function getHealthRecord(address owner) onlyAccess public view returns (string memory) {
+        return ipfsHashes[owner];
     }
 
     /**
@@ -181,20 +185,19 @@ contract HealthInfo {
      * @return The IPFS hash of the complete health record JSON.
      */
     function getOwnHealthRecord() public view returns (string memory) {
-        return healthRecords[msg.sender].ipfsHash;
+        return ipfsHashes[msg.sender];
     }
 
     function getUpdates() public view returns (address[] memory, uint256[] memory, string[] memory) {
-        HealthRecord storage record = healthRecords[msg.sender];
-        uint256 length = record.updates.length;
+        uint256 length = updates[msg.sender].length;
         address[] memory updaters = new address[](length);
         uint256[] memory timestamps = new uint256[](length);
         string[] memory description = new string[](length);
 
         for (uint256 i = 0; i < length; i++) {
-            updaters[i] = record.updates[i].updater;
-            timestamps[i] = record.updates[i].timestamp;
-            description[i] = record.updates[i].description;
+            updaters[i] = updates[msg.sender][i].updater;
+            timestamps[i] = updates[msg.sender][i].timestamp;
+            description[i] = updates[msg.sender][i].description;
         }
 
         return (updaters, timestamps, description);
@@ -209,8 +212,8 @@ contract HealthInfo {
         string[] memory notes = new string[](length);  
 
         for (uint256 i = 0; i < length; i++) {
-            requesters[i] = accessRequests[msg.sender][i];  
-            notes[i] = accessRequestNotes[msg.sender][requesters[i]]; 
+            requesters[i] = accessRequests[msg.sender][i].requester;  
+            notes[i] = accessRequests[msg.sender][i].note; 
         }
 
         return (requesters, notes);
