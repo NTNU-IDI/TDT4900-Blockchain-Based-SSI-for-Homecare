@@ -23,7 +23,7 @@ contract HealthInfo {
 
     event HealthRecordUpdated(address indexed owner, address indexed updater);
     event AccessRevoked(address indexed owner, address indexed permissionedUser);
-    event AccessRequested(address indexed owner, address indexed requester, string note);
+    event AccessRequested(address indexed owner, address indexed requester);
     event AccessRequestAccepted(address indexed owner, address indexed requester);
     event AccessRequestRejected(address indexed owner, address indexed requester);
 
@@ -123,7 +123,7 @@ contract HealthInfo {
         requestedAccess[recordOwner][msg.sender] = true;
 
         accessRequestNotes[recordOwner][msg.sender] = note;
-        emit AccessRequested(recordOwner, msg.sender, note);
+        emit AccessRequested(recordOwner, msg.sender);
     }
 
     /**
