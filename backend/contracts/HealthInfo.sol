@@ -18,7 +18,7 @@ contract HealthInfo {
     mapping(address => mapping(address => bool)) private requestedAccess;
     mapping(address => address[]) private accessList;
     mapping(address => address[]) private accessRequests;
-    mapping(address => mapping(address => string)) public accessRequestNotes;
+    mapping(address => mapping(address => string)) private accessRequestNotes;
 
 
     event HealthRecordUpdated(address indexed owner, address indexed updater);
