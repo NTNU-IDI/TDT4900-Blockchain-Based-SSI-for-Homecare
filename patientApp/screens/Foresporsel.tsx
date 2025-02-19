@@ -46,7 +46,7 @@ const Foresporsel = () => {
   useFocusEffect(
     useCallback(() => {
       fetchRequests();
-    }, [])
+    }, []),
   );
 
   const findWorker = (address: string) => workers[address] || null;

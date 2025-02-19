@@ -61,13 +61,13 @@ const Innsyn = () => {
       console.log("Success", "Access revoked successfully.");
 
       setAccessList((prevList) =>
-        prevList.filter((addr) => addr !== selectedAddress)
+        prevList.filter((addr) => addr !== selectedAddress),
       );
 
       // Remove from accessDetails by filtering out the worker using selectedAddress
       setAccessDetails((prevDetails) => {
         const newAccessList = accessList.filter(
-          (addr) => addr !== selectedAddress
+          (addr) => addr !== selectedAddress,
         );
         return newAccessList.map((addr) => workers[addr]); // Remap the accessList to worker details
       });

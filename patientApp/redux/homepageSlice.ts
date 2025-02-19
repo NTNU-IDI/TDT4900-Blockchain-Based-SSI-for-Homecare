@@ -16,12 +16,15 @@ const initialState: HomepageState = {
 };
 
 // Async thunk for fetching data (only runs once)
-export const fetchHomepageData = createAsyncThunk("homepage/fetchData", async () => {
-  const hash = await getOwnHealthRecordHash();
-  const personalData = await fetchIPFSData(hash);
-  console.log("Fetched data:", personalData);
-  return { name: personalData.name, notes: personalData.notes || [] };
-});
+export const fetchHomepageData = createAsyncThunk(
+  "homepage/fetchData",
+  async () => {
+    const hash = await getOwnHealthRecordHash();
+    const personalData = await fetchIPFSData(hash);
+    console.log("Fetched data:", personalData);
+    return { name: personalData.name, notes: personalData.notes || [] };
+  },
+);
 
 // Create Redux slice
 const homepageSlice = createSlice({

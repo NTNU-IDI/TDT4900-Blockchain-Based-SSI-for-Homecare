@@ -1,13 +1,17 @@
-import { PINATA_API_KEY, PINATA_JWT, PINATA_SECRET_API_KEY } from '@env';
+import {
+  PINATA_API_KEY,
+  PINATA_GATEWAY,
+  PINATA_JWT,
+  PINATA_SECRET_API_KEY
+} from '@env';
 
 import axios from 'axios';
 
-const PINATA_GET_URL = 'https://gateway.pinata.cloud/ipfs/';
 const PINATA_PIN_URL = 'https://api.pinata.cloud/pinning';
 
 export const fetchIPFSData = async (ipfsHash: string): Promise<any> => {
   try {
-    const response = await axios.get(`${PINATA_GET_URL}${ipfsHash}`);
+    const response = await axios.get(`${PINATA_GATEWAY}${ipfsHash}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching data from IPFS:', error);
