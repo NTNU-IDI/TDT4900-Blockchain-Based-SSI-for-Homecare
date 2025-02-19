@@ -1,8 +1,9 @@
-import React from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
-import Header from "../components/Header";
-import { RootStackParamList } from "../types/Screens";
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+
+import Header from "../components/Header";
+import React from "react";
+import { RootStackParamList } from "../types/Screens";
 
 type DetailedForesporselRouteProp = RouteProp<RootStackParamList, "Notater">;
 
@@ -49,7 +50,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#F5F9FA",
   },
   centered: {
     flex: 1,

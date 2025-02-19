@@ -62,14 +62,16 @@ const HomePage: React.FC = () => {
                   >
                     {patient.time} - {patient.address}
                   </Text>
-                  <Text
-                    style={[
-                      SharedStyles.greyCardText,
-                      isCurrentPatient && styles.currentPatientKey
-                    ]}
-                  >
-                    Nøkkelnummer: {patient.nøkkelnummer}
-                  </Text>
+                  {patient.nøkkelnummer?.trim() && (
+                    <Text
+                      style={[
+                        SharedStyles.greyCardText,
+                        isCurrentPatient && styles.currentPatientKey
+                      ]}
+                    >
+                      Nøkkelnummer: {patient.nøkkelnummer}
+                    </Text>
+                  )}
                 </>
               )}
             </View>

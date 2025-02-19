@@ -108,9 +108,16 @@ export async function addPatientNote(
     console.log('Uploading updated patient data to IPFS...');
     const filename = `${data.name.replace(/\s+/g, '')}.json`;
     const newIpfsHash = await uploadToIPFS(data, filename);
-
-    console.log('Updating smart contract with new IPFS hash...');
-    await updateHealthRecord(ownerAddress, newIpfsHash);
+    try {
+      console.log('Updating smart contract with new IPFS hash...');
+      await updateHealthRecord(ownerAddress, newIpfsHash, 'Added note');
+    } catch (error) {
+      console.error('Error updating blockchain:', error);
+      console.log(`Removing the uploaded IPFS file: ${newIpfsHash}`);
+      await unpinFromIPFS(newIpfsHash);
+      console.log('Uploaded IPFS file removed successfully.');
+      throw error;
+    }
 
     console.log('Note successfully added!');
   } catch (error) {
