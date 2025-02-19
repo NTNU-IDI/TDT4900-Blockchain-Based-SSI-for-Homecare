@@ -11,7 +11,7 @@ import {
 } from '../services/contractService';
 
 import { PATIENT_ADDRESSES } from '@env';
-import { Patient } from '../types/patientInterfaces';
+import { Patient } from '../types/patient';
 
 export const fetchAndSetPatients = createAsyncThunk(
   'patients/fetchAndSetPatients',

@@ -1,10 +1,11 @@
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
-import Header from "../components/Header";
-import Card from "../components/Card";
 import { getAccessList, revokeAccess } from "../services/BlockchainService";
+
+import Card from "../components/Card";
+import Header from "../components/Header";
+import { Worker } from "../types/worker";
 import workers from "../assets/homecare_workers.json";
-import { Worker } from "../types/Worker";
 
 const Innsyn = () => {
   const [accessList, setAccessList] = useState<string[]>([]);
@@ -97,8 +98,8 @@ const Innsyn = () => {
             onPress={() => handlePress(accessList[index])}
           >
             <Card
-              title={worker.navn}
-              description={`${worker.yrke} - ${worker.arbeidsplass}`}
+              title={worker.name}
+              description={`${worker.job} - ${worker.workplace}`}
             />
           </TouchableOpacity>
         ))}
@@ -114,7 +115,7 @@ const Innsyn = () => {
         <View style={styles.popupContainer}>
           <View style={styles.popupContent}>
             <Text style={styles.popupText}>
-              Vil du fjerne innsynsrettigheter for {selectedWorker?.navn}?
+              Vil du fjerne innsynsrettigheter for {selectedWorker?.name}?
             </Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity

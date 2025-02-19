@@ -1,4 +1,4 @@
-import { Worker } from "./Worker";
+import { Worker } from "./worker";
 
 export type RootStackParamList = {
   Home: undefined;

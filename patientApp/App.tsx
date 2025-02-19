@@ -1,18 +1,18 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-get-random-values";
-import { Provider } from "react-redux";
-import store from "./redux/store";
 
-import Homepage from "./screens/Homepage";
-import Tilganger from "./screens/Tilganger";
-import Innsyn from "./screens/Innsyn";
-import Foresporsel from "./screens/Foresporsel";
 import DetailedForesporsel from "./screens/DetailedForesporsel";
+import Foresporsel from "./screens/Foresporsel";
+import Homepage from "./screens/Homepage";
+import Innsyn from "./screens/Innsyn";
+import { NavigationContainer } from "@react-navigation/native";
 import Notater from "./screens/Notater";
 import Oppdateringer from "./screens/Oppdateringer";
-import { RootStackParamList } from "./types/Screens";
+import { Provider } from "react-redux";
+import React from "react";
+import { RootStackParamList } from "./types/screens";
+import Tilganger from "./screens/Tilganger";
+import { createStackNavigator } from "@react-navigation/stack";
+import {store} from "./redux/store";
 
 // Create the stack navigator
 const Stack = createStackNavigator<RootStackParamList>();

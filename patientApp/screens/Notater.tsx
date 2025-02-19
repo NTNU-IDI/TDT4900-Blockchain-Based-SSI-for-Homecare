@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import Header from "../components/Header";
 import React from "react";
-import { RootStackParamList } from "../types/Screens";
+import { RootStackParamList } from "../types/screens";
 
 type DetailedForesporselRouteProp = RouteProp<RootStackParamList, "Notater">;
 

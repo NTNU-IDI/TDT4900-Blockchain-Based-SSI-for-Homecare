@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getOwnHealthRecordHash } from "../services/BlockchainService";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
 import fetchIPFSData from "../services/PinataService";
+import { getOwnHealthRecordHash } from "../services/BlockchainService";
 
 // Define the initial state
 interface HomepageState {
@@ -27,7 +28,7 @@ export const fetchHomepageData = createAsyncThunk(
 );
 
 // Create Redux slice
-const homepageSlice = createSlice({
+const homepageSlicer = createSlice({
   name: "homepage",
   initialState,
   reducers: {},
@@ -48,4 +49,4 @@ const homepageSlice = createSlice({
   },
 });
 
-export default homepageSlice.reducer;
+export default homepageSlicer.reducer;

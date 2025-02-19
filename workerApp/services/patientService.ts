@@ -1,4 +1,4 @@
-import { Patient, Task } from '../types/patientInterfaces';
+import { Patient, Task } from '../types/patient';
 import { fetchIPFSData, unpinFromIPFS, uploadToIPFS } from './pinataService';
 import {
   getHealthRecordHash,

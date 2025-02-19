@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+
 import Card from "../components/Card";
 import Header from "../components/Header";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { getAccessRequests } from "../services/BlockchainService";
-import { RootStackParamList } from "../types/Screens";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/screens";
+import { getAccessRequests } from "../services/BlockchainService";
 import workers from "../assets/homecare_workers.json";
 
 type ForesporselScreenNavigationProp = NativeStackNavigationProp<
@@ -74,7 +75,7 @@ const Foresporsel = () => {
             }
           >
             <Card
-              title={findWorker(address)?.navn || "Ukjent"}
+              title={findWorker(address)?.name || "Ukjent"}
               description={`Note: ${requests.notes[index] || "Ingen merknad"}`}
             />
           </TouchableOpacity>
