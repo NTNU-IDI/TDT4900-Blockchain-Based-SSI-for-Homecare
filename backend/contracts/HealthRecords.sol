@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract HealthRecords {
-
     struct Update {
         address updater;
         uint256 timestamp;
@@ -21,7 +20,6 @@ contract HealthRecords {
     mapping(address => mapping(address => bool)) private requestedAccess;
     mapping(address => address[]) private accessList;
     mapping(address => AccessRequest[]) private accessRequests;
-
 
     event HealthRecordUpdated(address indexed owner, address indexed updater);
     event AccessRequested(address indexed owner, address indexed requester);
@@ -154,18 +152,15 @@ contract HealthRecords {
         emit AccessRevoked(msg.sender, permissionedUser);
     }
 
-
     function hasRequestedAccess(address owner) public view returns (bool) {
         return requestedAccess[owner][msg.sender];
     }
-
     function hasAccess(address owner) public view returns (bool) {
         return access[owner][msg.sender];
     }
     function getHealthRecord(address owner) onlyAccess(owner) public view returns (string memory) {
         return ipfsHashes[owner];
     }
-
     function getOwnHealthRecord() public view returns (string memory) {
         return ipfsHashes[msg.sender];
     }
@@ -182,22 +177,20 @@ contract HealthRecords {
         }
 
         return (updaters, timestamps, description);
-}
+    }
     function getAccessList() public view returns (address[] memory) {
         return accessList[msg.sender];
     }
     function getAccessRequests() public view returns (address[] memory, string[] memory) {
         uint256 length = accessRequests[msg.sender].length;
-        address[] memory requesters = new address[](length); 
-        string[] memory notes = new string[](length);  
+        address[] memory requesters = new address[](length);
+        string[] memory notes = new string[](length);
 
         for (uint256 i = 0; i < length; i++) {
-            requesters[i] = accessRequests[msg.sender][i].requester;  
-            notes[i] = accessRequests[msg.sender][i].note; 
+            requesters[i] = accessRequests[msg.sender][i].requester;
+            notes[i] = accessRequests[msg.sender][i].note;
         }
 
         return (requesters, notes);
     }
-
-
 }

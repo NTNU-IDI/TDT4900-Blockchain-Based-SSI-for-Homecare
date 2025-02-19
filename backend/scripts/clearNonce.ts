@@ -1,20 +1,19 @@
+import { JsonRpcProvider } from "ethers";
 import dotenv from "dotenv";
 import { ethers } from "hardhat";
 
 dotenv.config();
 
 async function main() {
-    const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+    const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY
+    const INFURA_API_KEY = process.env.INFURA_API_KEY
 
-    if (!CONTRACT_ADDRESS) throw new Error("CONTRACT_ADDRESS is not defined");
+    if (!METAMASK_PRIVATE_KEY) throw new Error("METAMASK_PRIVATE_KEY is not defined");
+    if (!INFURA_API_KEY) throw new Error("METAMASK_PRIVATE_KEY is not defined");
 
-    const [signer] = await ethers.getSigners();
-    console.log("Using signer:", await signer.getAddress());
-
-    const HealthInfoFactory = await ethers.getContractFactory("HealthInfo");
-    const contract = HealthInfoFactory.attach(CONTRACT_ADDRESS).connect(signer);
-
-    const provider = ethers.provider;
+    const provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`);
+          
+    const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
     let firstPendingNonce = await provider.getTransactionCount(signer.address, "pending");
     let latestNonce = await provider.getTransactionCount(signer.address, "latest");
 

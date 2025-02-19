@@ -12,26 +12,25 @@ npm install
 ```shell
 npx hardhat node
 ```
+## 2. Deploy the Smart Contract
+To deploy contract and set up owners for existing IPFS files, run:
+```shell
+npx hardhat run scripts/deployAndSetUp.ts --network localhost
+```
+
+To deploy contract, upload new IPFS files and set owners, run:
+```shell
+npx hardhat run scripts/deployAndResetIPFS.ts --network localhost
+```
 
 ### Remote Access
 If multiple users wants to connect to the local blockchain, start the hardhat node with a public hostname, for instance:
 ```shell
 npx hardhat node --hostname 10.22.X.X
 ```
-Deploy the contract with the --network flag remote, for instance:
+Deploy the contract in the same ways as above with the --network flag remote, for instance:
 ```shell
 npx hardhat run scripts/deployAndSetUp.ts --network remote
-```
-
-## 2. Deploy the Smart Contract
-Option 1: Deploy contract using existing IPFS files
-```shell
-npx hardhat run scripts/deployAndSetUp.ts --network localhost
-```
-
-Option 2: Deploy contract and reset IPFS files
-```shell
-npx hardhat run scripts/deployAndResetIPFS.ts --network localhost
 ```
 
 # Deploy to Sepolia Testnet
@@ -40,7 +39,12 @@ npx hardhat run scripts/deployAndResetIPFS.ts --network localhost
 npx hardhat ignition deploy ./ignition/modules/HealthInfo.ts --network sepolia
 ```
 
-## 2. Set up the contract with owners of the ipfs files
+## 2. Set up the contract with owners 
+To set up owners of existing ipfs files, run:
 ```shell
 npx hardhat run scripts/setUp.ts --network sepolia
+```
+To upload new ipfs files and set up owners, run:
+```shell
+npx hardhat run scripts/resetIPFS.ts --network sepolia
 ```
