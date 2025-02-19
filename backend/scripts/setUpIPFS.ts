@@ -105,7 +105,7 @@ async function main() {
             await tx.wait();
             console.log(`Owner set for ipfshash: ${ipfsHash}`);
         } catch (error) {
-            console.error(`Failed to set owner for ipdshash: ${ipfsHash}`, error);
+            console.error(`Failed to set owner for ipfshash: ${ipfsHash}`, error);
         }
     }
 }
