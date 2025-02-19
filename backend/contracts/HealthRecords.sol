@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.28;
 
 contract HealthRecords {
     struct Update {
@@ -38,7 +38,7 @@ contract HealthRecords {
      * @param ipfsHash The IPFS hash of the health record.
      */
     function initializePatientRecord(address owner, string memory ipfsHash) public {
-        require(updates[owner].length == 0, "Owner already exists");
+        require(updates[owner].length == 0, "Owner already has a record");
         require(!usedIpfsHashes[ipfsHash], "IPFS hash already used");
 
         access[owner][owner] = true;

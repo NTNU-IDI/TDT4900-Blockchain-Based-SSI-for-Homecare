@@ -1,7 +1,7 @@
 import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from '@env';
 import { Contract, JsonRpcProvider, ethers } from 'ethers';
 
-import HealthInfoABI from '../abi/HealthInfoABI.json';
+import HealthRecordsABI from '../abi/HealthRecordsABI.json';
 
 if (!CONTRACT_ADDRESS) {
   throw new Error('CONTRACT_ADDRESS is missing in .env.');
@@ -24,7 +24,7 @@ const provider = new JsonRpcProvider(
 const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
 
 const getContract = (): Contract => {
-  return new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
+  return new Contract(CONTRACT_ADDRESS, HealthRecordsABI, signer);
 };
 
 /**
@@ -34,12 +34,17 @@ const getContract = (): Contract => {
  */
 export async function updateHealthRecord(
   owner: string,
-  newIpfsHash: string
+  newIpfsHash: string,
+  description: string
 ): Promise<void> {
   if (!ethers.isAddress(owner)) {
     throw new Error(`Invalid Ethereum address: ${owner}`);
   }
-  const tx = await getContract().updateHealthRecord(owner, newIpfsHash);
+  const tx = await getContract().updatePatientRecord(
+    owner,
+    newIpfsHash,
+    description
+  );
   await tx.wait();
   console.log('Health record updated successfully.');
 }

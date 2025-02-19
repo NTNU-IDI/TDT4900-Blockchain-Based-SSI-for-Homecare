@@ -1,9 +1,12 @@
 import {
+  Keyboard,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -111,69 +114,77 @@ const StartedTasksPage: React.FC = () => {
   }
 
   return (
-    <View style={SharedStyles.container}>
-      <Text style={SharedStyles.title}>
-        Oppgaver for: {currentPatient.name}
-      </Text>
-      <View style={styles.timerContainer}>
-        <Text style={isOvertime ? styles.overtimeText : styles.timerText}>
-          {isOvertime ? 'Overtid:' : 'Tid igjen:'}{' '}
-          {formatTime(Math.abs(totalDuration - timeElapsed))}
-        </Text>
-      </View>
-      {currentPatient.tasks.map((task) => (
-        <View key={task.id} style={styles.taskContainer}>
-          <TouchableOpacity
-            style={styles.taskWrapper}
-            onPress={() => openTaskDescription(task.description)}
-          >
-            <Text style={SharedStyles.boldCardTitle}>{task.name}</Text>
-            <Text style={SharedStyles.greyCardText}>
-              Beregnet tid: {task.duration} min
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={SharedStyles.container}>
+          <Text style={SharedStyles.title}>
+            Oppgaver for: {currentPatient.name}
+          </Text>
+          <View style={styles.timerContainer}>
+            <Text style={isOvertime ? styles.overtimeText : styles.timerText}>
+              {isOvertime ? 'Overtid:' : 'Tid igjen:'}{' '}
+              {formatTime(Math.abs(totalDuration - timeElapsed))}
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.checkbox,
-              task.status === 'Ferdig' && styles.checkboxCompleted
-            ]}
-            onPress={() =>
-              dispatch(
-                updateTaskStatus({
-                  taskId: task.id,
-                  status: task.status === 'Ferdig' ? 'Ikke startet' : 'Ferdig'
-                })
-              )
-            }
-          >
-            <Text style={styles.checkboxText}>
-              {task.status === 'Ferdig' ? '✓' : ''}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>{selectedTaskDescription}</Text>
-            <GreenButton onPress={() => setModalVisible(false)} title="Lukk" />
           </View>
+          {currentPatient.tasks.map((task) => (
+            <View key={task.id} style={styles.taskContainer}>
+              <TouchableOpacity
+                style={styles.taskWrapper}
+                onPress={() => openTaskDescription(task.description)}
+              >
+                <Text style={SharedStyles.boldCardTitle}>{task.name}</Text>
+                <Text style={SharedStyles.greyCardText}>
+                  Beregnet tid: {task.duration} min
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.checkbox,
+                  task.status === 'Ferdig' && styles.checkboxCompleted
+                ]}
+                onPress={() =>
+                  dispatch(
+                    updateTaskStatus({
+                      taskId: task.id,
+                      status:
+                        task.status === 'Ferdig' ? 'Ikke startet' : 'Ferdig'
+                    })
+                  )
+                }
+              >
+                <Text style={styles.checkboxText}>
+                  {task.status === 'Ferdig' ? '✓' : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+          <Modal
+            visible={modalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={styles.modalBackground}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalText}>{selectedTaskDescription}</Text>
+                <GreenButton
+                  onPress={() => setModalVisible(false)}
+                  title="Lukk"
+                />
+              </View>
+            </View>
+          </Modal>
+          <TextInput
+            style={SharedStyles.noteInput}
+            placeholder="Legg til notat her..."
+            multiline
+            value={note}
+            onChangeText={setNote}
+          />
+          <GreenButton onPress={finishTasks} title="Ferdig" />
         </View>
-      </Modal>
-      <TextInput
-        style={SharedStyles.noteInput}
-        placeholder="Legg til notat her..."
-        multiline
-        value={note}
-        onChangeText={setNote}
-      />
-      <GreenButton onPress={finishTasks} title="Ferdig" />
-    </View>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 

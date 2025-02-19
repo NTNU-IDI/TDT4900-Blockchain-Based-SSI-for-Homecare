@@ -1,4 +1,8 @@
-import { Contract } from "ethers";
+/**
+ * This script reads JSON files from the `jsons` folder, uploads them to IPFS via Pinata, and sets the owner of the IPFS hash to an Ethereum patient address in the smart contract.
+ * **/
+import { Contract, JsonRpcProvider } from "ethers";
+
 import axios from "axios";
 import dotenv from "dotenv";
 import { ethers } from "hardhat";
@@ -43,43 +47,29 @@ export const uploadToIPFS = async (
     }
   };
 
-
-async function deployContract(): Promise<string> {
-    console.log("Deploying contract...");
-    const HealthInfo = await ethers.getContractFactory("HealthInfo");
-    const healthInfo = await HealthInfo.deploy();
-    await healthInfo.waitForDeployment();
-    const contractAddress = await healthInfo.getAddress();
-    console.log("Contract deployed to:", contractAddress);
-
-    changeEnvContractAddress(contractAddress);
-    return contractAddress;
-}
-
-async function changeEnvContractAddress(address: string){
-    let envContent = '';
-    if (fs.existsSync('.env')) {
-        envContent = fs.readFileSync('.env', 'utf8');
-    }
-
-    const newEntry = `CONTRACT_ADDRESS=${address}\n`;
-
-    if (envContent.includes('CONTRACT_ADDRESS=')) {
-        envContent = envContent.replace(/CONTRACT_ADDRESS=.*/g, newEntry.trim());
-    } else {
-        envContent += newEntry;
-    }
-    fs.writeFileSync('.env', envContent);
-}
-
 async function main() {
-    const contractAddress = await deployContract();
-    const signers = await ethers.getSigners();
-    const ACCOUNTS = signers.slice(0, 5).map(signer => signer.address);
-    if (ACCOUNTS.length < 5) {
-        throw new Error("Not enough accounts available in Hardhat. Ensure at least 5 accounts are configured.");
+    const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+    const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY
+    const INFURA_API_KEY = process.env.INFURA_API_KEY
+    const PATIENT_ADDRESSES = process.env.PATIENT_ADDRESSES ? process.env.PATIENT_ADDRESSES.split(",") : [];
+    
+    if (!CONTRACT_ADDRESS) {
+        throw new Error("CONTRACT_ADDRESS is not defined in .env");
     }
-    console.log("Using accounts:", ACCOUNTS);
+    if (!METAMASK_PRIVATE_KEY) {
+        throw new Error("METAMASK_PRIVATE_KEY is not defined in .env");
+    }
+    if (!INFURA_API_KEY) {
+        throw new Error("INFURA_API_KEY is not defined in .env");
+    }
+    if (PATIENT_ADDRESSES.length === 0) {
+        throw new Error("PATIENT_ADDRESSES are not defined in .env");
+    }
+    
+    const provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`); 
+    const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
+    const HealthInfoFactory = await ethers.getContractFactory("HealthRecords");
+    const contract = HealthInfoFactory.attach(CONTRACT_ADDRESS).connect(signer);
     
 
     const jsonFolderPath = path.join(__dirname, "../jsons");
@@ -88,8 +78,8 @@ async function main() {
     }
 
     const jsonFiles = fs.readdirSync(jsonFolderPath).filter(file => file.endsWith(".json"));
-    if (jsonFiles.length !== ACCOUNTS.length) {
-        throw new Error("Mismatch: The number of JSON files and accounts must be the same.");
+    if (jsonFiles.length !== PATIENT_ADDRESSES.length) {
+        throw new Error("Mismatch: The number of JSON files and patient addresses must be the same.");
     }
 
     const ipfsHashes: string[] = [];
@@ -104,22 +94,18 @@ async function main() {
         ipfsHashes.push(hash);
     }
 
-     const [signer] = await ethers.getSigners();
-     const HealthInfoFactory = await ethers.getContractFactory("HealthInfo");
-     const contract = HealthInfoFactory.attach(contractAddress).connect(signer);
-
-    for (let i = 0; i < ACCOUNTS.length; i++) {
-        const account = ACCOUNTS[i];
+    for (let i = 0; i < PATIENT_ADDRESSES.length; i++) {
+        const patient = PATIENT_ADDRESSES[i];
         const ipfsHash = ipfsHashes[i];
 
-        console.log(`Setting owner for IPFS hash: ${ipfsHash} to account: ${account}`);
+        console.log(`Setting owner for IPFS hash: ${ipfsHash} to account: ${patient}`);
         try {
-            const tx = await (contract!.connect(signer!) as Contract).setOwner(ipfsHash, account);
+            const tx = await (contract!.connect(signer!) as Contract).initializePatientRecord(patient, ipfsHash);
             console.log("Waiting for transaction confirmation...");
             await tx.wait();
-            console.log(`Owner set for account: ${account}`);
+            console.log(`Owner set for ipfshash: ${ipfsHash}`);
         } catch (error) {
-            console.error(`Failed to set owner for account: ${account}`, error);
+            console.error(`Failed to set owner for ipdshash: ${ipfsHash}`, error);
         }
     }
 }

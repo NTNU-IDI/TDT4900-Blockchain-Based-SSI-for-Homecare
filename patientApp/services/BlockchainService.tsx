@@ -1,7 +1,7 @@
 import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from '@env';
 import { Contract, JsonRpcProvider, ethers, getIcapAddress } from 'ethers';
 
-import HealthInfoABI from '../abi/HealthInfoABI.json';
+import HealthInfoABI from '../abi/HealthRecordsABI.json';
 
 if (!CONTRACT_ADDRESS) {
   throw new Error('CONTRACT_ADDRESS is missing in .env.');
