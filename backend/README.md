@@ -12,7 +12,7 @@ npm install
 npx hardhat ignition deploy ./ignition/modules/HealthRecords.ts --network sepolia
 ```
 
-## 2. Set up the contract with owners 
+## 2. Set up IPFS files with owners
 To upload new ipfs files and set up owners, run:
 ```shell
 npx hardhat run scripts/setUpIPFS.ts --network sepolia
