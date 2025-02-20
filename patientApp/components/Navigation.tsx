@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/Screens";
+import { RootStackParamList } from "../types/screens";
 
 type NavigationScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;

@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { AppDispatch, RootState } from "../redux/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Navigation from "../components/Navigation";
@@ -41,7 +41,7 @@ const Homepage = () => {
         <View style={[styles.secondCircle]} />
       </View>
 
-      <Text style={styles.circleText}>Hei {data.name.split(" ")[0]}!</Text>
+      <Text style={styles.circleText}>Hei {data.name.split(' ')[0]}!</Text>
       <Text style={styles.italicText}>Hva kan vi hjelpe deg med?</Text>
 
       <Navigation

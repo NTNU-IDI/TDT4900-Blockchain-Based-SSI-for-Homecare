@@ -29,7 +29,7 @@ const DetailedForesporsel = () => {
     try {
       await grantAccess(address);
       console.log("Success", "Access request approved successfully.");
-      setIsButtonPressed(true); // Disable buttons only on success
+      setIsButtonPressed(true); 
     } catch (error) {
       console.error("Error approving access request:", error);
     } finally {
@@ -42,7 +42,7 @@ const DetailedForesporsel = () => {
     try {
       await denyAccessRequest(address);
       console.log("Success", "Access request denied successfully.");
-      setIsButtonPressed(true); // Disable buttons only on success
+      setIsButtonPressed(true); 
     } catch (error) {
       console.error("Error denying access request:", error);
     } finally {

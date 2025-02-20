@@ -38,16 +38,14 @@ const Foresporsel = () => {
     }
   };
 
-  // Fetch data on initial load
   useEffect(() => {
     fetchRequests();
   }, []);
 
-  // Fetch data when the screen comes into focus
   useFocusEffect(
     useCallback(() => {
       fetchRequests();
-    }, []),
+    }, [])
   );
 
   const findWorker = (address: string) => workers[address] || null;

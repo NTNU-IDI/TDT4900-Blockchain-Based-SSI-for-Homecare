@@ -15,14 +15,12 @@ const Innsyn = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch access list function
   const fetchAccessList = async () => {
     try {
       const list = await getAccessList();
       setAccessList(list);
       console.log("Access list:", list);
 
-      // Map the access list to the JSON data
       const details = list.map((address) => {
         const detail = workers[address];
         return detail;
@@ -62,15 +60,14 @@ const Innsyn = () => {
       console.log("Success", "Access revoked successfully.");
 
       setAccessList((prevList) =>
-        prevList.filter((addr) => addr !== selectedAddress),
+        prevList.filter((addr) => addr !== selectedAddress)
       );
 
-      // Remove from accessDetails by filtering out the worker using selectedAddress
       setAccessDetails((prevDetails) => {
         const newAccessList = accessList.filter(
-          (addr) => addr !== selectedAddress,
+          (addr) => addr !== selectedAddress
         );
-        return newAccessList.map((addr) => workers[addr]); // Remap the accessList to worker details
+        return newAccessList.map((addr) => workers[addr]);
       });
       console.log("List:", getAccessList());
     } catch (error) {
@@ -161,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   popupContent: {
     width: "80%",

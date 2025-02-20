@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 import Header from "../components/Header";
-import { getUpdates } from "../services/BlockchainService"; // Ensure this path is correct
+import { getUpdates } from "../services/BlockchainService";
 import workers from "../assets/homecare_workers.json";
 
 const Oppdateringer = () => {
@@ -71,7 +71,7 @@ const Oppdateringer = () => {
 
         {updates.timestamps.map((timestamp, index) => {
           const address = updates.addresses[index];
-          const workerName = workers[address]?.name || "Ukjent Arbeider"; // Map address to name
+          const workerName = workers[address]?.name || "Ukjent Arbeider";
 
           return (
             <View key={index} style={styles.tableRow}>
