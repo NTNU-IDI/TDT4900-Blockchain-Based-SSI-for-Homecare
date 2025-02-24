@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import Header from "../components/Header";
-import { RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "../types/Screens";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { denyAccessRequest, grantAccess } from "../services/BlockchainService";
-import { Worker } from "../types/Worker";
+
+import Header from "../components/Header";
+import { RootStackParamList } from "../types/screens";
+import { RouteProp } from "@react-navigation/native";
+import { Worker } from "../types/worker";
+import { useRoute } from "@react-navigation/native";
 
 type DetailedForesporselRouteProp = RouteProp<
   RootStackParamList,
@@ -28,7 +29,7 @@ const DetailedForesporsel = () => {
     try {
       await grantAccess(address);
       console.log("Success", "Access request approved successfully.");
-      setIsButtonPressed(true); // Disable buttons only on success
+      setIsButtonPressed(true); 
     } catch (error) {
       console.error("Error approving access request:", error);
     } finally {
@@ -41,7 +42,7 @@ const DetailedForesporsel = () => {
     try {
       await denyAccessRequest(address);
       console.log("Success", "Access request denied successfully.");
-      setIsButtonPressed(true); // Disable buttons only on success
+      setIsButtonPressed(true); 
     } catch (error) {
       console.error("Error denying access request:", error);
     } finally {
@@ -55,13 +56,13 @@ const DetailedForesporsel = () => {
 
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
-          <Text style={styles.label}>Navn:</Text> {worker.navn}
+          <Text style={styles.label}>Navn:</Text> {worker.name}
         </Text>
         <Text style={styles.infoText}>
-          <Text style={styles.label}>Arbeidsplass:</Text> {worker.arbeidsplass}
+          <Text style={styles.label}>Arbeidsplass:</Text> {worker.workplace}
         </Text>
         <Text style={styles.infoText}>
-          <Text style={styles.label}>Yrke:</Text> {worker.yrke}
+          <Text style={styles.label}>Yrke:</Text> {worker.job}
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.label}>Notat:</Text> {note}

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import BackButton from '../components/BackButton';
-import { Patient } from '../types/patientInterfaces';
+import { Patient } from '../types/patient';
 import SharedStyles from '../styles/SharedStyles';
 import ToggleSection from '../components/ToggleSection';
 

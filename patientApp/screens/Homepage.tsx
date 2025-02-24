@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
-import Navigation from "../components/Navigation";
-import { RootState, AppDispatch } from "../redux/store";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { AppDispatch, RootState } from "../redux/store";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchHomepageData } from "../redux/homepageSlice";
+
+import Navigation from "../components/Navigation";
+import { fetchHomepageData } from "../redux/homepageSlicer";
 
 const Homepage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,7 +41,7 @@ const Homepage = () => {
         <View style={[styles.secondCircle]} />
       </View>
 
-      <Text style={styles.circleText}>Hei {data.name.split(" ")[0]}!</Text>
+      <Text style={styles.circleText}>Hei {data.name.split(' ')[0]}!</Text>
       <Text style={styles.italicText}>Hva kan vi hjelpe deg med?</Text>
 
       <Navigation

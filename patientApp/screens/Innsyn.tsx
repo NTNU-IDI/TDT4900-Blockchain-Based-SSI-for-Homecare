@@ -1,10 +1,11 @@
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
-import Header from "../components/Header";
-import Card from "../components/Card";
 import { getAccessList, revokeAccess } from "../services/BlockchainService";
+
+import Card from "../components/Card";
+import Header from "../components/Header";
+import { Worker } from "../types/worker";
 import workers from "../assets/homecare_workers.json";
-import { Worker } from "../types/Worker";
 
 const Innsyn = () => {
   const [accessList, setAccessList] = useState<string[]>([]);
@@ -14,14 +15,12 @@ const Innsyn = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch access list function
   const fetchAccessList = async () => {
     try {
       const list = await getAccessList();
       setAccessList(list);
       console.log("Access list:", list);
 
-      // Map the access list to the JSON data
       const details = list.map((address) => {
         const detail = workers[address];
         return detail;
@@ -61,15 +60,14 @@ const Innsyn = () => {
       console.log("Success", "Access revoked successfully.");
 
       setAccessList((prevList) =>
-        prevList.filter((addr) => addr !== selectedAddress),
+        prevList.filter((addr) => addr !== selectedAddress)
       );
 
-      // Remove from accessDetails by filtering out the worker using selectedAddress
       setAccessDetails((prevDetails) => {
         const newAccessList = accessList.filter(
-          (addr) => addr !== selectedAddress,
+          (addr) => addr !== selectedAddress
         );
-        return newAccessList.map((addr) => workers[addr]); // Remap the accessList to worker details
+        return newAccessList.map((addr) => workers[addr]);
       });
       console.log("List:", getAccessList());
     } catch (error) {
@@ -97,8 +95,8 @@ const Innsyn = () => {
             onPress={() => handlePress(accessList[index])}
           >
             <Card
-              title={worker.navn}
-              description={`${worker.yrke} - ${worker.arbeidsplass}`}
+              title={worker.name}
+              description={`${worker.job} - ${worker.workplace}`}
             />
           </TouchableOpacity>
         ))}
@@ -114,7 +112,7 @@ const Innsyn = () => {
         <View style={styles.popupContainer}>
           <View style={styles.popupContent}>
             <Text style={styles.popupText}>
-              Vil du fjerne innsynsrettigheter for {selectedWorker?.navn}?
+              Vil du fjerne innsynsrettigheter for {selectedWorker?.name}?
             </Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -160,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   popupContent: {
     width: "80%",

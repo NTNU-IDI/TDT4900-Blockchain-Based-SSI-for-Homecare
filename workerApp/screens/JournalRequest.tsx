@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import BackButton from '../components/BackButton';
 import GreenButton from '../components/GreenButton';
 import InfoText from '../components/InfoText';
-import { Patient } from '../types/patientInterfaces';
+import { Patient } from '../types/patient';
 import SharedStyles from '../styles/SharedStyles';
 import { requestPatientAccess } from '../redux/patientSlicer';
 

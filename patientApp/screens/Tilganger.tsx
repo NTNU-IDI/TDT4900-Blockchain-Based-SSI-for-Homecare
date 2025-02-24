@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../types/Screens";
+import { RootStackParamList } from "../types/screens";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 type TilgangerScreenNavigationProp = NativeStackNavigationProp<

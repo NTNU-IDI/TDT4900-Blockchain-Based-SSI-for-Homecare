@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import JournalRequest from './JournalRequest';
-import { Patient } from '../types/patientInterfaces';
+import { Patient } from '../types/patient';
 import PatientJournal from './PatientJournal';
 import SharedStyles from '../styles/SharedStyles';
 import { fetchAccessStatus } from '../redux/patientSlicer';

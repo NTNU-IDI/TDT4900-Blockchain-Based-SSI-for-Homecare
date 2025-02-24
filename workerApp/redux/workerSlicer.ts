@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { HOMECARE_WORKER_ADDRESS } from '@env';
-import { Worker } from '../types/workerInterfaces';
+import { Worker } from '../types/worker';
 
 const workerData: Record<
   string,
