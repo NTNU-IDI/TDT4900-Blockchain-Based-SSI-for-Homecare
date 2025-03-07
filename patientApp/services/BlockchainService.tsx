@@ -1,5 +1,7 @@
 import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from "@env";
 import { Contract, JsonRpcProvider, ethers } from "ethers";
+import { getOrCreateDID } from "./DIDService";
+
 
 import HealthInfoABI from "../abi/HealthRecordsABI.json";
 
@@ -26,6 +28,19 @@ const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
 const getContract = (): Contract => {
   return new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
 };
+
+export async function registerDIDOnBlockchain(): Promise<void> {
+  const { did } = await getOrCreateDID(); // Get or create the DID
+  const contract = getContract();
+
+  try {
+    const tx = await contract.setDID(did);  // Correct contract method name
+    await tx.wait();
+    console.log(`DID registered on blockchain: ${did}`);
+  } catch (error) {
+    console.error("Error registering DID on blockchain:", error);
+  }
+}
 
 /**
  * Fetch the health record IPFS hash for the requester.

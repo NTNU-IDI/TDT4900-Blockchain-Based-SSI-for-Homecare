@@ -5,17 +5,31 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Navigation from "../components/Navigation";
 import { fetchHomepageData } from "../redux/homepageSlicer";
+import { interactWithContract } from "../services/DIDService";
+import { registerDIDOnBlockchain } from "../services/BlockchainService";
 
 const Homepage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector(
-    (state: RootState) => state.homepage,
+    (state: RootState) => state.homepage
   );
 
   useEffect(() => {
+    const setupDID = async () => {
+      try {
+        // Call registerDIDOnBlockchain to register DID if not registered
+        await registerDIDOnBlockchain();
+        console.log("DID has been successfully registered on the blockchain");
+      } catch (error) {
+        console.error("Error registering DID on the blockchain:", error);
+      }
+    }
+
     if (!data.name) {
       dispatch(fetchHomepageData());
     }
+
+    setupDID();
   }, [dispatch, data.name]);
 
   if (loading) {
@@ -41,7 +55,7 @@ const Homepage = () => {
         <View style={[styles.secondCircle]} />
       </View>
 
-      <Text style={styles.circleText}>Hei {data.name.split(' ')[0]}!</Text>
+      <Text style={styles.circleText}>Hei {data.name.split(" ")[0]}!</Text>
       <Text style={styles.italicText}>Hva kan vi hjelpe deg med?</Text>
 
       <Navigation

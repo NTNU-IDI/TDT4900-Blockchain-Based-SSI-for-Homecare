@@ -20,16 +20,37 @@ contract HealthRecords {
     mapping(address => mapping(address => bool)) private requestedAccess;
     mapping(address => address[]) private accessList;
     mapping(address => AccessRequest[]) private accessRequests;
+    mapping(address => string) private dids;
 
     event HealthRecordUpdated(address indexed owner, address indexed updater);
     event AccessRequested(address indexed owner, address indexed requester);
     event AccessRequestAccepted(address indexed owner, address indexed requester);
     event AccessRequestRejected(address indexed owner, address indexed requester);
     event AccessRevoked(address indexed owner, address indexed user);
+    event DIDVerified(address indexed user);
+
 
     modifier onlyAccess (address owner) {
         require(access[owner][msg.sender], "Access denied");
+        require(verifyDID(msg.sender), "DID verification failed");
+
         _;
+    }
+
+    /**
+     * @dev Allows users to associate their Ethereum address with a DID.
+     * @param did The DID to associate with the address.
+     */
+    function setDID(string memory did) public {
+        dids[msg.sender] = did;
+    }
+
+    /**
+     * @dev Verifies that the caller has a DID associated with their address.
+     * @return bool - True if the DID exists, false otherwise.
+     */
+    function verifyDID(address user) public view returns (bool) {
+        return bytes(dids[user]).length > 0; // Check if DID exists for the user
     }
 
     /**
