@@ -8,12 +8,20 @@ import { RootStackParamList } from "../types/screens";
 type NavigationScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-const Navigation = ({ data }: { data: { name: string; notes: string[] } }) => {
+const Navigation = ({
+  data,
+}: {
+  data: { name: string; patientHash: string };
+}) => {
   const navigation = useNavigation<NavigationScreenNavigationProp>();
 
-  const handlePress = (screen: keyof RootStackParamList) => {
+  const handlePress = (screen?: keyof RootStackParamList) => {
+    if (!screen) {
+      console.warn("No navigation target for this item."); 
+      return;
+    }
     if (screen === "Notater") {
-      navigation.navigate(screen, { notes: data.notes });
+      navigation.navigate(screen, { patientHash: data.patientHash });
     } else {
       navigation.navigate(screen);
     }

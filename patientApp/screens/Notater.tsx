@@ -1,16 +1,54 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import Header from "../components/Header";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RootStackParamList } from "../types/screens";
+import fetchIPFSData from "../services/PinataService";
 
-type DetailedForesporselRouteProp = RouteProp<RootStackParamList, "Notater">;
+type NotaterRouteProp = RouteProp<RootStackParamList, "Notater">;
 
 const Notater = () => {
-  const route = useRoute<DetailedForesporselRouteProp>();
+  const route = useRoute<NotaterRouteProp>();
 
-  const { notes } = route.params as { notes: string[] };
+  const { patientHash } = route.params as { patientHash: string };
+
+  const [notesData, setNotesData] = useState<string[][]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+      const fetchNotes = async () => {
+        try {
+          const personalData = await fetchIPFSData(patientHash);
+          setNotesData(personalData.notes);
+          
+        } catch (err) {
+          setError("Failed to fetch notes");
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchNotes();
+    }, []);
+
+    if (loading) {
+        return (
+          <View style={styles.centered}>
+            <ActivityIndicator size="large" color="#007BFF" />
+          </View>
+        );
+      }
+    
+      if (error) {
+        return (
+          <View style={styles.centered}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        );
+      }
 
   return (
     <View style={styles.screen}>
@@ -28,7 +66,7 @@ const Notater = () => {
           </View>
         </View>
 
-        {notes.map((note, index) => (
+        {notesData.map((note, index) => (
           <View key={index} style={styles.tableRow}>
             <View style={styles.tableCell}>
               <Text style={styles.cellText}>{note[1].split(",")[0]}</Text>
