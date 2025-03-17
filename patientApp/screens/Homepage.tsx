@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Navigation from "../components/Navigation";
 import { fetchHomepageData } from "../redux/homepageSlicer";
-import { interactWithContract } from "../services/DIDService";
 import { registerDIDOnBlockchain } from "../services/BlockchainService";
 
 const Homepage = () => {
@@ -17,9 +16,7 @@ const Homepage = () => {
   useEffect(() => {
     const setupDID = async () => {
       try {
-        // Call registerDIDOnBlockchain to register DID if not registered
         await registerDIDOnBlockchain();
-        console.log("DID has been successfully registered on the blockchain");
       } catch (error) {
         console.error("Error registering DID on the blockchain:", error);
       }
@@ -28,6 +25,7 @@ const Homepage = () => {
     if (!data.name) {
       dispatch(fetchHomepageData());
     }
+    console.log("data", fetchHomepageData());
 
     setupDID();
   }, [dispatch, data.name]);

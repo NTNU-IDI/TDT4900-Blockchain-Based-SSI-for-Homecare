@@ -1,7 +1,8 @@
 import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from "@env";
 import { Contract, JsonRpcProvider, ethers } from "ethers";
-import { getOrCreateDID } from "./DIDService";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { EthrDID } from "ethr-did";
+import { createVerifiableCredentialJwt } from "did-jwt-vc";
 
 import HealthInfoABI from "../abi/HealthRecordsABI.json";
 
@@ -17,6 +18,8 @@ if (!INFURA_API_KEY) {
   throw new Error("INFURA_API_KEY is missing in .env.");
 }
 
+const DID_STORAGE_KEY = "user_did"; // Key for AsyncStorage
+const DEFAULT_ROLE = "patient"; 
 /**
  * Connect to contract through Metamask.
  */
@@ -29,18 +32,109 @@ const getContract = (): Contract => {
   return new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
 };
 
-export async function registerDIDOnBlockchain(): Promise<void> {
-  const { did } = await getOrCreateDID(); // Get or create the DID
+
+/**
+ * Generates a new DID if one doesn't exist in storage.
+ * @returns The stored or newly created DID document.
+ */
+export async function getOrCreateDID(role = DEFAULT_ROLE): Promise<{ did: string; privateKey: string; role: string }> {
+  const storedDID = await AsyncStorage.getItem(DID_STORAGE_KEY);
+  if (storedDID) {
+    console.log("Existing DID retrieved:", storedDID);
+    return JSON.parse(storedDID); // Return the existing DID
+  }
+
+  const contract = getContract();
+  const onChainDID = await contract.getDID(signer.address);
+  if (onChainDID) {
+    await AsyncStorage.setItem(DID_STORAGE_KEY, JSON.stringify({ did: onChainDID, role }));
+    return onChainDID;
+  }
+
+  const wallet = ethers.Wallet.createRandom();
+  const privateKey = wallet.privateKey;
+  const address = wallet.address;
+
+  const didInstance = new EthrDID({
+    identifier: address,
+    privateKey,
+    provider,
+    chainNameOrId: "sepolia", //vet ikke om dette må være med
+  });
+
+  const didDocument = {
+    did: didInstance.did,
+    privateKey,
+    role,
+  };
+
+  await AsyncStorage.setItem(DID_STORAGE_KEY, JSON.stringify(didDocument));
+  console.log("henter item" , AsyncStorage.getItem(DID_STORAGE_KEY));
+  console.log("New DID created and stored:", didDocument.did);
+
+  return didDocument;
+}
+
+/**
+ * Registers the DID on the blockchain if it hasn't been registered already.
+ */
+export async function registerDIDOnBlockchain(role = DEFAULT_ROLE): Promise<void> {
+  const { did } = await getOrCreateDID(role); // Retrieve or create the DID
   const contract = getContract();
 
   try {
-    const tx = await contract.setDID(did);  // Correct contract method name
+    // Check if the DID is already registered on the blockchain
+    const isRegistered = await contract.verifyDID(signer.address);
+    if (isRegistered) {
+      console.log("DID is already registered on the blockchain:", did);
+      return;
+    }
+
+    // Register the DID on the blockchain
+    const tx = await contract.setDID(did, role);
     await tx.wait();
-    console.log(`DID registered on blockchain: ${did}`);
+    console.log(`DID registered on blockchain: ${did} with role ${role}`);
   } catch (error) {
     console.error("Error registering DID on blockchain:", error);
   }
 }
+
+// export async function createPatientVC(subjectDID: string, claims: any, issuerPrivateKey: string): Promise<string> {
+//   const issuanceDate = new Date().toISOString();
+
+//   // VC Payload
+//   const vcPayload = {
+//       "@context": ["https://www.w3.org/2018/credentials/v1"],
+//       "type": ["VerifiableCredential", "PatientCredential"],
+//       "issuer": { "id": "did:ethr:issuerDID" },  // Replace with actual issuer DID
+//       "issuanceDate": issuanceDate,
+//       "credentialSubject": {
+//           "id": subjectDID,
+//           "medicalInfo": claims
+//       }
+//   };
+
+//   // Sign the VC using the issuer's private key
+//   const signer = ethers.Wallet.fromEncryptedJson(issuerPrivateKey, "password");
+//   const jwt = await createVerifiableCredentialJwt(vcPayload, { signer });
+
+//   console.log("Generated Patient VC:", jwt);
+//   return jwt;
+// }
+
+
+// export async function registerDIDOnBlockchain(): Promise<void> {
+//   const { did } = await getOrCreateDID(); // Get or create the DID
+//   const contract = getContract();
+
+//   try {
+//     const tx = await contract.setDID(did);  // Correct contract method name
+//     await tx.wait();
+//     console.log(`DID registered on blockchain: ${did}`);
+//   } catch (error) {
+//     console.error("Error registering DID on blockchain:", error);
+//   }
+// }
 
 /**
  * Fetch the health record IPFS hash for the requester.

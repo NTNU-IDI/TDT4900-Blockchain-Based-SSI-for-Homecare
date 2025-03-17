@@ -3,71 +3,117 @@ pragma solidity ^0.8.28;
 
 contract HealthRecords {
     struct Update {
-        address updater;
+        string updaterDID;
         uint256 timestamp;
         string description;
     }
 
     struct AccessRequest {
-        address requester;
+        string requesterDID;
         string note;
     }
 
-    mapping(address => string) private ipfsHashes;
-    mapping(string => bool) private usedIpfsHashes;
-    mapping(address => Update[]) private updates;
-    mapping(address => mapping(address => bool)) private access;
-    mapping(address => mapping(address => bool)) private requestedAccess;
-    mapping(address => address[]) private accessList;
-    mapping(address => AccessRequest[]) private accessRequests;
-    mapping(address => string) private dids;
+    mapping(string => address) private didToAddress;
+    mapping(address => string) private addressToDID;
+    mapping(string => string) private didRoles;
+    mapping(string => string) private ipfsHashes;
+    mapping(string => bool) private usedIpfsHashes; 
+    mapping(string => Update[]) private updates;
+    mapping(string => mapping(string => bool)) private access; 
+    mapping(string => mapping(string => bool)) private requestedAccess; 
+    mapping(string => string[]) private accessList; 
+    mapping(string => AccessRequest[]) private accessRequests; 
 
-    event HealthRecordUpdated(address indexed owner, address indexed updater);
-    event AccessRequested(address indexed owner, address indexed requester);
-    event AccessRequestAccepted(address indexed owner, address indexed requester);
-    event AccessRequestRejected(address indexed owner, address indexed requester);
-    event AccessRevoked(address indexed owner, address indexed user);
-    event DIDVerified(address indexed user);
+    event HealthRecordUpdated(string indexed ownerDID, string updaterDID);
+    event AccessRequested(string indexed ownerDID, string requesterDID);
+    event AccessRequestAccepted(string indexed ownerDID, string requesterDID);
+    event AccessRequestRejected(string indexed ownerDID, string requesterDID);
+    event AccessRevoked(string indexed ownerDID, string userDID);
+    event DIDVerified(string indexed did, address indexed user);
+    event DIDUpdated(string indexed did, address oldAddress, address newAddress);
 
 
-    modifier onlyAccess (address owner) {
-        require(access[owner][msg.sender], "Access denied");
+    modifier onlyAccess(string memory ownerDID) {
+        require(access[ownerDID][addressToDID[msg.sender]], "Access denied");
         require(verifyDID(msg.sender), "DID verification failed");
-
         _;
     }
-
+        
     /**
-     * @dev Allows users to associate their Ethereum address with a DID.
-     * @param did The DID to associate with the address.
+     * @dev Registers or updates a DID for the caller with an associated role.
+     * @param did The DID to associate with the caller's address.
+     * @param role The role to associate with the DID.
      */
-    function setDID(string memory did) public {
-        dids[msg.sender] = did;
+    function setDID(string memory did, string memory role) public {
+        require(bytes(did).length > 0, "Invalid DID");
+        require(bytes(role).length > 0, "Invalid role");
+        require(didToAddress[did] == address(0), "DID already taken");
+
+        string memory existingDID = addressToDID[msg.sender];
+        if (bytes(existingDID).length > 0) {
+            didToAddress[existingDID] = address(0);
+
+        addressToDID[msg.sender] = did;
+        didToAddress[did] = msg.sender;
+        didRoles[did] = role;
+
+        emit DIDVerified(did, msg.sender);
+    }
+    
     }
 
-    /**
+     /**
      * @dev Verifies that the caller has a DID associated with their address.
      * @return bool - True if the DID exists, false otherwise.
      */
     function verifyDID(address user) public view returns (bool) {
-        return bytes(dids[user]).length > 0; // Check if DID exists for the user
+        return bytes(addressToDID[user]).length > 0;
+    }
+
+      /**
+     * @dev Retrieves the DID associated with a specific address.
+     * @param user The address to query.
+     * @return string - The DID associated with the address.
+     */
+    function getDID(address user) public view returns (string memory) {
+        return addressToDID[user];
+    }
+
+    
+    /**
+     * @dev Updates the address associated with a DID.
+     * @param did The DID to update.
+     * @param newAddress The new address to associate with the DID.
+     */
+    function updateDIDAddress(string memory did, address newAddress) public {
+        require(didToAddress[did] == msg.sender, "Unauthorized DID update");
+        require(newAddress != address(0), "Invalid new address");
+
+        address oldAddress = msg.sender;
+        didToAddress[did] = newAddress;
+        addressToDID[newAddress] = did;
+        addressToDID[oldAddress] = "";
+
+        emit DIDUpdated(did, oldAddress, newAddress);
     }
 
     /**
      * @dev Initializes a patient health record.
-     * @param owner The address of the patient.
+     * @param ownerDID The DID of the patient.
      * @param ipfsHash The IPFS hash of the health record.
      */
-    function initializePatientRecord(address owner, string memory ipfsHash) public {
-        require(updates[owner].length == 0, "Owner already has a record");
+    function initializePatientRecord(string memory ownerDID, string memory ipfsHash) public {
+        require(updates[ownerDID].length == 0, "Owner already has a record");
         require(!usedIpfsHashes[ipfsHash], "IPFS hash already used");
+        require(didToAddress[ownerDID] == msg.sender, "Unauthorized");
 
-        access[owner][owner] = true;
-        ipfsHashes[owner] = ipfsHash;
+
+        access[ownerDID][ownerDID] = true;
+        ipfsHashes[ownerDID] = ipfsHash;
         usedIpfsHashes[ipfsHash] = true;
 
-        updates[owner].push(Update({
-            updater: owner,
+        updates[ownerDID].push(Update({
+            updaterDID: ownerDID,
             timestamp: block.timestamp,
             description: "Initialized health record"
         }));
@@ -75,141 +121,160 @@ contract HealthRecords {
 
     /**
      * @dev Updates the ipfs hash of the owner.
-     * @param owner The address of the patient.
+     * @param ownerDID The address of the patient.
      * @param newIpfsHash The new IPFS hash of the health record.
      * @param description The description of the change.
      */
-    function updatePatientRecord(address owner, string memory newIpfsHash, string memory description) onlyAccess(owner) public {
-        require(updates[owner].length != 0, "Owner is not initialized");
+    function updatePatientRecord(string memory ownerDID, string memory newIpfsHash, string memory description) onlyAccess(ownerDID) public {
         require(!usedIpfsHashes[newIpfsHash], "IPFS hash already used");
-        usedIpfsHashes[ipfsHashes[owner]] = false;
-        ipfsHashes[owner] = newIpfsHash;
+        usedIpfsHashes[ipfsHashes[ownerDID]] = false;
+        ipfsHashes[ownerDID] = newIpfsHash;
         usedIpfsHashes[newIpfsHash] = true;
-        updates[owner].push(Update({
-            updater: msg.sender,
+
+       updates[ownerDID].push(Update({
+            updaterDID: addressToDID[msg.sender],
             timestamp: block.timestamp,
             description: description
         }));
 
-        emit HealthRecordUpdated(owner, msg.sender);
+        emit HealthRecordUpdated(ownerDID, addressToDID[msg.sender]);
     }
 
     /**
      * @dev Grants access to the sender's health record to a specified address.
-     * @param requester The address to grant access to.
+     * @param requesterDID The address to grant access to.
      */
-    function grantAccess(address requester) public {
-        require(requester != address(0), "Invalid requester");
-        require(!access[msg.sender][requester], "Access already granted");
-        require(requestedAccess[msg.sender][requester], "No access request found");
+    function grantAccess(string memory requesterDID) public {
+        string memory ownerDID = addressToDID[msg.sender];
+        require(didToAddress[requesterDID] != address(0), "Invalid requester DID");
+        require(!access[ownerDID][requesterDID], "Access already granted");
+        require(requestedAccess[ownerDID][requesterDID], "No access request found");
 
-        access[msg.sender][requester] = true;
-        accessList[msg.sender].push(requester);
-        uint256 length = accessRequests[msg.sender].length;
+        access[ownerDID][requesterDID] = true;
+        accessList[ownerDID].push(requesterDID);
+
+       
+        uint256 length = accessRequests[ownerDID].length;
         for (uint256 i = 0; i < length; i++) {
-            if (accessRequests[msg.sender][i].requester == requester) {
-                accessRequests[msg.sender][i] = accessRequests[msg.sender][length - 1];
-                accessRequests[msg.sender].pop();
+            if (keccak256(bytes(accessRequests[ownerDID][i].requesterDID)) == keccak256(bytes(requesterDID))) {
+                accessRequests[ownerDID][i] = accessRequests[ownerDID][length - 1];
+                accessRequests[ownerDID].pop();
                 break;
             }
         }
-        requestedAccess[msg.sender][requester] = false;
-        emit AccessRequestAccepted(msg.sender, requester);
+
+        requestedAccess[ownerDID][requesterDID] = false;
+        emit AccessRequestAccepted(ownerDID, requesterDID);
     }
 
     /**
      * @dev Denies an access request.
-     * @param requester The address of the user requesting access.
+     * @param requesterDID The address of the user requesting access.
      */
-    function denyAccessRequest(address requester) public {
-        require(requester != address(0), "Invalid requester");
-        require(!access[msg.sender][requester], "Access already granted");
-        require(requestedAccess[msg.sender][requester], "No access request found");
+   function denyAccessRequest(string memory requesterDID) public {
+        string memory ownerDID = addressToDID[msg.sender];
+        require(!access[ownerDID][requesterDID], "Access already granted");
+        require(requestedAccess[ownerDID][requesterDID], "No access request found");
 
-        uint256 length = accessRequests[msg.sender].length;
+        uint256 length = accessRequests[ownerDID].length;
         for (uint256 i = 0; i < length; i++) {
-            if (accessRequests[msg.sender][i].requester == requester) {
-                accessRequests[msg.sender][i] = accessRequests[msg.sender][length - 1];
-                accessRequests[msg.sender].pop();
+            if (keccak256(bytes(accessRequests[ownerDID][i].requesterDID)) == keccak256(bytes(requesterDID))) {
+                accessRequests[ownerDID][i] = accessRequests[ownerDID][length - 1];
+                accessRequests[ownerDID].pop();
                 break;
             }
         }
-        requestedAccess[msg.sender][requester] = false;
-        emit AccessRequestRejected(msg.sender, requester);
+        requestedAccess[ownerDID][requesterDID] = false;
+        emit AccessRequestRejected(ownerDID, requesterDID);
     }
 
     /**
      * @dev Requests access to a patient's health record.
-     * @param owner The patient address.
-     * @param note Optional note with sent request
+     * @param ownerDID The DID of the patient.
+     * @param note Optional note with the request.
      */
-    function requestAccess(address owner, string memory note) public {
-        require(owner != msg.sender, "Cannot request access to your own record");
-        require(!access[owner][msg.sender], "Access already granted");
-        require(!requestedAccess[owner][msg.sender], "Access already requested");
+    function requestAccess(string memory ownerDID, string memory note) public {
+        string memory requesterDID = addressToDID[msg.sender];
+        require(didToAddress[ownerDID] != didToAddress[requesterDID], "Cannot request access to your own record");
+        require(!access[ownerDID][requesterDID], "Access already granted");
+        require(!requestedAccess[ownerDID][requesterDID], "Access already requested");
 
-        accessRequests[owner].push(AccessRequest(msg.sender, note));
-        requestedAccess[owner][msg.sender] = true;
+        accessRequests[ownerDID].push(AccessRequest(requesterDID, note));
+        requestedAccess[ownerDID][requesterDID] = true;
 
-        emit AccessRequested(owner, msg.sender);
+        emit AccessRequested(ownerDID, requesterDID);
     }
 
-    /**
-     * @dev Revokes access to the sender's health record from a specified address.
-     * @param permissionedUser The address to revoke access from.
+  /**
+     * @dev Revokes access to the sender's health record from a specified DID.
+     * @param userDID The DID to revoke access from.
      */
-    function revokeAccess(address permissionedUser) public {
-        require(permissionedUser != address(0), "Invalid user address");
-        require(access[msg.sender][permissionedUser], "User does not have access");
+    function revokeAccess(string memory userDID) public {
+        string memory ownerDID = addressToDID[msg.sender];
+        require(access[ownerDID][userDID], "User does not have access");
 
-        access[msg.sender][permissionedUser] = false;
-        for (uint256 i = 0; i < accessList[msg.sender].length; i++) {
-            if (accessList[msg.sender][i] == permissionedUser) {
-                accessList[msg.sender][i] = accessList[msg.sender][accessList[msg.sender].length - 1];
-                accessList[msg.sender].pop();
+        access[ownerDID][userDID] = false;
+
+        uint256 length = accessList[ownerDID].length;
+        for (uint256 i = 0; i < length; i++) {
+            if (keccak256(bytes(accessList[ownerDID][i])) == keccak256(bytes(userDID))) {
+                accessList[ownerDID][i] = accessList[ownerDID][length - 1];
+                accessList[ownerDID].pop();
                 break;
             }
         }
-        emit AccessRevoked(msg.sender, permissionedUser);
+
+        emit AccessRevoked(ownerDID, userDID);
     }
 
-    function hasRequestedAccess(address owner) public view returns (bool) {
-        return requestedAccess[owner][msg.sender];
+
+  function hasRequestedAccess(string memory ownerDID, string memory requesterDID) public view returns (bool) {
+        return requestedAccess[ownerDID][requesterDID];
     }
-    function hasAccess(address owner) public view returns (bool) {
-        return access[owner][msg.sender];
+
+    function hasAccess(string memory ownerDID, string memory requesterDID) public view returns (bool) {
+        return access[ownerDID][requesterDID];
     }
-    function getHealthRecord(address owner) onlyAccess(owner) public view returns (string memory) {
-        return ipfsHashes[owner];
+
+    function getHealthRecord(string memory ownerDID) onlyAccess(ownerDID) public view returns (string memory) {
+        return ipfsHashes[ownerDID];
     }
-    function getOwnHealthRecord() public view returns (string memory) {
-        return ipfsHashes[msg.sender];
+
+    function getOwnHealthRecord(string memory requesterDID) public view returns (string memory) {
+        return ipfsHashes[requesterDID];
     }
-    function getUpdates() public view returns (address[] memory, uint256[] memory, string[] memory) {
-        uint256 length = updates[msg.sender].length;
-        address[] memory updaters = new address[](length);
+
+    function getAccessList(string memory ownerDID) public view returns (string[] memory) {
+        return accessList[ownerDID];
+    }
+   
+   /**
+     * @dev Retrieves the updates for the caller's health record.
+     * @return (string[] memory, uint256[] memory, string[] memory) - The updater DIDs, timestamps, and descriptions.
+     */
+    function getUpdates(string memory ownerDID) public view returns (string[] memory, uint256[] memory, string[] memory) {
+        uint256 length = updates[ownerDID].length;
+        string[] memory updaters = new string[](length);
         uint256[] memory timestamps = new uint256[](length);
-        string[] memory description = new string[](length);
+        string[] memory descriptions = new string[](length);
 
         for (uint256 i = 0; i < length; i++) {
-            updaters[i] = updates[msg.sender][i].updater;
-            timestamps[i] = updates[msg.sender][i].timestamp;
-            description[i] = updates[msg.sender][i].description;
+            updaters[i] = updates[ownerDID][i].updaterDID;
+            timestamps[i] = updates[ownerDID][i].timestamp;
+            descriptions[i] = updates[ownerDID][i].description;
         }
 
-        return (updaters, timestamps, description);
+        return (updaters, timestamps, descriptions);
     }
-    function getAccessList() public view returns (address[] memory) {
-        return accessList[msg.sender];
-    }
-    function getAccessRequests() public view returns (address[] memory, string[] memory) {
-        uint256 length = accessRequests[msg.sender].length;
-        address[] memory requesters = new address[](length);
+
+    function getAccessRequests(string memory ownerDID) public view returns (string[] memory, string[] memory) {
+        uint256 length = accessRequests[ownerDID].length;
+        string[] memory requesters = new string[](length);
         string[] memory notes = new string[](length);
 
         for (uint256 i = 0; i < length; i++) {
-            requesters[i] = accessRequests[msg.sender][i].requester;
-            notes[i] = accessRequests[msg.sender][i].note;
+            requesters[i] = accessRequests[ownerDID][i].requesterDID;
+            notes[i] = accessRequests[ownerDID][i].note;
         }
 
         return (requesters, notes);

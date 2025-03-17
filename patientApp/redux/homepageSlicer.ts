@@ -21,8 +21,8 @@ export const fetchHomepageData = createAsyncThunk(
   "homepage/fetchData",
   async () => {
     const hash = await getOwnHealthRecordHash();
-    const personalData = await fetchIPFSData(hash);
     console.log("yo")
+    const personalData = await fetchIPFSData(hash);
     console.log("Fetched data:", personalData);
     return { name: personalData.name, notes: personalData.notes || [] };
   },

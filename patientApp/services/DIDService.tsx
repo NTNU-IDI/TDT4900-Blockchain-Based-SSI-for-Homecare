@@ -28,6 +28,7 @@ export async function getOrCreateDID(): Promise<{ did: string; privateKey: strin
   // Check if DID exists in AsyncStorage
   const storedDID = await AsyncStorage.getItem(DID_STORAGE_KEY);
   if (storedDID) {
+    console.log("Existing DID retrieved:", storedDID);
     return JSON.parse(storedDID); // Return the existing DID
   }
 
@@ -49,13 +50,11 @@ export async function getOrCreateDID(): Promise<{ did: string; privateKey: strin
     privateKey,
   };
 
-  // Store DID document in AsyncStorage
   await AsyncStorage.setItem(DID_STORAGE_KEY, JSON.stringify(didDocument));
 
+  console.log("henter item" , AsyncStorage.getItem(DID_STORAGE_KEY));
+
   console.log("New DID created and stored:", didDocument.did);
-
-
-  // Sign the DID and send it to the backend
 
   return didDocument;
 }
