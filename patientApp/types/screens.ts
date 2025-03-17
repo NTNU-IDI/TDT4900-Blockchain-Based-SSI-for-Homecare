@@ -6,7 +6,7 @@ export type RootStackParamList = {
   Innsyn: undefined;
   DetailedInnsyn: { address: string; worker: Worker | null };
   Oppdateringer: undefined;
-  Notater: { notes: string[] };
+  Notater: { patientHash: string };
   Foresporsel: undefined;
   DetailedForesporsel: { address: string; note: string; worker: Worker | null };
 };

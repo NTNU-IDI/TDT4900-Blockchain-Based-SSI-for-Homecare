@@ -47,9 +47,10 @@ const Homepage = () => {
       <Navigation
         data={{
           name: data.name,
-          notes: data.notes,
+          patientHash: data.patientHash,
         }}
       />
+
     </View>
   );
 };

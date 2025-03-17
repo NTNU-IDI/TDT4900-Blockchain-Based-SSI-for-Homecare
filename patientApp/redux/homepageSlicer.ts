@@ -5,13 +5,13 @@ import { getOwnHealthRecordHash } from "../services/BlockchainService";
 
 // Define the initial state
 interface HomepageState {
-  data: { name: string; notes: string[] };
+  data: { name: string; patientHash: string };
   loading: boolean;
   error: string | null;
 }
 
 const initialState: HomepageState = {
-  data: { name: "", notes: [] },
+  data: { name: "", patientHash: "" },
   loading: true,
   error: null,
 };
@@ -22,9 +22,7 @@ export const fetchHomepageData = createAsyncThunk(
   async () => {
     const hash = await getOwnHealthRecordHash();
     const personalData = await fetchIPFSData(hash);
-    console.log("yo")
-    console.log("Fetched data:", personalData);
-    return { name: personalData.name, notes: personalData.notes || [] };
+    return { name: personalData.name, patientHash: hash };
   },
 );
 
