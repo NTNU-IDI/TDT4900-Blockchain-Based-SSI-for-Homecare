@@ -39,7 +39,7 @@ export async function fetchPatientData(ownerAddress: string): Promise<Patient> {
 
     return patient;
   } catch (error) {
-    console.error('Error fetching patient data:', error);
+    console.log('Could not fetch patient data:', error);
     const requestedAccess = await hasRequestedAccess(ownerAddress);
 
     return {
