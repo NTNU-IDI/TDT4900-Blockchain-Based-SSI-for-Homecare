@@ -30,6 +30,10 @@ const JournalsPage: React.FC = () => {
   );
 
   const handlePatientPress = (patient: Patient) => {
+    dispatch(fetchAccessStatus({
+      patientId: patient.id,
+      currentAccessStatus: patient.access
+    }));
     if (patient.accessRequest) {
       return console.log('Access already requested for', patient.name);
     }
