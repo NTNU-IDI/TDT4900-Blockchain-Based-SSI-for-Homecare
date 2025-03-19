@@ -1,4 +1,4 @@
-import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY } from "@env";
+import { CONTRACT_ADDRESS, INFURA_API_KEY, METAMASK_PRIVATE_KEY, TEST_ADDRESS } from "@env";
 import { Contract, JsonRpcProvider, ethers } from "ethers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { EthrDID } from "ethr-did";
@@ -23,13 +23,23 @@ const DEFAULT_ROLE = "patient";
 /**
  * Connect to contract through Metamask.
  */
-const provider = new JsonRpcProvider(
-  `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-);
-const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
+// const provider = new JsonRpcProvider(
+//   `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+// );
+// const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
+
+const provider = new JsonRpcProvider("http://127.0.0.1:8545");
+
+//const signer = new ethers.Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80", provider);
+
+
+const signer = new ethers.Wallet("0xc1b90aceb14bd40c153f1bbf7dc70f62336562e5999265f4ba8b815258559945", provider);
+
+
+console.log("CONTRACT_ADDRESS: ", CONTRACT_ADDRESS);
 
 const getContract = (): Contract => {
-  return new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
+  return new Contract(CONTRACT_ADDRESS, HealthInfoABI, provider);
 };
 
 
@@ -81,15 +91,16 @@ export async function getOrCreateDID(role = DEFAULT_ROLE): Promise<{ did: string
 export async function registerDIDOnBlockchain(role = DEFAULT_ROLE): Promise<void> {
   const { did } = await getOrCreateDID(role); // Retrieve or create the DID
   const contract = getContract();
-
+  
   try {
     // Check if the DID is already registered on the blockchain
     const isRegistered = await contract.verifyDID(signer.address);
+    console.log("address: ", signer.address);
     if (isRegistered) {
       console.log("DID is already registered on the blockchain:", did);
       return;
     }
-
+    
     // Register the DID on the blockchain
     const tx = await contract.setDID(did, role);
     await tx.wait();
@@ -141,7 +152,12 @@ export async function registerDIDOnBlockchain(role = DEFAULT_ROLE): Promise<void
  * @returns - The IPFS hash of the health record.
  */
 export async function getOwnHealthRecordHash(): Promise<string> {
-  return await getContract().getOwnHealthRecord();
+  const didData = await getOrCreateDID();
+  console.log("Using DID:", didData.did);
+
+  const hash = await getContract().getOwnHealthRecord(didData.did);
+  console.log("Health record hash:", hash);
+  return await getContract().getOwnHealthRecord(hash);
 }
 
 /**

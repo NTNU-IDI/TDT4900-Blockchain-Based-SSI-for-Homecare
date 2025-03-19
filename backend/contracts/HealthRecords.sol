@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
+import "hardhat/console.sol";
 
 contract HealthRecords {
     struct Update {
@@ -103,6 +104,10 @@ contract HealthRecords {
      * @param ipfsHash The IPFS hash of the health record.
      */
     function initializePatientRecord(string memory ownerDID, string memory ipfsHash) public {
+
+        console.log("ownerDID: %s", ownerDID);
+        console.log("msg.sender: %s", msg.sender);
+        
         require(updates[ownerDID].length == 0, "Owner already has a record");
         require(!usedIpfsHashes[ipfsHash], "IPFS hash already used");
         require(didToAddress[ownerDID] == msg.sender, "Unauthorized");
