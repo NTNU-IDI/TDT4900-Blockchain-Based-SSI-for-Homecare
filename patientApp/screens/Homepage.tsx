@@ -9,7 +9,7 @@ import { fetchHomepageData } from "../redux/homepageSlicer";
 const Homepage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector(
-    (state: RootState) => state.homepage,
+    (state: RootState) => state.homepage
   );
 
   useEffect(() => {
@@ -41,16 +41,10 @@ const Homepage = () => {
         <View style={[styles.secondCircle]} />
       </View>
 
-      <Text style={styles.circleText}>Hei {data.name.split(' ')[0]}!</Text>
+      <Text style={styles.circleText}>Hei {data.name.split(" ")[0]}!</Text>
       <Text style={styles.italicText}>Hva kan vi hjelpe deg med?</Text>
 
-      <Navigation
-        data={{
-          name: data.name,
-          patientHash: data.patientHash,
-        }}
-      />
-
+      <Navigation />
     </View>
   );
 };

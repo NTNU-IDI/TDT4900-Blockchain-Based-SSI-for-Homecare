@@ -23,6 +23,7 @@ const provider = new JsonRpcProvider(
 );
 const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
 
+
 const getContract = (): Contract => {
   return new Contract(CONTRACT_ADDRESS, HealthInfoABI, signer);
 };

@@ -3,16 +3,11 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-nat
 
 import Header from "../components/Header";
 import React, { useEffect, useState } from "react";
-import { RootStackParamList } from "../types/screens";
 import fetchIPFSData from "../services/PinataService";
+import { getOwnHealthRecordHash } from "../services/BlockchainService";
 
-type NotaterRouteProp = RouteProp<RootStackParamList, "Notater">;
 
 const Notater = () => {
-  const route = useRoute<NotaterRouteProp>();
-
-  const { patientHash } = route.params as { patientHash: string };
-
   const [notesData, setNotesData] = useState<string[][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +15,9 @@ const Notater = () => {
   useEffect(() => {
       const fetchNotes = async () => {
         try {
-          const personalData = await fetchIPFSData(patientHash);
+          const hash = await getOwnHealthRecordHash();
+          const personalData = await fetchIPFSData(hash);
+          console.log("hash", hash)
           setNotesData(personalData.notes);
           
         } catch (err) {
