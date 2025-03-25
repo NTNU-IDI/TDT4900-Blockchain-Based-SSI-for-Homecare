@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import fetchIPFSData from "../services/PinataService";
 import { getOwnHealthRecordHash } from "../services/BlockchainService";
+import { jwtDecode } from "jwt-decode";
 
 // Define the initial state
 interface HomepageState {
@@ -23,8 +24,9 @@ export const fetchHomepageData = createAsyncThunk(
     const hash = await getOwnHealthRecordHash();
     console.log("yo")
     console.log("Fetched hash:", hash);
-    const personalData = await fetchIPFSData(hash);
-    console.log("Fetched data:", personalData);
+    const personalData = await fetchIPFSData("Qmcu4wAF7ZHNvhhVFvCSBuewkQDkzNd5914S5EU4PcToSG");
+    console.log("Fetched data:", jwtDecode(personalData));
+    
     return { name: personalData.name, notes: personalData.notes || [] };
   },
 );

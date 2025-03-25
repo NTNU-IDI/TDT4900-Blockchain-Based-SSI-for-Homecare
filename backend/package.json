@@ -12,7 +12,9 @@
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@pinata/sdk": "^2.1.0",
     "axios": "^1.7.9",
+    "did-jwt-vc": "^4.0.7",
     "dotenv": "^16.4.7",
+    "ethr-did": "^3.0.26",
     "fs": "^0.0.1-security",
     "path": "^0.12.7"
   }

@@ -110,7 +110,6 @@ contract HealthRecords {
         
         require(updates[ownerDID].length == 0, "Owner already has a record");
         require(!usedIpfsHashes[ipfsHash], "IPFS hash already used");
-        require(didToAddress[ownerDID] == msg.sender, "Unauthorized");
 
 
         access[ownerDID][ownerDID] = true;

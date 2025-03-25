@@ -23,22 +23,15 @@ const DEFAULT_ROLE = "patient";
 /**
  * Connect to contract through Metamask.
  */
-// const provider = new JsonRpcProvider(
-//   `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-// );
-// const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
+const provider = new JsonRpcProvider(
+  `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+);
+const signer = new ethers.Wallet(METAMASK_PRIVATE_KEY, provider);
 
-const provider = new JsonRpcProvider("http://127.0.0.1:8545");
-
-//const signer = new ethers.Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80", provider);
-
-
-const signer = new ethers.Wallet("0xc1b90aceb14bd40c153f1bbf7dc70f62336562e5999265f4ba8b815258559945", provider);
-
-
-console.log("CONTRACT_ADDRESS: ", CONTRACT_ADDRESS);
+//const provider = new JsonRpcProvider("http://127.0.0.1:8545");
 
 const getContract = (): Contract => {
+  console.log("Contract address: ", CONTRACT_ADDRESS);
   return new Contract(CONTRACT_ADDRESS, HealthInfoABI, provider);
 };
 
