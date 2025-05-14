@@ -14,7 +14,7 @@ Create a `.env` file containing the variables specified in `.env.d.ts`.
 
 Make sure you have the Expo Go application installed on your phone. Then run:
 
-```bash 
+```shell
 npm install
 npx expo start
 ```

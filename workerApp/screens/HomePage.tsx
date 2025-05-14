@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
             key={client.id}
             style={[
               SharedStyles.clientCard,
-              isCurrentClient && styles.currentclientCard
+              isCurrentClient && styles.currentClientCard
             ]}
             onPress={() => dispatch(setCurrentClient(client.id))}
           >
