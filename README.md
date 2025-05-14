@@ -5,7 +5,7 @@ This repository contains a prototype developed as part of a Master's thesis in C
 The prototype demonstrates how the Self-Sovereign Identity (SSI) principles of **Access and Consent** can be applied to homecare services in Trondheim.
 
 ## System Overview
-The system consists of a **blockchain-based backend**, IPFS storage and two applications, one for **homecare workers** and one for **homecare clients**. 
+The system consists of a **blockchain-based backend**, IPFS storage using Pinata and two React Native applications, one for **homecare workers** and one for **homecare clients**. 
 
 ### Backend
 The backend consists of a smart contract responsible for handling access management. It is written in Solidity and set up to be deployed on Sepolia Testnet using Hardhat Ignition.
