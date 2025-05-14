@@ -40,7 +40,7 @@ export async function updateHealthRecord(
   if (!ethers.isAddress(owner)) {
     throw new Error(`Invalid Ethereum address: ${owner}`);
   }
-  const tx = await getContract().updatePatientRecord(
+  const tx = await getContract().updateClientRecord(
     owner,
     newIpfsHash,
     description

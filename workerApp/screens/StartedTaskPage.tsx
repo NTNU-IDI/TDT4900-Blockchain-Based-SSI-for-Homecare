@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  addPatientTasksNote,
-  setCurrentPatient,
-  updatePatientStatus,
+  addClientTasksNote,
+  setCurrentClient,
+  updateClientStatus,
   updateTaskStatus
-} from '../redux/patientSlicer';
+} from '../redux/clientSlicer';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import GreenButton from '../components/GreenButton';
@@ -25,9 +25,7 @@ import { store } from '../redux/store';
 let visitTimer: NodeJS.Timeout | null = null;
 
 const StartedTasksPage: React.FC = () => {
-  const { currentPatientId, patients } = useAppSelector(
-    (state) => state.patient
-  );
+  const { currentClientId, clients } = useAppSelector((state) => state.client);
   const dispatch = useAppDispatch();
 
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -36,7 +34,7 @@ const StartedTasksPage: React.FC = () => {
   const [selectedTaskDescription, setSelectedTaskDescription] = useState('');
   const [note, setNote] = useState('');
 
-  const currentPatient = patients.find((p) => p.id === currentPatientId);
+  const currentClient = clients.find((c) => c.id === currentClientId);
   const isOvertime = timeElapsed > totalDuration;
 
   const startVisitTimer = useCallback(() => {
@@ -53,8 +51,8 @@ const StartedTasksPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (currentPatient?.tasks.length) {
-      const totalVisitTime = currentPatient.tasks.reduce(
+    if (currentClient?.tasks.length) {
+      const totalVisitTime = currentClient.tasks.reduce(
         (sum, task) => sum + task.duration,
         0
       );
@@ -63,7 +61,7 @@ const StartedTasksPage: React.FC = () => {
     }
 
     return () => clearVisitTimer();
-  }, [currentPatient, startVisitTimer, clearVisitTimer]);
+  }, [currentClient, startVisitTimer, clearVisitTimer]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -71,15 +69,15 @@ const StartedTasksPage: React.FC = () => {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
-  const moveToNextPatient = () => {
-    const currentIndex = patients.findIndex((p) => p.id === currentPatientId);
-    const nextPatient =
-      currentIndex < patients.length - 1 ? patients[currentIndex + 1] : null;
-    dispatch(setCurrentPatient(nextPatient ? nextPatient.id : ''));
+  const moveToNextClient = () => {
+    const currentIndex = clients.findIndex((c) => c.id === currentClientId);
+    const nextClient =
+      currentIndex < clients.length - 1 ? clients[currentIndex + 1] : null;
+    dispatch(setCurrentClient(nextClient ? nextClient.id : ''));
   };
 
   const finishTasks = async () => {
-    if (currentPatient) {
+    if (currentClient) {
       if (note.trim() != '') {
         const state = store.getState();
         const workerName = state.worker.worker?.name;
@@ -88,15 +86,15 @@ const StartedTasksPage: React.FC = () => {
           throw new Error('No worker name found in state.');
         }
         dispatch(
-          addPatientTasksNote({
-            patientId: currentPatient.id,
+          addClientTasksNote({
+            clientId: currentClient.id,
             note,
             workerName
           })
         );
       }
-      dispatch(updatePatientStatus({ status: 'Ferdig' }));
-      moveToNextPatient();
+      dispatch(updateClientStatus({ status: 'Ferdig' }));
+      moveToNextClient();
     }
   };
 
@@ -105,7 +103,7 @@ const StartedTasksPage: React.FC = () => {
     setModalVisible(true);
   };
 
-  if (!currentPatient) {
+  if (!currentClient) {
     return (
       <View style={SharedStyles.container}>
         <Text style={SharedStyles.message}>Ingen pasient valgt.</Text>
@@ -118,7 +116,7 @@ const StartedTasksPage: React.FC = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={SharedStyles.container}>
           <Text style={SharedStyles.title}>
-            Oppgaver for: {currentPatient.name}
+            Oppgaver for: {currentClient.name}
           </Text>
           <View style={styles.timerContainer}>
             <Text style={isOvertime ? styles.overtimeText : styles.timerText}>
@@ -126,7 +124,7 @@ const StartedTasksPage: React.FC = () => {
               {formatTime(Math.abs(totalDuration - timeElapsed))}
             </Text>
           </View>
-          {currentPatient.tasks.map((task) => (
+          {currentClient.tasks.map((task) => (
             <View key={task.id} style={styles.taskContainer}>
               <TouchableOpacity
                 style={styles.taskWrapper}

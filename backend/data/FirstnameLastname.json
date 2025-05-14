@@ -1,0 +1,35 @@
+{
+  "time": "HH:MM",
+  "name": "Full Name",
+  "address": "Street Address",
+  "nøkkelnummer": "123",
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Task Name",
+      "description": "Task description.",
+      "duration": 5
+    },
+    {
+      "id": 2,
+      "name": "Task Name",
+      "description": "Task description.",
+      "duration": 10
+    }
+  ],
+  "notes": [],
+  "journal": {
+    "diagnoses": [
+      "Diagnosis 1",
+      "Diagnosis 2"
+    ],
+    "medications": [
+      "Medication 1",
+      "Medication 2"
+    ],
+    "previousTreatments": [
+      "Previous treatment 1",
+      "Previous treatment 2"
+    ]
+  }
+}

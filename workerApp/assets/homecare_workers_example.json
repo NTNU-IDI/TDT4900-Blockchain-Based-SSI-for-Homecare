@@ -1,0 +1,27 @@
+{
+  "0x1": {
+    "name": "Mona Hansen",
+    "workplace": "Byåsen Hjemmetjeneste",
+    "job": "Sykepleier"
+  },
+  "0x2": {
+    "name": "Ola Pedersen",
+    "workplace": "Byåsen Hjemmetjeneste",
+    "job": "Vernepleier"
+  },
+  "0x3": {
+    "name": "Kari Olsen",
+    "workplace": "Trondheim Kommune",
+    "job": "Administrator"
+  },
+  "0x4": {
+    "name": "Per Johansen",
+    "workplace": "Byåsen Hjemmetjeneste",
+    "job": "Sykepleier"
+  },
+  "0x5": {
+    "name": "Lise Sørensen",
+    "workplace": "Byåsen Hjemmetjeneste",
+    "job": "Hjelpepleier"
+  }
+}

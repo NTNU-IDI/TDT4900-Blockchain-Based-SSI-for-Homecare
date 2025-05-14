@@ -7,13 +7,13 @@ const MorePage: React.FC = () => {
   return (
     <View style={SharedStyles.container}>
       <Text style={SharedStyles.title}>Mer</Text>
-      <TouchableOpacity style={SharedStyles.patientCard}>
+      <TouchableOpacity style={SharedStyles.clientCard}>
         <Text style={SharedStyles.boldCardTitle}>Innstillinger</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={SharedStyles.patientCard}>
+      <TouchableOpacity style={SharedStyles.clientCard}>
         <Text style={SharedStyles.boldCardTitle}>Hjelp</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={SharedStyles.patientCard}>
+      <TouchableOpacity style={SharedStyles.clientCard}>
         <Text style={SharedStyles.boldCardTitle}>Logg ut</Text>
       </TouchableOpacity>
     </View>

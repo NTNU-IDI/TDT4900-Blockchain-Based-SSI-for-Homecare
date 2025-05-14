@@ -1,6 +1,6 @@
-# Homecare Worker App
+## Client app
 
-This is the React Native application developed for homecare workers.
+This is the React Native application developed for the homecare service client. 
 
 ### Getting Started
 

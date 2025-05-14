@@ -1,6 +1,6 @@
 declare module '@env' {
     export const CONTRACT_ADDRESS: string;
-    export const PATIENT_ADDRESSES: string;
+    export const CLIENT_ADDRESSES: string;
     export const HOMECARE_WORKER_ADDRESS: string;
     export const PINATA_API_KEY: string;
     export const PINATA_SECRET_API_KEY: string;

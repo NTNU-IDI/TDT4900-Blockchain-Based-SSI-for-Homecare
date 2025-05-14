@@ -33,11 +33,11 @@ contract HealthRecords {
     }
 
     /**
-     * @dev Initializes a patient health record.
-     * @param owner The address of the patient.
+     * @dev Initializes a client health record.
+     * @param owner The address of the client.
      * @param ipfsHash The IPFS hash of the health record.
      */
-    function initializePatientRecord(address owner, string memory ipfsHash) public {
+    function initializeClientRecord(address owner, string memory ipfsHash) public {
         require(updates[owner].length == 0, "Owner already has a record");
         require(!usedIpfsHashes[ipfsHash], "IPFS hash already used");
 
@@ -54,13 +54,14 @@ contract HealthRecords {
 
     /**
      * @dev Updates the ipfs hash of the owner.
-     * @param owner The address of the patient.
+     * @param owner The address of the client.
      * @param newIpfsHash The new IPFS hash of the health record.
      * @param description The description of the change.
      */
-    function updatePatientRecord(address owner, string memory newIpfsHash, string memory description) onlyAccess(owner) public {
+    function updateClientRecord(address owner, string memory newIpfsHash, string memory description) onlyAccess(owner) public {
         require(updates[owner].length != 0, "Owner is not initialized");
         require(!usedIpfsHashes[newIpfsHash], "IPFS hash already used");
+        
         usedIpfsHashes[ipfsHashes[owner]] = false;
         ipfsHashes[owner] = newIpfsHash;
         usedIpfsHashes[newIpfsHash] = true;
@@ -118,8 +119,8 @@ contract HealthRecords {
     }
 
     /**
-     * @dev Requests access to a patient's health record.
-     * @param owner The patient address.
+     * @dev Requests access to a client's health record.
+     * @param owner The client address.
      * @param note Optional note with sent request
      */
     function requestAccess(address owner, string memory note) public {

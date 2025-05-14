@@ -8,7 +8,7 @@ The artifact is developed for ios applications.
 The backend consists of a smart contract written in Solidity and deployed on the Sepolia testnest. The smart contract handles the interaction between clients and homecare prsonell. 
 
 ### Client app
-The patient app is made for users receiving care from homecare services. 
+The client app is made for users receiving care from homecare services. 
 
 ### Worker app
 The worker app is designed for healthcare professionals, assisting them in carrying out daily operations. 

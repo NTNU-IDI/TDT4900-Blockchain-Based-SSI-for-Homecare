@@ -4,28 +4,26 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import GreenButton from '../components/GreenButton';
 import React from 'react';
 import SharedStyles from '../styles/SharedStyles';
-import { updatePatientStatus } from '../redux/patientSlicer';
+import { updateClientStatus } from '../redux/clientSlicer';
 
 const StartTaskPage: React.FC = () => {
-  const { currentPatientId, patients } = useAppSelector(
-    (state) => state.patient
-  );
+  const { currentClientId, clients } = useAppSelector((state) => state.client);
   const dispatch = useAppDispatch();
 
-  const currentPatient = patients.find((p) => p.id === currentPatientId);
+  const currentClient = clients.find((c) => c.id === currentClientId);
 
-  if (!currentPatient) {
+  if (!currentClient) {
     return (
       <View style={SharedStyles.centeredContainer}>
-        <Text style={styles.noPatientText}>Ingen pasient valgt</Text>
+        <Text style={styles.noClientText}>Ingen pasient valgt</Text>
       </View>
     );
   }
 
-  if (!currentPatient.access) {
+  if (!currentClient.access) {
     return (
       <View style={SharedStyles.centeredContainer}>
-        <Text style={styles.patientText}>
+        <Text style={styles.clientText}>
           Du har ikke tilgang til gjøremål for denne brukeren.
         </Text>
         <Text style={SharedStyles.message}>Be om tilgang på journalsiden.</Text>
@@ -46,23 +44,23 @@ const StartTaskPage: React.FC = () => {
   };
 
   const handleStart = () => {
-    dispatch(updatePatientStatus({ status: 'Påbegynt' }));
+    dispatch(updateClientStatus({ status: 'Påbegynt' }));
   };
 
   return (
     <View style={SharedStyles.centeredContainer}>
-      <Text style={styles.patientText}>{currentPatient.name}</Text>
+      <Text style={styles.clientText}>{currentClient.name}</Text>
       <Text style={SharedStyles.message}>
-        {currentPatient.time} -{' '}
-        {endTime(currentPatient.time, currentPatient.tasks)}
+        {currentClient.time} -{' '}
+        {endTime(currentClient.time, currentClient.tasks)}
       </Text>
-      {currentPatient.status === 'Ikke startet' && (
+      {currentClient.status === 'Ikke startet' && (
         <GreenButton onPress={handleStart} title="Start besøk" />
       )}
-      {currentPatient.status === 'Ferdig' && (
+      {currentClient.status === 'Ferdig' && (
         <View>
-          <Text style={styles.patientText}>
-            Oppgavene for {currentPatient.name} er fullført.
+          <Text style={styles.clientText}>
+            Oppgavene for {currentClient.name} er fullført.
           </Text>
         </View>
       )}
@@ -73,12 +71,12 @@ const StartTaskPage: React.FC = () => {
 export default StartTaskPage;
 
 const styles = StyleSheet.create({
-  noPatientText: {
+  noClientText: {
     fontSize: 18,
     color: '#666',
     textAlign: 'center'
   },
-  patientText: {
+  clientText: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
