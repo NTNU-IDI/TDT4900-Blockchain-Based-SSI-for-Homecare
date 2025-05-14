@@ -1,0 +1,12 @@
+{
+  "extends": "expo/tsconfig.base",
+  "typeRoots": ["./types"],
+  
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true
+    }
+  
+}
