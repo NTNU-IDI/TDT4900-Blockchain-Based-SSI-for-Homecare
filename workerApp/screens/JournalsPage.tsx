@@ -11,8 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const JournalsPage: React.FC = () => {
   const { clients: clients } = useAppSelector((state) => state.client);
-  const [selectedJournalClient, setSelectedJournalClient] =
-    useState<Client>();
+  const [selectedJournalClient, setSelectedJournalClient] = useState<Client>();
   const [viewType, setViewType] = useState<'journal' | 'request' | null>(null);
   const dispatch = useAppDispatch();
 
@@ -30,10 +29,12 @@ const JournalsPage: React.FC = () => {
   );
 
   const handleClientPress = (client: Client) => {
-    dispatch(fetchAccessStatus({
-      clientId: client.id,
-      currentAccessStatus: client.access
-    }));
+    dispatch(
+      fetchAccessStatus({
+        clientId: client.id,
+        currentAccessStatus: client.access
+      })
+    );
     if (client.accessRequest) {
       return console.log('Access already requested for', client.name);
     }

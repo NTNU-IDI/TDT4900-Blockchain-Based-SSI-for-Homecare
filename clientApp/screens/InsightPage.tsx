@@ -60,12 +60,12 @@ const InsightPage = () => {
       console.log("Success", "Access revoked successfully.");
 
       setAccessList((prevList) =>
-        prevList.filter((addr) => addr !== selectedAddress)
+        prevList.filter((addr) => addr !== selectedAddress),
       );
 
       setAccessDetails((prevDetails) => {
         const newAccessList = accessList.filter(
-          (addr) => addr !== selectedAddress
+          (addr) => addr !== selectedAddress,
         );
         return newAccessList.map((addr) => workers[addr]);
       });

@@ -13,9 +13,7 @@ import { useAppSelector } from '../redux/hooks';
 const Tab = createBottomTabNavigator();
 
 const Navigation: React.FC = () => {
-  const { currentClientId, clients } = useAppSelector(
-    (state) => state.client
-  );
+  const { currentClientId, clients } = useAppSelector((state) => state.client);
 
   // Determine task screen based on current client status
   const getTaskScreen = () => {

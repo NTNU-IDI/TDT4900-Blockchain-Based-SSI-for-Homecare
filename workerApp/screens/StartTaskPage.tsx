@@ -7,9 +7,7 @@ import SharedStyles from '../styles/SharedStyles';
 import { updateClientStatus } from '../redux/clientSlicer';
 
 const StartTaskPage: React.FC = () => {
-  const { currentClientId, clients } = useAppSelector(
-    (state) => state.client
-  );
+  const { currentClientId, clients } = useAppSelector((state) => state.client);
   const dispatch = useAppDispatch();
 
   const currentClient = clients.find((c) => c.id === currentClientId);

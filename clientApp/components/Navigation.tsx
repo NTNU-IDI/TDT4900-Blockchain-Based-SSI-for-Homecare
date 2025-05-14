@@ -6,8 +6,7 @@ import { Pages } from "../types/screens";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-type NavigationScreenNavigationProp =
-  NativeStackNavigationProp<Pages>;
+type NavigationScreenNavigationProp = NativeStackNavigationProp<Pages>;
 
 const Navigation = () => {
   const navigation = useNavigation<NavigationScreenNavigationProp>();

@@ -25,9 +25,7 @@ import { store } from '../redux/store';
 let visitTimer: NodeJS.Timeout | null = null;
 
 const StartedTasksPage: React.FC = () => {
-  const { currentClientId, clients } = useAppSelector(
-    (state) => state.client
-  );
+  const { currentClientId, clients } = useAppSelector((state) => state.client);
   const dispatch = useAppDispatch();
 
   const [timeElapsed, setTimeElapsed] = useState(0);

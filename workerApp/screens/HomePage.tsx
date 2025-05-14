@@ -7,9 +7,7 @@ import { setCurrentClient } from '../redux/clientSlicer';
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { currentClientId, clients } = useAppSelector(
-    (state) => state.client
-  );
+  const { currentClientId, clients } = useAppSelector((state) => state.client);
 
   const currentDate = new Date().toLocaleDateString('no-NO', {
     weekday: 'long',

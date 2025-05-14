@@ -8,10 +8,7 @@ import { RouteProp } from "@react-navigation/native";
 import { Worker } from "../types/worker";
 import { useRoute } from "@react-navigation/native";
 
-type DetailedRequestRouteProp = RouteProp<
-  Pages,
-  "DetailedRequest"
->;
+type DetailedRequestRouteProp = RouteProp<Pages, "DetailedRequest">;
 
 const DetailedRequestPage = () => {
   const route = useRoute<DetailedRequestRouteProp>();
@@ -29,7 +26,7 @@ const DetailedRequestPage = () => {
     try {
       await grantAccess(address);
       console.log("Success", "Access request approved successfully.");
-      setIsButtonPressed(true); 
+      setIsButtonPressed(true);
     } catch (error) {
       console.error("Error approving access request:", error);
     } finally {
@@ -42,7 +39,7 @@ const DetailedRequestPage = () => {
     try {
       await denyAccessRequest(address);
       console.log("Success", "Access request denied successfully.");
-      setIsButtonPressed(true); 
+      setIsButtonPressed(true);
     } catch (error) {
       console.error("Error denying access request:", error);
     } finally {

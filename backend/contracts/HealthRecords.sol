@@ -61,6 +61,7 @@ contract HealthRecords {
     function updateClientRecord(address owner, string memory newIpfsHash, string memory description) onlyAccess(owner) public {
         require(updates[owner].length != 0, "Owner is not initialized");
         require(!usedIpfsHashes[newIpfsHash], "IPFS hash already used");
+        
         usedIpfsHashes[ipfsHashes[owner]] = false;
         ipfsHashes[owner] = newIpfsHash;
         usedIpfsHashes[newIpfsHash] = true;

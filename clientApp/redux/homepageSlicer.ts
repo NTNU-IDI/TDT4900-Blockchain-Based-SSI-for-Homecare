@@ -20,7 +20,7 @@ export const fetchHomepageData = createAsyncThunk(
   async () => {
     const hash = await getOwnHealthRecordHash();
     const personalData = await fetchIPFSData(hash);
-    return {name: personalData.name};
+    return { name: personalData.name };
   },
 );
 

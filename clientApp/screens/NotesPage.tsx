@@ -1,4 +1,10 @@
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Header from "../components/Header";
@@ -11,39 +17,38 @@ const NotesPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-      const fetchNotes = async () => {
-        try {
-          const hash = await getOwnHealthRecordHash();
-          const personalData = await fetchIPFSData(hash);
-          console.log("hash", hash)
-          setNotesData(personalData.notes);
-          
-        } catch (err) {
-          setError("Failed to fetch notes");
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchNotes();
-    }, []);
+    const fetchNotes = async () => {
+      try {
+        const hash = await getOwnHealthRecordHash();
+        const personalData = await fetchIPFSData(hash);
+        console.log("hash", hash);
+        setNotesData(personalData.notes);
+      } catch (err) {
+        setError("Failed to fetch notes");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (loading) {
-        return (
-          <View style={styles.centered}>
-            <ActivityIndicator size="large" color="#007BFF" />
-          </View>
-        );
-      }
-    
-      if (error) {
-        return (
-          <View style={styles.centered}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        );
-      }
+    fetchNotes();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>

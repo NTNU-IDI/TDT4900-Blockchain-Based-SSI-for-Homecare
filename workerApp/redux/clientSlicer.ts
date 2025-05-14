@@ -30,10 +30,7 @@ export const fetchAndSetClients = createAsyncThunk(
 
 export const requestClientAccess = createAsyncThunk(
   'clients/requestclientAccess',
-  async (
-    { clientId, note }: { clientId: string; note: string },
-    thunkAPI
-  ) => {
+  async ({ clientId, note }: { clientId: string; note: string }, thunkAPI) => {
     try {
       await requestAccess(clientId, note);
       return { clientId: clientId, note };
@@ -124,9 +121,7 @@ const clientSlice = createSlice({
       state.currentClientId = action.payload;
     },
     updateClientStatus: (state, action: PayloadAction<{ status: string }>) => {
-      const client = state.clients.find(
-        (c) => c.id === state.currentClientId
-      );
+      const client = state.clients.find((c) => c.id === state.currentClientId);
       if (client) {
         client.status = action.payload.status;
       }
@@ -135,9 +130,7 @@ const clientSlice = createSlice({
       state,
       action: PayloadAction<{ taskId: number; status: string }>
     ) => {
-      const client = state.clients.find(
-        (c) => c.id === state.currentClientId
-      );
+      const client = state.clients.find((c) => c.id === state.currentClientId);
       if (client) {
         const task = client.tasks.find((t) => t.id === action.payload.taskId);
         if (task) {

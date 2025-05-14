@@ -7,10 +7,7 @@ import { Pages } from "../types/screens";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-type AccessScreenNavigationProp = NativeStackNavigationProp<
-  Pages,
-  "Access"
->;
+type AccessScreenNavigationProp = NativeStackNavigationProp<Pages, "Access">;
 
 const Tilganger = () => {
   const navigation = useNavigation<AccessScreenNavigationProp>();

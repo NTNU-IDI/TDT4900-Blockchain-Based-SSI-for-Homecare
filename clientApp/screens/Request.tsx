@@ -9,10 +9,7 @@ import { Pages } from "../types/screens";
 import { getAccessRequests } from "../services/BlockchainService";
 import workers from "../assets/homecare_workers.json";
 
-type RequestScreenNavigationProp = NativeStackNavigationProp<
-  Pages,
-  "Request"
->;
+type RequestScreenNavigationProp = NativeStackNavigationProp<Pages, "Request">;
 
 const Request = () => {
   const navigation = useNavigation<RequestScreenNavigationProp>();
@@ -45,7 +42,7 @@ const Request = () => {
   useFocusEffect(
     useCallback(() => {
       fetchRequests();
-    }, [])
+    }, []),
   );
 
   const findWorker = (address: string) => workers[address] || null;

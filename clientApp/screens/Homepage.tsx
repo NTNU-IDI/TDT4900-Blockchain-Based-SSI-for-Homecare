@@ -9,7 +9,7 @@ import { fetchHomepageData } from "../redux/homepageSlicer";
 const Homepage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector(
-    (state: RootState) => state.homepage
+    (state: RootState) => state.homepage,
   );
 
   useEffect(() => {
