@@ -1,6 +1,6 @@
 ## Blockchain-based SSI system for homecare services
 
-This repository contains the developed prototype used in our Master's thesis in Computer Science at NTNU 👩🏼‍💻.
+This repository contains the developed prototype used in our Master's thesis in Computer Science at NTNU 👩🏼‍💻
 
 ### Backend
 The backend consists of a smart contract written in Solidity and deployed on the Sepolia testnest. The smart contract handles the interaction between clients and homecare prsonell. 
