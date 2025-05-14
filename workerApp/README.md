@@ -6,7 +6,7 @@ This is the application for homecare workers.
 
 Make sure you have the Expo Go application installed on your phone. 
 
-1. cd patientApp
+1. cd workerApp
 2. npm install
 3. npx expo start
 
