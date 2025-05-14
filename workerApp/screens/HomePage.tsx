@@ -3,12 +3,12 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import React from 'react';
 import SharedStyles from '../styles/SharedStyles';
-import { setCurrentPatient } from '../redux/patientSlicer';
+import { setCurrentClient } from '../redux/clientSlicer';
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { currentPatientId, patients } = useAppSelector(
-    (state) => state.patient
+  const { currentClientId, clients } = useAppSelector(
+    (state) => state.client
   );
 
   const currentDate = new Date().toLocaleDateString('no-NO', {
@@ -23,28 +23,28 @@ const HomePage: React.FC = () => {
   return (
     <View style={SharedStyles.container}>
       <Text style={SharedStyles.title}>{currentDateFormatted}</Text>
-      {patients.map((patient) => {
-        const isCurrentPatient = currentPatientId === patient.id;
+      {clients.map((client) => {
+        const isCurrentClient = currentClientId === client.id;
 
         return (
           <TouchableOpacity
-            key={patient.id}
+            key={client.id}
             style={[
-              SharedStyles.patientCard,
-              isCurrentPatient && styles.currentPatientCard
+              SharedStyles.clientCard,
+              isCurrentClient && styles.currentclientCard
             ]}
-            onPress={() => dispatch(setCurrentPatient(patient.id))}
+            onPress={() => dispatch(setCurrentClient(client.id))}
           >
             <View>
               <Text
                 style={[
                   SharedStyles.boldCardTitle,
-                  isCurrentPatient && styles.currentPatientName
+                  isCurrentClient && styles.currentClientName
                 ]}
               >
-                {patient.name}
+                {client.name}
               </Text>
-              {!patient.access && (
+              {!client.access && (
                 <>
                   <Text style={styles.noAccessMessage}>
                     Ikke tilgang. Be om tilgang på journalsiden.
@@ -52,24 +52,24 @@ const HomePage: React.FC = () => {
                 </>
               )}
 
-              {patient.access && (
+              {client.access && (
                 <>
                   <Text
                     style={[
-                      styles.patientInfo,
-                      isCurrentPatient && styles.currentPatientInfo
+                      styles.clientInfo,
+                      isCurrentClient && styles.currentClientInfo
                     ]}
                   >
-                    {patient.time} - {patient.address}
+                    {client.time} - {client.address}
                   </Text>
-                  {patient.nøkkelnummer?.trim() && (
+                  {client.nøkkelnummer?.trim() && (
                     <Text
                       style={[
                         SharedStyles.greyCardText,
-                        isCurrentPatient && styles.currentPatientKey
+                        isCurrentClient && styles.currentClientKey
                       ]}
                     >
-                      Nøkkelnummer: {patient.nøkkelnummer}
+                      Nøkkelnummer: {client.nøkkelnummer}
                     </Text>
                   )}
                 </>
@@ -78,11 +78,11 @@ const HomePage: React.FC = () => {
 
             <Text
               style={[
-                styles.patientStatus,
-                isCurrentPatient && styles.currentPatientStatus
+                styles.clientStatus,
+                isCurrentClient && styles.currentClientStatus
               ]}
             >
-              {patient.status}
+              {client.status}
             </Text>
           </TouchableOpacity>
         );
@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
 export default HomePage;
 
 const styles = StyleSheet.create({
-  currentPatientCard: {
+  currentClientCard: {
     backgroundColor: '#0D9276',
     borderWidth: 2,
     borderColor: '#00B3B3',
@@ -104,25 +104,25 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
   },
-  currentPatientName: {
+  currentClientName: {
     color: '#FFFFFF'
   },
-  patientInfo: {
+  clientInfo: {
     fontSize: 14,
     color: '#444'
   },
-  currentPatientInfo: {
+  currentClientInfo: {
     color: '#E0FFFF'
   },
-  currentPatientKey: {
+  currentClientKey: {
     color: '#E0FFFF'
   },
-  patientStatus: {
+  clientStatus: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#333'
   },
-  currentPatientStatus: {
+  currentClientStatus: {
     color: '#FFFFFF'
   },
   noAccessMessage: {

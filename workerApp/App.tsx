@@ -4,7 +4,7 @@ import { StatusBar, StyleSheet } from 'react-native';
 
 import Navigation from './components/Navigation';
 import { Provider } from 'react-redux';
-import { fetchAndSetPatients } from './redux/patientSlicer';
+import { fetchAndSetClients } from './redux/clientSlicer';
 import { fetchWorker } from './redux/workerSlicer';
 import { store } from './redux/store';
 import { useAppDispatch } from './redux/hooks';
@@ -13,7 +13,7 @@ const ReduxWrapper: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchAndSetPatients());
+    dispatch(fetchAndSetClients());
     dispatch(fetchWorker());
   }, [dispatch]);
 

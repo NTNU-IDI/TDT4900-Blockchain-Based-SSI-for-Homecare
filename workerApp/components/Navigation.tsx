@@ -13,14 +13,14 @@ import { useAppSelector } from '../redux/hooks';
 const Tab = createBottomTabNavigator();
 
 const Navigation: React.FC = () => {
-  const { currentPatientId, patients } = useAppSelector(
-    (state) => state.patient
+  const { currentClientId, clients } = useAppSelector(
+    (state) => state.client
   );
 
-  // Determine task screen based on current patient status
+  // Determine task screen based on current client status
   const getTaskScreen = () => {
-    const currentPatient = patients.find((p) => p.id === currentPatientId);
-    if (currentPatient?.status === 'Påbegynt') {
+    const currentClient = clients.find((p) => p.id === currentClientId);
+    if (currentClient?.status === 'Påbegynt') {
       return StartedTaskPage;
     } else {
       return StartTaskPage;

@@ -2,56 +2,56 @@ import React, { useCallback, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
+import { Client } from '../types/client';
+import ClientJournal from './ClientJournal';
 import JournalRequest from './JournalRequest';
-import { Patient } from '../types/patient';
-import PatientJournal from './PatientJournal';
 import SharedStyles from '../styles/SharedStyles';
-import { fetchAccessStatus } from '../redux/patientSlicer';
+import { fetchAccessStatus } from '../redux/clientSlicer';
 import { useFocusEffect } from '@react-navigation/native';
 
 const JournalsPage: React.FC = () => {
-  const { patients } = useAppSelector((state) => state.patient);
-  const [selectedJournalPatient, setSelectedJournalPatient] =
-    useState<Patient>();
+  const { clients: clients } = useAppSelector((state) => state.client);
+  const [selectedJournalClient, setSelectedJournalClient] =
+    useState<Client>();
   const [viewType, setViewType] = useState<'journal' | 'request' | null>(null);
   const dispatch = useAppDispatch();
 
   useFocusEffect(
     useCallback(() => {
-      patients.forEach((patient) =>
+      clients.forEach((client) =>
         dispatch(
           fetchAccessStatus({
-            patientId: patient.id,
-            currentAccessStatus: patient.access
+            clientId: client.id,
+            currentAccessStatus: client.access
           })
         )
       );
-    }, [dispatch, patients])
+    }, [dispatch, clients])
   );
 
-  const handlePatientPress = (patient: Patient) => {
+  const handleClientPress = (client: Client) => {
     dispatch(fetchAccessStatus({
-      patientId: patient.id,
-      currentAccessStatus: patient.access
+      clientId: client.id,
+      currentAccessStatus: client.access
     }));
-    if (patient.accessRequest) {
-      return console.log('Access already requested for', patient.name);
+    if (client.accessRequest) {
+      return console.log('Access already requested for', client.name);
     }
-    setSelectedJournalPatient(patient);
-    setViewType(patient.access ? 'journal' : 'request');
+    setSelectedJournalClient(client);
+    setViewType(client.access ? 'journal' : 'request');
   };
 
   const onBack = () => {
-    setSelectedJournalPatient(undefined);
+    setSelectedJournalClient(undefined);
     setViewType(null);
   };
 
-  if (viewType === 'journal' && selectedJournalPatient) {
-    return <PatientJournal patient={selectedJournalPatient} onBack={onBack} />;
+  if (viewType === 'journal' && selectedJournalClient) {
+    return <ClientJournal client={selectedJournalClient} onBack={onBack} />;
   }
 
-  if (viewType === 'request' && selectedJournalPatient) {
-    return <JournalRequest patient={selectedJournalPatient} onBack={onBack} />;
+  if (viewType === 'request' && selectedJournalClient) {
+    return <JournalRequest client={selectedJournalClient} onBack={onBack} />;
   }
 
   const ACCESS_COLORS = {
@@ -60,17 +60,17 @@ const JournalsPage: React.FC = () => {
     requested: '#D98A00'
   };
 
-  const getAccessText = (patient: Patient) => {
-    if (patient.access) return 'Tilgang';
-    if (patient.accessRequest) return 'Bedt om tilgang';
+  const getAccessText = (client: Client) => {
+    if (client.access) return 'Tilgang';
+    if (client.accessRequest) return 'Bedt om tilgang';
     return 'Ikke tilgang';
   };
 
-  const getAccessStyle = (patient: Patient) => ({
+  const getAccessStyle = (client: Client) => ({
     ...SharedStyles.boldCardTitle,
-    color: patient.access
+    color: client.access
       ? ACCESS_COLORS.granted
-      : patient.accessRequest
+      : client.accessRequest
         ? ACCESS_COLORS.requested
         : ACCESS_COLORS.denied
   });
@@ -78,16 +78,16 @@ const JournalsPage: React.FC = () => {
   return (
     <View style={SharedStyles.container}>
       <Text style={SharedStyles.title}>Pasientjournaler</Text>
-      {patients.map((patient) => (
+      {clients.map((client) => (
         <TouchableOpacity
-          key={patient.id}
-          style={SharedStyles.patientCard}
-          onPress={() => handlePatientPress(patient)}
+          key={client.id}
+          style={SharedStyles.clientCard}
+          onPress={() => handleClientPress(client)}
         >
           <View>
-            <Text style={SharedStyles.boldCardTitle}>{patient.name}</Text>
+            <Text style={SharedStyles.boldCardTitle}>{client.name}</Text>
           </View>
-          <Text style={getAccessStyle(patient)}>{getAccessText(patient)}</Text>
+          <Text style={getAccessStyle(client)}>{getAccessText(client)}</Text>
         </TouchableOpacity>
       ))}
     </View>

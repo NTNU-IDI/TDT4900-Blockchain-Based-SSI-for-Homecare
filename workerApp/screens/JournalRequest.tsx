@@ -9,14 +9,14 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 import BackButton from '../components/BackButton';
+import { Client } from '../types/client';
 import GreenButton from '../components/GreenButton';
 import InfoText from '../components/InfoText';
-import { Patient } from '../types/patient';
 import SharedStyles from '../styles/SharedStyles';
-import { requestPatientAccess } from '../redux/patientSlicer';
+import { requestClientAccess } from '../redux/clientSlicer';
 
-const JournalRequest: React.FC<{ patient: Patient; onBack: () => void }> = ({
-  patient,
+const JournalRequest: React.FC<{ client: Client; onBack: () => void }> = ({
+  client,
   onBack
 }) => {
   const dispatch = useAppDispatch();
@@ -25,7 +25,7 @@ const JournalRequest: React.FC<{ patient: Patient; onBack: () => void }> = ({
   const [note, setNote] = useState('');
 
   const handleRequestAccess = () => {
-    dispatch(requestPatientAccess({ patientId: patient.id, note }));
+    dispatch(requestClientAccess({ clientId: client.id, note }));
     setRequestSent(true);
     setTimeout(onBack, 2000);
   };

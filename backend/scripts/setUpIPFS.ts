@@ -1,5 +1,5 @@
 /**
- * This script reads JSON files from the `jsons` folder, uploads them to IPFS via Pinata, and sets the owner of the IPFS hash to an Ethereum patient address in the smart contract.
+ * This script reads JSON files from the `jsons` folder, uploads them to IPFS via Pinata, and sets the owner of the IPFS hash to an Ethereum client address in the smart contract.
  * **/
 import { Contract, JsonRpcProvider } from "ethers";
 
@@ -51,7 +51,7 @@ async function main() {
     const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
     const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY
     const INFURA_API_KEY = process.env.INFURA_API_KEY
-    const PATIENT_ADDRESSES = process.env.PATIENT_ADDRESSES ? process.env.PATIENT_ADDRESSES.split(",") : [];
+    const CLIENT_ADDRESSES = process.env.CLIENT_ADDRESSES ? process.env.CLIENT_ADDRESSES.split(",") : [];
     
     if (!CONTRACT_ADDRESS) {
         throw new Error("CONTRACT_ADDRESS is not defined in .env");
@@ -62,8 +62,8 @@ async function main() {
     if (!INFURA_API_KEY) {
         throw new Error("INFURA_API_KEY is not defined in .env");
     }
-    if (PATIENT_ADDRESSES.length === 0) {
-        throw new Error("PATIENT_ADDRESSES are not defined in .env");
+    if (CLIENT_ADDRESSES.length === 0) {
+        throw new Error("CLIENT_ADDRESSES are not defined in .env");
     }
     
     const provider = new JsonRpcProvider(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`); 
@@ -78,8 +78,8 @@ async function main() {
     }
 
     const jsonFiles = fs.readdirSync(jsonFolderPath).filter(file => file.endsWith(".json"));
-    if (jsonFiles.length !== PATIENT_ADDRESSES.length) {
-        throw new Error("Mismatch: The number of JSON files and patient addresses must be the same.");
+    if (jsonFiles.length != CLIENT_ADDRESSES.length) {
+        throw new Error("Mismatch: The number of JSON files and client addresses must be the same.");
     }
 
     const ipfsHashes: string[] = [];
@@ -94,13 +94,13 @@ async function main() {
         ipfsHashes.push(hash);
     }
 
-    for (let i = 0; i < PATIENT_ADDRESSES.length; i++) {
-        const patient = PATIENT_ADDRESSES[i];
+    for (let i = 0; i < CLIENT_ADDRESSES.length; i++) {
+        const client = CLIENT_ADDRESSES[i];
         const ipfsHash = ipfsHashes[i];
 
-        console.log(`Setting owner for IPFS hash: ${ipfsHash} to account: ${patient}`);
+        console.log(`Setting owner for IPFS hash: ${ipfsHash} to account: ${client}`);
         try {
-            const tx = await (contract!.connect(signer!) as Contract).initializePatientRecord(patient, ipfsHash);
+            const tx = await (contract!.connect(signer!) as Contract).initializeClientRecord(client, ipfsHash);
             console.log("Waiting for transaction confirmation...");
             await tx.wait();
             console.log(`Owner set for ipfshash: ${ipfsHash}`);

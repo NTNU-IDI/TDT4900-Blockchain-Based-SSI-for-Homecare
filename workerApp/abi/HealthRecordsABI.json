@@ -257,7 +257,7 @@
         "type": "string"
       }
     ],
-    "name": "initializePatientRecord",
+    "name": "initializeClientRecord",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -311,7 +311,7 @@
         "type": "string"
       }
     ],
-    "name": "updatePatientRecord",
+    "name": "updateClientRecord",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

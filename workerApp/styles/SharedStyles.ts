@@ -40,7 +40,7 @@ export const SharedStyles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: '#FFF'
   },
-  patientCard: {
+  clientCard: {
     backgroundColor: '#BBE2EC',
     borderRadius: 10,
     marginBottom: 10,
