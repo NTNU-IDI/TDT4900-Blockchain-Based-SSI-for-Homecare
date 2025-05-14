@@ -27,10 +27,10 @@ const Navigation = () => {
   }[] = [
     { name: "calendar", label: "Timeavtaler" },
     { name: "chemistry", label: "Prøvesvar" },
-    { name: "note", label: "Endringslogg", screen: "Oppdateringer" },
+    { name: "note", label: "Endringslogg", screen: "ChangeLogPage" },
     { name: "envelope", label: "Meldinger" },
-    { name: "user", label: "Tilganger", screen: "Tilganger" },
-    { name: "docs", label: "Notater", screen: "Notater" },
+    { name: "user", label: "Tilganger", screen: "AccessPage" },
+    { name: "docs", label: "Notater", screen: "NotesPage" },
   ];
 
   return (

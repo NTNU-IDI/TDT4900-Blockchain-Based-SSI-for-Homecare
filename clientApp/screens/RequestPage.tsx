@@ -11,7 +11,7 @@ import workers from "../assets/homecare_workers.json";
 
 type RequestScreenNavigationProp = NativeStackNavigationProp<Pages, "Request">;
 
-const Request = () => {
+const RequestPage = () => {
   const navigation = useNavigation<RequestScreenNavigationProp>();
   const [requests, setRequests] = useState<{
     addresses: string[];
@@ -100,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Request;
+export default RequestPage;

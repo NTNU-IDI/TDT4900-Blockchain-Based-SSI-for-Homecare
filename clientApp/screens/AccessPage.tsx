@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 
 type AccessScreenNavigationProp = NativeStackNavigationProp<Pages, "Access">;
 
-const Tilganger = () => {
+const AccessPage = () => {
   const navigation = useNavigation<AccessScreenNavigationProp>();
 
   const handlePress = (screen: keyof Pages) => {
@@ -51,4 +51,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Tilganger;
+export default AccessPage;
