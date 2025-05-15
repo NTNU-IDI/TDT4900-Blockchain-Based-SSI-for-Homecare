@@ -74,6 +74,22 @@ contract HealthRecords {
         emit HealthRecordUpdated(owner, msg.sender);
     }
 
+     /**
+     * @dev Requests access to a client's health record.
+     * @param owner The client address.
+     * @param note Optional note with sent request
+     */
+    function requestAccess(address owner, string memory note) public {
+        require(owner != msg.sender, "Cannot request access to your own record");
+        require(!access[owner][msg.sender], "Access already granted");
+        require(!requestedAccess[owner][msg.sender], "Access already requested");
+
+        accessRequests[owner].push(AccessRequest(msg.sender, note));
+        requestedAccess[owner][msg.sender] = true;
+
+        emit AccessRequested(owner, msg.sender);
+    }
+
     /**
      * @dev Grants access to the sender's health record to a specified address.
      * @param requester The address to grant access to.
@@ -116,22 +132,6 @@ contract HealthRecords {
         }
         requestedAccess[msg.sender][requester] = false;
         emit AccessRequestRejected(msg.sender, requester);
-    }
-
-    /**
-     * @dev Requests access to a client's health record.
-     * @param owner The client address.
-     * @param note Optional note with sent request
-     */
-    function requestAccess(address owner, string memory note) public {
-        require(owner != msg.sender, "Cannot request access to your own record");
-        require(!access[owner][msg.sender], "Access already granted");
-        require(!requestedAccess[owner][msg.sender], "Access already requested");
-
-        accessRequests[owner].push(AccessRequest(msg.sender, note));
-        requestedAccess[owner][msg.sender] = true;
-
-        emit AccessRequested(owner, msg.sender);
     }
 
     /**
