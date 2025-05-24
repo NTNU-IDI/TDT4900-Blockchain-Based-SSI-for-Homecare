@@ -15,7 +15,7 @@ const StartTaskPage: React.FC = () => {
   if (!currentClient) {
     return (
       <View style={SharedStyles.centeredContainer}>
-        <Text style={styles.noClientText}>Ingen pasient valgt</Text>
+        <Text style={styles.noClientText}>Ingen bruker valgt</Text>
       </View>
     );
   }

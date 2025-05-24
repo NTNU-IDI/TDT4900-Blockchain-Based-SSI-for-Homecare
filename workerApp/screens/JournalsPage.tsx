@@ -78,7 +78,7 @@ const JournalsPage: React.FC = () => {
 
   return (
     <View style={SharedStyles.container}>
-      <Text style={SharedStyles.title}>Pasientjournaler</Text>
+      <Text style={SharedStyles.title}>Journaler</Text>
       {clients.map((client) => (
         <TouchableOpacity
           key={client.id}
