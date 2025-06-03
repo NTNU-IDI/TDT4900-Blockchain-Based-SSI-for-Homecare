@@ -1,4 +1,4 @@
-# Homecare Worker App
+# Worker App
 
 This is the React Native application developed for homecare workers.
 
