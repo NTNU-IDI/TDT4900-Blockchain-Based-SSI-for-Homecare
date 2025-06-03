@@ -72,9 +72,9 @@ async function main() {
     const contract = HealthInfoFactory.attach(CONTRACT_ADDRESS).connect(signer);
     
 
-    const jsonFolderPath = path.join(__dirname, "../jsons");
+    const jsonFolderPath = path.join(__dirname, "../data");
     if (!fs.existsSync(jsonFolderPath)) {
-        throw new Error("JSON folder not found: " + jsonFolderPath);
+        throw new Error("Data folder not found: " + jsonFolderPath);
     }
 
     const jsonFiles = fs.readdirSync(jsonFolderPath).filter(file => file.endsWith(".json"));
@@ -90,7 +90,6 @@ async function main() {
         const data = JSON.parse(rawData.toString());
         const filename = `${data.name.replace(/\s+/g, '')}.json`;
         const hash = await uploadToIPFS(data, filename);
-        console.log(`Uploaded ${file} with IPFS hash: ${hash}`);
         ipfsHashes.push(hash);
     }
 
